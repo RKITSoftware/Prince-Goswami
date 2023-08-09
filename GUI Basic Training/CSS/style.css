@@ -89,7 +89,7 @@ input:focus ~ label,
       border-radius: 40px;
       background-color: #fff;
       border: none;
-      outline: none;
+       outline: none;
       cursor: pointer;
       font-size: 1em;
       font-weight: 600;
