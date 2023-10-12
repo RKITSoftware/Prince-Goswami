@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+</head>
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container ">
+          <span class="fw-bolder text-dark" >
+            User = <span class="" id="user"></span>
+          </span>
+        </div>
+        <button class="btn bg-danger" onclick="deleteSessionStorageUser()" id="logout-button">Log Out</button>
+      </nav>
+    <section>
+    </section>
+    <script >
+            // Get the username from session storage.
+            const usernameInput = document.querySelector("#user");
+            
+            // Get the username from session storage.
+            const sessionUser = JSON.parse(sessionStorage.getItem("user"));
+            const username = sessionUser.firstName+" "+sessionUser.lastName;
+            console.log(username);
+
+             usernameInput.innerHTML = username; 
+             function deleteSessionStorageUser() {
+              console.log("hii");
+            // Delete the user object from session storage.
+              sessionStorage.removeItem("user");
+
+  // Redirect the user to the login page.
+  window.location.href = "login.html";
+             }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+</body>
+</html>
+
