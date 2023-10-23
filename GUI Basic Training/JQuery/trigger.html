@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery Trigger Demo</title>
+    
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./Style.css">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <button class="btn btn-primary m-4" id="colorChangeButton">Change Color</button>
+    
+    <script>
+        $(document).ready(function() {
+            // Define a custom event called "colorChange"
+            $("#colorChangeButton").on("click", function() {
+                // Trigger the custom event "colorChange"
+                $("body").trigger("colorChange");
+            });
+
+            // Listen for the custom event and change the background color
+            $("body").on("colorChange", function() {
+                $(this).css("background-color", "black");
+            });
+        });
+    </script>
+</body>
+</html>
