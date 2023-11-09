@@ -62,14 +62,20 @@
 
             // Extend
             var targetObject = {
-                name: "John",
+                fullName: {
+                    firstName : 'asa',
+                    lastName : 'week'
+                },
                 age: 30
             };
             var sourceObject = {
+                fullName : {
+                    firstName : 'john'
+                },
                 age: 35,
                 city: "New York"
             };
-            $.extend(targetObject, sourceObject);
+            $.extend(true,targetObject, sourceObject);
             $("#extend-result").text("Extended Object: " + JSON.stringify(targetObject));
 
             // Each

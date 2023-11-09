@@ -8,7 +8,8 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <style type="text/css">
         label {
-            color: red;}
+            color: red;
+        }
     </style>
 </head>
 
@@ -47,44 +48,53 @@
 </html>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-    // Add rules and messages for form fields
-    $("#registration-form").validate({
-        rules: {
-            username: "required",
-            email: {
-                required: true,
-                email: true
+    $(document).ready(function () {
+        // Add rules and messages for form fields
+
+        $.validator.addMethod("regex", function (value, element, param) {
+            return this.optional(element) ||
+                value.match(typeof param == "string" ? new RegExp(param) : param);
+        });
+        
+
+        $("#registration-form").validate({
+            
+            rules: {
+                username: "required",
+                email: {
+                    regex : "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+                    required: true,
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                "confirm-password": {
+                    required: true,
+                    equalTo: "#password"
+                }
             },
-            password: {
-                required: true,
-                minlength: 6
+            messages: {
+                username: "Please enter your username",
+                email: {
+                    required: "Please enter your email",
+                    regex: "Please enter a valid email address"
+                },
+                password: {
+                    required: "Please enter a password",
+                    minlength: "Password must be at least 6 characters long"
+                },
+                "confirm-password": {
+                    required: "Please confirm your password",
+                    equalTo: "Passwords do not match"
+                }
             },
-            "confirm-password": {
-                required: true,
-                equalTo: "#password"
+            submitHandler: function (form) {
+                // Form is valid, you can submit it here
+                alert("hii");
+                form.preventDefault();
             }
-        },
-        messages: {
-            username: "Please enter your username",
-            email: {
-                required: "Please enter your email",
-                email: "Please enter a valid email address"
-            },
-            password: {
-                required: "Please enter a password",
-                minlength: "Password must be at least 6 characters long"
-            },
-            "confirm-password": {
-                required: "Please confirm your password",
-                equalTo: "Passwords do not match"
-            }
-        },
-        submitHandler: function(form) {
-            // Form is valid, you can submit it here
-            form.preventDefault();
-        }
+        });
     });
-});
 
 </script>

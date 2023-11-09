@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style >
+        .highlighted { 
+            background-color: black;
+            color: aliceblue;
+        }
+        tr{
+            width: 100vw;
+        }
+    </style>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    
+</head>
+
+<body>
+    <table id="myTable">
+        <tr>
+            <td>Row 1 Data</td>
+            <td>
+                <div>
+                    <span>
+                        <button class="myButton">Button in Row 1</button>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Row 2 Data</td>
+            <td>
+                <button class="myButton">Button in Row 2</button>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $('.myButton').on('click', function () {
+                var row = $(this).closest('tr');
+                row.addClass('highlighted');
+            });
+        });
+
+    </script>
+  
+</body>
+
+</html>
