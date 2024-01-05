@@ -1,0 +1,8 @@
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Hello World\DataType&Variable\Datatype&Variable\Datatype&Variable\obj\Debug\Datatype&Variable.csproj.AssemblyReference.cache
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Hello World\DataType&Variable\Datatype&Variable\Datatype&Variable\obj\Debug\Datatype&Variable.csproj.SuggestedBindingRedirects.cache
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Hello World\DataType&Variable\Datatype&Variable\Datatype&Variable\obj\Debug\Datatype&Variable.csproj.CoreCompileInputs.cache
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Hello World\DataType&Variable\Datatype&Variable\Datatype&Variable\bin\Debug\Datatype&Variable.exe.config
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Hello World\DataType&Variable\Datatype&Variable\Datatype&Variable\bin\Debug\Datatype&Variable.exe
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Hello World\DataType&Variable\Datatype&Variable\Datatype&Variable\bin\Debug\Datatype&Variable.pdb
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Hello World\DataType&Variable\Datatype&Variable\Datatype&Variable\obj\Debug\Datatype&Variable.exe
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Hello World\DataType&Variable\Datatype&Variable\Datatype&Variable\obj\Debug\Datatype&Variable.pdb
