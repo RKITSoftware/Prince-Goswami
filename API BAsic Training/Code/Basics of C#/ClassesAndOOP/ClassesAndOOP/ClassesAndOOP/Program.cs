@@ -1,4 +1,4 @@
-﻿=zusing System;
+﻿= zusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -37,7 +37,7 @@ namespace ClassesAndOOP
             // Abstraction
             Circle myCircle = new Circle(5);
             Console.WriteLine($"Area of the circle: {myCircle.CalculateArea()} square units");
-            
+
             #endregion
         }
     }
@@ -76,8 +76,17 @@ namespace ClassesAndOOP
         public string Model
         {
             get { return model; }
-            set { model = value; }
-        }
+            set
+            {
+                if (value != null)
+                {
+                    model = value;
+                }
+                else
+                {
+                    Console.WriteLine("Invlaid Model");
+                }
+            }
 
         public int Year
         {
@@ -106,6 +115,7 @@ namespace ClassesAndOOP
     {
         public ElectricCar(string model, int year) : base(model, year)
         {
+
         }
 
         // Additional method specific to ElectricCar
