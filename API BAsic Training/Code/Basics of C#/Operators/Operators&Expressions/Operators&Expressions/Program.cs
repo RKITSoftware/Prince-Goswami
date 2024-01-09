@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Services;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Operators_Expressions
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
@@ -191,7 +186,7 @@ namespace Operators_Expressions
 
             #endregion
 
-            #region Conditional Operators\
+            #region Conditional Operators
 
             Console.WriteLine("\nConditional Operators\n");
 

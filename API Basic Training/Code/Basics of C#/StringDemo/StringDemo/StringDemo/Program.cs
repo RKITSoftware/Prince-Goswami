@@ -2,6 +2,9 @@
 
 class StringOperations
 {
+    /// <summary>
+    /// Demonstrates various string operations such as concatenation, length, substring, case conversion, index of, replace, split, and string comparison.
+    /// </summary>
     static void Main()
     {
         // Creating strings

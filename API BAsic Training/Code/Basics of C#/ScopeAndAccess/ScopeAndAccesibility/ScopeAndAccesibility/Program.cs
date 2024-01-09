@@ -4,48 +4,53 @@ namespace ScopeAndAccesibility
 {
     public class Vehicle
     {
-        // Private field 
-        private float fuelLevel;
+        #region Private field
+        private float _fuelLevel;
+        #endregion
 
-        // Protected field
-        protected int mileage;
+        #region Protected field
+
+        protected int Mileage;
+
+        #endregion
 
         // Static field 
-        private static int totalVehicles;
+        private static int _totalVehicles;
 
-        public Vehicle(float initialFuelLevel, int initialMileage)
+        public Vehicle(float initialfuelLevel, int initialMileage)
         {
-            fuelLevel = initialFuelLevel;
-            mileage = initialMileage;
-            totalVehicles++;
+            _fuelLevel = initialfuelLevel;
+            Mileage = initialMileage;
+            _totalVehicles++;
         }
 
-        public float GetFuelLevel()
+        public float GetfuelLevel()
         {
-            return fuelLevel;
+            return _fuelLevel;
         }
 
         public int GetMileage()
         {
-            return mileage;
+            return Mileage;
         }
 
         // Static method 
         public static int GetTotalVehicles()
         {
-            return totalVehicles;
+            return _totalVehicles;
         }
     }
 
-    // Derived class inheriting from Vehicle
+   
+
     public class Car : Vehicle
     {
-        private static int totalCars;
+        private static int _totalCars;
 
-        public Car(float initialFuelLevel, int initialMileage, string model) : base(initialFuelLevel, initialMileage)
+        public Car(float initialfuelLevel, int initialMileage, string model) : base(initialfuelLevel, initialMileage)
         {
             Model = model;
-            totalCars++;
+            _totalCars++;
         }
 
         public string Model { get; }
@@ -53,14 +58,14 @@ namespace ScopeAndAccesibility
         // Static method 
         public static int GetTotalCars()
         {
-            return totalCars;
+            return _totalCars;
         }
 
         public void DisplayCarInfo()
         {
             Console.WriteLine($"Car Model: {Model}");
-            Console.WriteLine($"Fuel Level: {GetFuelLevel()} liters"); // Accessing private method
-            Console.WriteLine($"Mileage: {mileage} miles"); // Accessing protected field
+            Console.WriteLine($"Fuel Level: {GetfuelLevel()} liters"); // Accessing private method
+            Console.WriteLine($"Mileage: {Mileage} miles"); // Accessing protected field
             Console.WriteLine($"Total Cars: {GetTotalCars()}"); // Accessing static method in the derived class
             Console.WriteLine($"Total Vehicles: {GetTotalVehicles()}"); // Accessing static method in the base class
         }
@@ -73,10 +78,10 @@ namespace ScopeAndAccesibility
             Console.WriteLine("Welcome to the Simple Demo!");
 
             // Creating a car
-            Car myCar = new Car(initialFuelLevel: 30.5f, initialMileage: 5000, model: "Sedan");
+            Car myCar = new Car(initialfuelLevel: 30.5f, initialMileage: 5000, model: "Sedan");
 
             // Creating another vehicle 
-            Vehicle anotherVehicle = new Vehicle(initialFuelLevel: 40.0f, initialMileage: 3000);
+            Vehicle anotherVehicle = new Vehicle(initialfuelLevel: 40.0f, initialMileage: 3000);
 
             myCar.DisplayCarInfo();
 
@@ -84,3 +89,12 @@ namespace ScopeAndAccesibility
         }
     }
 }
+
+
+
+
+
+
+
+
+
