@@ -44,6 +44,8 @@ namespace Test_of_Basic_C__training
             }
         }
 
+        #region Helper Methods
+
         /// <summary>
         /// Converts the user input date to a PIN.
         /// </summary>
@@ -68,5 +70,8 @@ namespace Test_of_Basic_C__training
             Console.WriteLine("Invalid date format. Please enter a date in the format dd-MM-yyyy.");
             return "Error"; // Indicate an error
         }
+
+        #endregion
     }
 }
+

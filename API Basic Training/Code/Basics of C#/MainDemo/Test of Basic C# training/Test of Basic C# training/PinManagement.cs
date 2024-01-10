@@ -2,9 +2,17 @@
 
 namespace Test_of_Basic_C__training
 {
+    /// <summary>
+    /// Represents a module for managing PINs for users.
+    /// </summary>
     public class PinModule
     {
-        // Method to assign a PIN to a user
+        #region Assign a pin
+        /// <summary>
+        /// Assigns a PIN to a user.
+        /// </summary>
+        /// <param name="user">The user to assign the PIN to.</param>
+        /// <param name="newPin">The new PIN to assign.</param>
         public void AssignPin(User user, string newPin)
         {
             if (IsPinValid(newPin))
@@ -17,8 +25,15 @@ namespace Test_of_Basic_C__training
                 Console.WriteLine("Invalid PIN. Please use a 4-digit numeric PIN.");
             }
         }
+        #endregion
 
-        // Method to change the PIN for a user
+        #region Change pin
+        /// <summary>
+        /// Changes the PIN for a user.
+        /// </summary>
+        /// <param name="user">The user to change the PIN for.</param>
+        /// <param name="currentPin">The current PIN for verification.</param>
+        /// <param name="newPin">The new PIN to set.</param>
         public void ChangePin(User user, string currentPin, string newPin)
         {
             if (VerifyPin(user, currentPin))
@@ -38,12 +53,22 @@ namespace Test_of_Basic_C__training
                 Console.WriteLine("Current PIN verification failed. PIN not changed.");
             }
         }
+        #endregion
 
-        // Method to verify if the entered PIN matches the user's PIN
+        #region Verify pIn
+        /// <summary>
+        /// Verifies if the entered PIN matches the user's PIN.
+        /// </summary>
+        /// <param name="user">The user to verify the PIN for.</param>
+        /// <param name="enteredPin">The entered PIN to verify.</param>
+        /// <returns>True if the entered PIN matches the user's PIN, otherwise false.</returns>
         public bool VerifyPin(User user, string enteredPin)
         {
             return user.PIN == enteredPin;
         }
+        #endregion
+
+        #region Helper Methods
 
         // Helper method to validate the PIN format
         private bool IsPinValid(string pin)
@@ -51,6 +76,7 @@ namespace Test_of_Basic_C__training
             // PIN should be a 4-digit numeric value
             return !string.IsNullOrEmpty(pin) && pin.Length == 4 && int.TryParse(pin, out _);
         }
-    }
 
+        #endregion
+    }
 }

@@ -4,15 +4,33 @@ using System.Collections.Generic;
 // Abstract class that defines common methods for user-related operations
 public abstract class UserBase
 {
+    #region Abstract Methods
+
+    /// <summary>
+    /// Updates the user's balance.
+    /// </summary>
+    /// <param name="amount">The amount to update the balance by.</param>
     public abstract void UpdateBalance(decimal amount);
+
+    /// <summary>
+    /// Adds a transaction to the user's transaction history.
+    /// </summary>
+    /// <param name="transaction">The transaction to add.</param>
     public abstract void AddTransaction(Transaction transaction);
+
+    /// <summary>
+    /// Displays the user's details.
+    /// </summary>
     public abstract void DisplayUserDetails();
+
+    #endregion
 }
 
 // Concrete implementation of the abstract class
 public class User : UserBase
 {
-    // Private fields
+    #region Private Fields
+
     private string userName;
     private string cardNumber;
     private string pin;
@@ -20,13 +38,16 @@ public class User : UserBase
     private decimal balance;
     private List<Transaction> transactionHistory;
 
-    // Properties
+    #endregion
+
+    #region Properties
+
     public string UserName
     {
         get { return userName; }
         set { userName = value; }
     }
- 
+
     public string CardNumber
     {
         get { return cardNumber; }
@@ -57,6 +78,10 @@ public class User : UserBase
         set { transactionHistory = value; }
     }
 
+    #endregion
+
+    #region Constructor
+
     // Constructor
     public User(string userName, string pin, string mobileNumber, decimal balance = 0)
     {
@@ -67,11 +92,14 @@ public class User : UserBase
         Balance = balance;
         TransactionHistory = new List<Transaction>();
         Console.WriteLine("Your account has been created.\n" +
-            "Your card number is "+ CardNumber +
-            "\nYour card PIN is "+ pin);
+            "Your card number is " + CardNumber +
+            "\nYour card PIN is " + pin);
     }
 
-    // Methods from the abstract class
+    #endregion
+
+    #region Methods from the abstract class
+
     public override void UpdateBalance(decimal amount)
     {
         Balance += amount;
@@ -96,8 +124,7 @@ public class User : UserBase
         }
     }
 
-
-
+    #endregion
 }
 
 // Transaction class to store transaction details
@@ -115,10 +142,15 @@ public class Transaction
     }
 }
 
+// Class to generate a unique card number
 public class CardNumberGenerator
 {
     private static Random random = new Random();
 
+    /// <summary>
+    /// Generates a unique card number.
+    /// </summary>
+    /// <returns>The generated card number.</returns>
     public static string GenerateCardNumber()
     {
         // You can customize the prefix based on your needs

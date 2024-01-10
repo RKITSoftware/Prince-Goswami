@@ -2,20 +2,40 @@
 
 namespace Test_of_Basic_C__training
 {
-
+    /// <summary>
+    /// Class representing the menu system of the application.
+    /// </summary>
     public class MenuSystem
     {
+        #region Fields
+
         private User loggedInUser;
         private PinModule pinModule;
         private TransactionManagement transactionManagement;
         private DatabaseManagement databaseManagement;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor for MenuSystem class.
+        /// </summary>
         public MenuSystem()
         {
             pinModule = new PinModule();
+            databaseManagement = new DatabaseManagement();
             transactionManagement = new TransactionManagement(databaseManagement);
         }
 
-        // Method to handle user login
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Method to handle user login.
+        /// </summary>
+        /// <param name="database">The database management object.</param>
         public void Login(DatabaseManagement database)
         {
             Console.WriteLine("===== User Login =====");
@@ -30,7 +50,7 @@ namespace Test_of_Basic_C__training
 
             if (user != null)
             {
-                Console.WriteLine("Login successful. Welcome!");
+                Console.WriteLine("Login successful. Welcome "+ user.UserName);
                 loggedInUser = user;
                 ShowMainMenu();
             }
@@ -40,7 +60,13 @@ namespace Test_of_Basic_C__training
             }
         }
 
-        // Display the main menu and handle user selections
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Display the main menu and handle user selections.
+        /// </summary>
         private void ShowMainMenu()
         {
             while (true)
@@ -60,42 +86,47 @@ namespace Test_of_Basic_C__training
                 switch (choice)
                 {
                     case "1":
+                        // Display user's balance
                         Console.WriteLine($"Your Balance: {loggedInUser.Balance:C}");
                         break;
 
                     case "2":
+                        // View transaction history
                         transactionManagement.ViewTransactionHistory(loggedInUser);
                         break;
 
                     case "3":
-                        // Implement cash withdrawal functionality
-                        Console.WriteLine("Enter amount of cash to be withdrawn : ");
+                        // Deposit cash
+                        Console.WriteLine("Enter amount of cash to be deposited: ");
                         decimal amountToDeposit = decimal.Parse(Console.ReadLine());
-                        transactionManagement.DepositCash(loggedInUser , amountToDeposit );
+                        transactionManagement.DepositCash(loggedInUser, amountToDeposit);
                         break;
-                        
+
                     case "4":
-                        // Implement cash withdrawal functionality
-                        Console.WriteLine("Enter amount of cash to be withdrawn : ");
+                        // Withdraw cash
+                        Console.WriteLine("Enter amount of cash to be withdrawn: ");
                         decimal amountToWithdraw = decimal.Parse(Console.ReadLine());
-                        transactionManagement.WithdrawCash(loggedInUser , amountToWithdraw );
+                        transactionManagement.WithdrawCash(loggedInUser, amountToWithdraw);
                         break;
 
                     case "5":
-                        // Implement change PIN functionality
-                        Console.WriteLine("Enter Current pin : ");
+                        // Change PIN
+                        Console.WriteLine("Enter Current PIN: ");
                         string currentPin = Console.ReadLine();
+                        Console.WriteLine("Enter New PIN: ");
                         string newPin = Console.ReadLine();
                         pinModule.ChangePin(loggedInUser, currentPin, newPin);
                         break;
 
                     case "6":
-                        // Implement update mobile number functionality
+                        // Update mobile number
+                        Console.WriteLine("Enter New Mobile Number: ");
                         string newMobileNumber = Console.ReadLine();
-                        databaseManagement.UpdateMobileNumber(loggedInUser , newMobileNumber);
+                        databaseManagement.UpdateMobileNumber(loggedInUser, newMobileNumber);
                         break;
 
                     case "7":
+                        // Logout
                         Console.WriteLine("Logging out. Have a nice day!");
                         loggedInUser = null;
                         return;
@@ -106,6 +137,7 @@ namespace Test_of_Basic_C__training
                 }
             }
         }
-    }
 
+        #endregion
+    }
 }
