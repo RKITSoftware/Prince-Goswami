@@ -11,7 +11,6 @@ class NonGenericDemo
         StackExample();
     }
 
-    #region ArrayList
     /// <summary>
     /// Demonstrates the usage of ArrayList.
     /// </summary>
@@ -35,9 +34,7 @@ class NonGenericDemo
 
         Console.WriteLine("\n");
     }
-    #endregion
 
-    #region HashTable
     /// <summary>
     /// Demonstrates the usage of Hashtable.
     /// </summary>
@@ -58,9 +55,7 @@ class NonGenericDemo
 
         Console.WriteLine("\n");
     }
-    #endregion
 
-    #region Queue
     /// <summary>
     /// Demonstrates the usage of Queue.
     /// </summary>
@@ -83,9 +78,7 @@ class NonGenericDemo
 
         Console.WriteLine("\n");
     }
-    #endregion
 
-    #region Stack
     /// <summary>
     /// Demonstrates the usage of Stack.
     /// </summary>
@@ -108,5 +101,4 @@ class NonGenericDemo
 
         Console.WriteLine("\n");
     }
-    #endregion
 }

@@ -10,20 +10,37 @@ class _DataTable
         // Create a DataTable with columns
         DataTable employeeTable = new DataTable("Employee");
 
-        // Add columns to the DataTable
-        employeeTable.Columns.Add("EmployeeID", typeof(int));
+
+        // Create the primary key column
+        DataColumn primaryKeyColumn = new DataColumn("EmployeeID", typeof(int));
+        primaryKeyColumn.AutoIncrement = true;
+        primaryKeyColumn.AllowDBNull = false;
+        primaryKeyColumn.Unique = true;
+
+        // Add the primary key column and other columns
+        employeeTable.Columns.Add(primaryKeyColumn);
         employeeTable.Columns.Add("FirstName", typeof(string));
         employeeTable.Columns.Add("LastName", typeof(string));
         employeeTable.Columns.Add("Position", typeof(string));
 
+        // Set the primary key constraint
+        employeeTable.PrimaryKey = new DataColumn[] { primaryKeyColumn };
+
+
         // Add data to the DataTable
         employeeTable.Rows.Add(1, "John", "Doe", "Developer");
-        employeeTable.Rows.Add(2, "Jane", "Smith", "Manager");
+            employeeTable.Rows.Add(2, "Jane", "Smith", "Manager");
         employeeTable.Rows.Add(3, "Bob", "Johnson", "Tester");
 
         // Display the contents of the DataTable
         DisplayDataTable(employeeTable);
 
+        // Remove data from DataTable
+        employeeTable.Rows.Remove( employeeTable.Rows.Find(3));
+        
+        
+        // Display the contents of the DataTable
+        DisplayDataTable(employeeTable);
         Console.ReadLine();
     }
 
@@ -48,6 +65,7 @@ class _DataTable
             }
             Console.WriteLine();
         }
+
         Console.WriteLine("--------------------------------------------------");
     }
 }

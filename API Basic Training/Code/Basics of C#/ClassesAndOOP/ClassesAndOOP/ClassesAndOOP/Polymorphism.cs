@@ -2,17 +2,17 @@
 
 namespace ClassesAndOOP
 {
-
     class Polymorphism
     {
-        public static void polymorphismRun()
+        /// <summary>
+        /// Demonstrates polymorphism by displaying the sound made by different animals.
+        /// </summary>
+        public static void PolymorphismExample()
         {
             Console.WriteLine("\nPolymorphism Example:");
-            // Creating instances of different animals
             Animal objCat = new Cat("Whiskers");
             Animal objDog = new Dog("Buddy");
 
-            // Displaying sounds of different animals using polymorphism
             DisplayAnimalSound(objCat);
             DisplayAnimalSound(objDog);
 
@@ -20,7 +20,7 @@ namespace ClassesAndOOP
         }
 
         /// <summary>
-        /// Displays the sound of an animal using polymorphism.
+        /// Displays the sound made by an animal.
         /// </summary>
         /// <param name="animal">The animal object.</param>
         static void DisplayAnimalSound(Animal animal)
@@ -30,7 +30,7 @@ namespace ClassesAndOOP
     }
 
     /// <summary>
-    /// Base class representing an animal.
+    /// Represents an animal.
     /// </summary>
     public abstract class Animal
     {
@@ -40,7 +40,7 @@ namespace ClassesAndOOP
         public string Name { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Animal"/> class with the specified name.
+        /// Initializes a new instance of the Animal class with the specified name.
         /// </summary>
         /// <param name="name">The name of the animal.</param>
         protected Animal(string name)
@@ -49,19 +49,19 @@ namespace ClassesAndOOP
         }
 
         /// <summary>
-        /// Abstract method to make the animal sound.
+        /// Makes the sound of the animal.
         /// </summary>
-        /// <returns>The sound of the animal.</returns>
+        /// <returns>The sound made by the animal.</returns>
         public abstract string MakeSound();
     }
 
     /// <summary>
-    /// Class representing a cat, inheriting from the base animal class.
+    /// Represents a cat, which is an animal.
     /// </summary>
     public class Cat : Animal
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Cat"/> class with the specified name.
+        /// Initializes a new instance of the Cat class with the specified name.
         /// </summary>
         /// <param name="name">The name of the cat.</param>
         public Cat(string name) : base(name)
@@ -69,9 +69,9 @@ namespace ClassesAndOOP
         }
 
         /// <summary>
-        /// Implementation of the abstract method to make the cat sound.
+        /// Makes the sound of the cat.
         /// </summary>
-        /// <returns>The sound of the cat.</returns>
+        /// <returns>The sound made by the cat.</returns>
         public override string MakeSound()
         {
             return "Meow!";
@@ -79,12 +79,12 @@ namespace ClassesAndOOP
     }
 
     /// <summary>
-    /// Class representing a dog, inheriting from the base animal class.
+    /// Represents a dog, which is an animal.
     /// </summary>
     public class Dog : Animal
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Dog"/> class with the specified name.
+        /// Initializes a new instance of the Dog class with the specified name.
         /// </summary>
         /// <param name="name">The name of the dog.</param>
         public Dog(string name) : base(name)
@@ -92,9 +92,9 @@ namespace ClassesAndOOP
         }
 
         /// <summary>
-        /// Implementation of the abstract method to make the dog sound.
+        /// Makes the sound of the dog.
         /// </summary>
-        /// <returns>The sound of the dog.</returns>
+        /// <returns>The sound made by the dog.</returns>
         public override string MakeSound()
         {
             return "Woof!";

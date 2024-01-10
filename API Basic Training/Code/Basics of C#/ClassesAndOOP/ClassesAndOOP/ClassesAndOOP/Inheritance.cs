@@ -1,30 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassesAndOOP
 {
-    using System;
-
-    /// <summary>
-    /// Main program class that demonstrates inheritance in C# with vehicles.
-    /// </summary>
     class Inheritance
     {
         /// <summary>
-        /// Entry point of the program.
+        /// Runs the inheritance example.
         /// </summary>
-        public static void inheritanceRun()
+        public static void InheritanceExample()
         {
             Console.WriteLine("\nInheritance Example:");
 
-            // Creating instances of different vehicles
             Car objCar = new Car("Sedan", "Toyota");
             Bicycle objBicycle = new Bicycle("Mountain Bike", "Trek");
 
-            // Displaying information about different vehicles using inheritance
             DisplayVehicleInfo(objCar);
             DisplayVehicleInfo(objBicycle);
 
@@ -32,7 +21,7 @@ namespace ClassesAndOOP
         }
 
         /// <summary>
-        /// Displays information about a vehicle using inheritance.
+        /// Displays the vehicle information.
         /// </summary>
         /// <param name="vehicle">The vehicle object.</param>
         static void DisplayVehicleInfo(Vehicle vehicle)
@@ -42,22 +31,19 @@ namespace ClassesAndOOP
     }
 
     /// <summary>
-    /// Base class representing a vehicle.
+    /// Represents a vehicle.
     /// </summary>
     public class Vehicle
     {
-        /// <summary>
-        /// Gets the model of the vehicle.
-        /// </summary>
+
+        // Gets the model of the vehicle.
         public string Model { get; }
 
-        /// <summary>
-        /// Gets the brand of the vehicle.
-        /// </summary>
+        // Gets the brand of the vehicle.
         public string Brand { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Vehicle"/> class with the specified model and brand.
+        /// Initializes a new instance of the Vehicle class.
         /// </summary>
         /// <param name="model">The model of the vehicle.</param>
         /// <param name="brand">The brand of the vehicle.</param>
@@ -68,22 +54,22 @@ namespace ClassesAndOOP
         }
 
         /// <summary>
-        /// Gets information about the vehicle.
+        /// Gets the vehicle information.
         /// </summary>
-        /// <returns>Information about the vehicle.</returns>
+        /// <returns>The vehicle information.</returns>
         public virtual string GetVehicleInfo()
         {
-            return "Generic vehicle information.";
+            return "Generic vehicle info.";
         }
     }
 
     /// <summary>
-    /// Class representing a car, inheriting from the base vehicle class.
+    /// Represents a car. Inherited Vehicle
     /// </summary>
     public class Car : Vehicle
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Car"/> class with the specified model and brand.
+        /// Initializes a new instance of the Car class.
         /// </summary>
         /// <param name="model">The model of the car.</param>
         /// <param name="brand">The brand of the car.</param>
@@ -92,9 +78,9 @@ namespace ClassesAndOOP
         }
 
         /// <summary>
-        /// Overrides the base method to get specific information about the car.
+        /// Gets the vehicle information.
         /// </summary>
-        /// <returns>Information about the car.</returns>
+        /// <returns>The vehicle information.</returns>
         public override string GetVehicleInfo()
         {
             return "This is a car.";
@@ -102,12 +88,12 @@ namespace ClassesAndOOP
     }
 
     /// <summary>
-    /// Class representing a bicycle, inheriting from the base vehicle class.
+    /// Represents a bicycle.
     /// </summary>
     public class Bicycle : Vehicle
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Bicycle"/> class with the specified model and brand.
+        /// Initializes a new instance of the Bicycle class.
         /// </summary>
         /// <param name="model">The model of the bicycle.</param>
         /// <param name="brand">The brand of the bicycle.</param>
@@ -116,13 +102,12 @@ namespace ClassesAndOOP
         }
 
         /// <summary>
-        /// Overrides the base method to get specific information about the bicycle.
+        /// Gets the vehicle information.
         /// </summary>
-        /// <returns>Information about the bicycle.</returns>
+        /// <returns>The vehicle information.</returns>
         public override string GetVehicleInfo()
         {
             return "This is a bicycle.";
         }
     }
-
 }

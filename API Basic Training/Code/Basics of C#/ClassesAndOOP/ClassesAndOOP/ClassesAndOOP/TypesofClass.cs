@@ -3,10 +3,12 @@ using ClassesAndOOP;
 
 namespace ClassesAndOOP
 {
+
     public class TypesOfClass
     {
-        #region RegularClassExample        
+
         // Regular class example
+
         public static void RegularClassExample()
         {
             Console.WriteLine("Regular Class Example:");
@@ -18,9 +20,7 @@ namespace ClassesAndOOP
             double area = b1.getArea();
             Console.WriteLine("Area of box is : " + area);
         }
-        #endregion
 
-        #region AbstractClassExample
         // Abstract class example
         public static void AbstractClassExample()
         {
@@ -35,9 +35,7 @@ namespace ClassesAndOOP
 
             Console.WriteLine();
         }
-        #endregion
 
-        #region StaticClassExample
         // Static class example
         public static void StaticClassExample()
         {
@@ -51,9 +49,7 @@ namespace ClassesAndOOP
 
             Console.WriteLine();
         }
-        #endregion
 
-        #region SealedClassExample
         // Sealed class example
         public static void SealedClassExample()
         {
@@ -69,11 +65,10 @@ namespace ClassesAndOOP
 
             Console.WriteLine();
         }
-        #endregion
+
 
     }
 
-    #region Regular Class
     class Box
     {
         private double length, breath, width;
@@ -94,9 +89,6 @@ namespace ClassesAndOOP
         public double getWidth() => width;
         public double getBreath() => breath;
     }
-#endregion
-
-    #region Abstract Class
     public class Circle : Shape
     {
         // Property
@@ -114,9 +106,7 @@ namespace ClassesAndOOP
             return Math.PI * Math.Pow(Radius, 2);
         }
     }
-    #endregion
 
-    #region Static Class
     // Static class
     public static class MathUtility
     {
@@ -131,9 +121,7 @@ namespace ClassesAndOOP
             return Math.Sqrt(number);
         }
     }
-    #endregion
 
-    #region Sealed Class
     // Sealed class
     public sealed class FinalClass
     {
@@ -141,5 +129,5 @@ namespace ClassesAndOOP
     }
 
     // public class DerivedClass : FinalClass { }
-    #endregion
+
 }

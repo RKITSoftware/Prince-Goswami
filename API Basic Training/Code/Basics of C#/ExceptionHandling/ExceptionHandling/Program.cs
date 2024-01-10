@@ -1,7 +1,13 @@
 ﻿using System;
 
+/// <summary>
+/// This program demonstrates Exception Handling in C#.
+/// </summary>
 class ExceptionHandling
 {
+    /// <summary>
+    /// The main entry point for the program.
+    /// </summary>
     static void Main()
     {
         Console.WriteLine("Exception Handling Program:");

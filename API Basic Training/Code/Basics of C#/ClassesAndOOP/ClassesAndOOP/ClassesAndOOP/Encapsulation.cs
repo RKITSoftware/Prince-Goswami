@@ -8,7 +8,7 @@ namespace ClassesAndOOP
 {
     internal class Encapsulation
     {
-        public static void encapsulationRun()
+        public static void EncapsulationExample()
         {
 
             Console.WriteLine("\nEncapsulation Example:");
@@ -17,13 +17,12 @@ namespace ClassesAndOOP
             EncapsulationDemo encapsulationDemo = new EncapsulationDemo();
 
             // Accessing encapsulated properties and methods
-            encapsulationDemo.SetName("John Doe");
-            encapsulationDemo.SetAge(25);
+            encapsulationDemo.SetName("Prince Goswami");
+            encapsulationDemo.SetAge(22);
 
             Console.WriteLine($"Name: {encapsulationDemo.GetName()}, Age: {encapsulationDemo.GetAge()}");
 
-            // Uncommenting the line below will result in a compilation error,
-            // as 'age' is a private field and cannot be accessed directly.
+
             // Console.WriteLine(encapsulationDemo.age);
 
             Console.WriteLine();
@@ -35,6 +34,7 @@ namespace ClassesAndOOP
     /// </summary>
     public class EncapsulationDemo
     {
+        
         private string name; // Private field for name
         private int age;     // Private field for age
 
@@ -59,6 +59,7 @@ namespace ClassesAndOOP
             name = newName;
         }
 
+        
         /// <summary>
         /// Gets the age of the object.
         /// </summary>
@@ -80,7 +81,7 @@ namespace ClassesAndOOP
             }
             else
             {
-                Console.WriteLine("Invalid age value. Age must be non-negative.");
+                Console.WriteLine("Invalid age value.");
             }
         }
     }

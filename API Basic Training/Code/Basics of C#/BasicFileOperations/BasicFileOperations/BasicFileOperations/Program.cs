@@ -38,6 +38,11 @@ class Program
         }
     }
 
+
+    /// <summary>
+    /// Writes a new note to the specified file.
+    /// </summary>
+    /// <param name="filePath">The path to the notes file.</param>
     static void WriteNoteToFile(string filePath)
     {
         try
@@ -63,6 +68,11 @@ class Program
         }
     }
 
+
+    /// <summary>
+    /// Reads all notes from the specified file and displays them.
+    /// </summary>
+    /// <param name="filePath">The path to the notes file.</param>
     static void ReadAllNotes(string filePath)
     {
         try

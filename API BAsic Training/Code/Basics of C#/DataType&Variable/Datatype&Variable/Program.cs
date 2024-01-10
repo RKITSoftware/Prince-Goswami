@@ -21,48 +21,48 @@ namespace Datatype_Variable
 
             #region Type Casting
 
-              #region Implicit Conversion
+                #region Implicit Conversion
 
-            Console.WriteLine("Implicit Conversion");
+                Console.WriteLine("Implicit Conversion");
 
-            int numInt = 500;
+                int numInt = 500;
         
-            // get type of numInt
-            Type n = numInt.GetType();
+                // get type of numInt
+                Type n = numInt.GetType();
 
-            // Implicit Conversion
-            double numDouble = numInt;
+                // Implicit Conversion
+                double numDouble = numInt;
 
-            // get type of numDouble
-            Type n1 = numDouble.GetType();
+                // get type of numDouble
+                Type n1 = numDouble.GetType();
 
-            // Value before conversion
-            Console.WriteLine("numInt value: " + numInt);
-            Console.WriteLine("numInt Type: " + n);
+                // Value before conversion
+                Console.WriteLine("numInt value: " + numInt);
+                Console.WriteLine("numInt Type: " + n);
 
-            // Value after conversion
-            Console.WriteLine("Value after conversion");
-            Console.WriteLine("numDouble value: " + numDouble);
-            Console.WriteLine("numDouble Type: " + n1);
-            #endregion
+                // Value after conversion
+                Console.WriteLine("Value after conversion");
+                Console.WriteLine("numDouble value: " + numDouble);
+                Console.WriteLine("numDouble Type: " + n1);
 
+                #endregion
+
+                #region Explicit Conersion
             
-              #region Explicit Conersion
-            
-            Console.WriteLine("Explicit Conversion");
-            double dbl = 1.23;
+                Console.WriteLine("Explicit Conversion");
+                double dbl = 1.23;
 
-            // Explicit casting
-            int integer = (int)dbl;
+                // Explicit casting
+                int integer = (int)dbl;
 
-            // Value before conversion
-            Console.WriteLine("Original double Value: " + dbl);
+                // Value before conversion
+                Console.WriteLine("Original double Value: " + dbl);
 
-            // Value after conversion
-            Console.WriteLine("Value after conversion");
-            Console.WriteLine("Converted int Value: " + integer);
-            Console.ReadLine();
-            #endregion
+                // Value after conversion
+                Console.WriteLine("Value after conversion");
+                Console.WriteLine("Converted int Value: " + integer);
+                Console.ReadLine();
+                #endregion
     
             #endregion
         }

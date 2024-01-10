@@ -4,68 +4,96 @@ namespace ScopeAndAccesibility
 {
     public class Vehicle
     {
-        #region Private field
         private float _fuelLevel;
-        #endregion
 
-        #region Protected field
+        protected int mileage;
 
-        protected int Mileage;
-
-        #endregion
-
-        // Static field 
         private static int _totalVehicles;
 
-        public Vehicle(float initialfuelLevel, int initialMileage)
+        /// <summary>
+        /// Constructor to initialize the Vehicle object
+        /// </summary>
+        /// <param name="initialFuelLevel">The initial fuel level of the vehicle.</param>
+        /// <param name="initialMileage">The initial mileage of the vehicle.</param>
+        public Vehicle(float initialFuelLevel, int initialMileage)
         {
-            _fuelLevel = initialfuelLevel;
-            Mileage = initialMileage;
+            _fuelLevel = initialFuelLevel;
+            mileage = initialMileage;
             _totalVehicles++;
         }
 
-        public float GetfuelLevel()
+        /// <summary>
+        /// Gets the fuel level of the vehicle.
+        /// </summary>
+        /// <returns>The fuel level of the vehicle.</returns>
+        public float GetFuelLevel()
         {
             return _fuelLevel;
         }
 
+        /// <summary>
+        /// Gets the mileage of the vehicle.
+        /// </summary>
+        /// <returns>The mileage of the vehicle.</returns>
         public int GetMileage()
         {
-            return Mileage;
+            return mileage;
         }
 
-        // Static method 
+        /// <summary>
+        /// Gets the total number of vehicles created.
+        /// </summary>
+        /// <returns>The total number of vehicles created.</returns>
         public static int GetTotalVehicles()
         {
             return _totalVehicles;
         }
     }
 
-   
-
+    /// <summary>
+    /// Derived class inheriting from Vehicle.
+    /// </summary>
     public class Car : Vehicle
     {
+        /// <summary>
+        /// Static field to store the total number of cars created.
+        /// </summary>
         private static int _totalCars;
 
-        public Car(float initialfuelLevel, int initialMileage, string model) : base(initialfuelLevel, initialMileage)
+        /// <summary>
+        /// Constructor to initialize the Car object with the specified initial fuel level, mileage, and model.
+        /// </summary>
+        /// <param name="initialFuelLevel">The initial fuel level of the car.</param>
+        /// <param name="initialMileage">The initial mileage of the car.</param>
+        /// <param name="model">The model of the car.</param>
+        public Car(float initialFuelLevel, int initialMileage, string model) : base(initialFuelLevel, initialMileage)
         {
             Model = model;
             _totalCars++;
         }
 
+        /// <summary>
+        /// Gets the model of the car.
+        /// </summary>
         public string Model { get; }
 
-        // Static method 
+        /// <summary>
+        /// Gets the total number of cars created.
+        /// </summary>
+        /// <returns>The total number of cars created.</returns>
         public static int GetTotalCars()
         {
             return _totalCars;
         }
 
+        /// <summary>
+        /// Displays the information of the car
+        /// </summary>
         public void DisplayCarInfo()
         {
             Console.WriteLine($"Car Model: {Model}");
-            Console.WriteLine($"Fuel Level: {GetfuelLevel()} liters"); // Accessing private method
-            Console.WriteLine($"Mileage: {Mileage} miles"); // Accessing protected field
+            Console.WriteLine($"Fuel Level: {GetFuelLevel()} liters"); // Accessing private method
+            Console.WriteLine($"Mileage: {mileage} miles"); // Accessing protected field
             Console.WriteLine($"Total Cars: {GetTotalCars()}"); // Accessing static method in the derived class
             Console.WriteLine($"Total Vehicles: {GetTotalVehicles()}"); // Accessing static method in the base class
         }
@@ -78,10 +106,10 @@ namespace ScopeAndAccesibility
             Console.WriteLine("Welcome to the Simple Demo!");
 
             // Creating a car
-            Car myCar = new Car(initialfuelLevel: 30.5f, initialMileage: 5000, model: "Sedan");
+            Car myCar = new Car(initialFuelLevel: 30.5f, initialMileage: 5000, model: "Sedan");
 
             // Creating another vehicle 
-            Vehicle anotherVehicle = new Vehicle(initialfuelLevel: 40.0f, initialMileage: 3000);
+            Vehicle anotherVehicle = new Vehicle(initialFuelLevel: 40.0f, initialMileage: 3000);
 
             myCar.DisplayCarInfo();
 
@@ -89,12 +117,3 @@ namespace ScopeAndAccesibility
         }
     }
 }
-
-
-
-
-
-
-
-
-
