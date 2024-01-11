@@ -1,5 +1,8 @@
 ﻿using Test_of_Basic_C__training;
 using System;
+/// <summary>
+/// class for managing Transactions
+/// </summary>
 public class TransactionManagement
 {
     private DatabaseManagement database;

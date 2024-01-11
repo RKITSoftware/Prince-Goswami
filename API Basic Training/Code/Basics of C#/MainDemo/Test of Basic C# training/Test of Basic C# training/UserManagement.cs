@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// Abstract class that defines common methods for user-related operations
+/// <summary>
+/// Abstract class that defines common methods for user-related operations
+/// </summary>
 public abstract class UserBase
 {
     #region Abstract Methods
@@ -26,7 +28,10 @@ public abstract class UserBase
     #endregion
 }
 
-// Concrete implementation of the abstract class
+
+/// <summary>
+/// Concrete implementation of the abstract class
+/// </summary>
 public class User : UserBase
 {
     #region Private Fields
@@ -127,7 +132,10 @@ public class User : UserBase
     #endregion
 }
 
-// Transaction class to store transaction details
+
+/// <summary>
+/// Transaction class to store transaction details
+/// </summary>
 public class Transaction
 {
     public DateTime Date { get; set; }
@@ -142,7 +150,10 @@ public class Transaction
     }
 }
 
-// Class to generate a unique card number
+
+/// <summary>
+/// Class to generate a unique card number
+/// </summary>
 public class CardNumberGenerator
 {
     private static Random random = new Random();
