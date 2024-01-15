@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassesAndOOP
 {
@@ -11,7 +7,12 @@ namespace ClassesAndOOP
     public abstract class Shape
     {
         public abstract double CalculateArea();
-    }
 
-    #endregion`
+        // Concrete method
+        public void DisplayDetails()
+        {
+            Console.WriteLine($"This is a {GetType().Name}.");
+        }
+    }
+    #endregion
 }

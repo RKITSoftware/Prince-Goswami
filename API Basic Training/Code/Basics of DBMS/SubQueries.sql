@@ -1,0 +1,26 @@
+-- Sub queries
+
+INSERT INTO BRC01(
+	C01F02,
+    C01F03,
+    C01F04
+)
+VALUES(
+	"MORBI",
+    "MB06",
+    6
+);
+
+SELECT * FROM BRC01
+
+DELETE FROM
+	BRC01
+WHERE
+	(
+		SELECT 
+			K01F02
+		FROM 
+			BNK01
+		WHERE
+			K01F02 = "HDFC"
+    )

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassesAndOOP
 {
@@ -10,7 +6,6 @@ namespace ClassesAndOOP
     {
         public static void EncapsulationExample()
         {
-
             Console.WriteLine("\nEncapsulation Example:");
 
             // Creating an instance of the encapsulated class
@@ -22,8 +17,8 @@ namespace ClassesAndOOP
 
             Console.WriteLine($"Name: {encapsulationDemo.GetName()}, Age: {encapsulationDemo.GetAge()}");
 
-
-            // Console.WriteLine(encapsulationDemo.age);
+            // Attempting to access private fields directly (will result in compilation error)
+            // Console.WriteLine(encapsulationDemo.name); // This line will not compile
 
             Console.WriteLine();
         }
@@ -34,7 +29,6 @@ namespace ClassesAndOOP
     /// </summary>
     public class EncapsulationDemo
     {
-        
         private string name; // Private field for name
         private int age;     // Private field for age
 
@@ -53,13 +47,16 @@ namespace ClassesAndOOP
         /// <param name="newName">The new name to set.</param>
         public void SetName(string newName)
         {
-            if( newName == null ) {
-                Console.WriteLine("Enter valid name..!!");
+            if (newName == null)
+            {
+                Console.WriteLine("Enter a valid name..!!");
             }
-            name = newName;
+            else
+            {
+                name = newName;
+            }
         }
 
-        
         /// <summary>
         /// Gets the age of the object.
         /// </summary>
@@ -85,5 +82,4 @@ namespace ClassesAndOOP
             }
         }
     }
-
 }
