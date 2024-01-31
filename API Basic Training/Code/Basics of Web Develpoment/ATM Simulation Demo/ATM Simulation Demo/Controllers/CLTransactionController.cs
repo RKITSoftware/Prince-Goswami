@@ -1,108 +1,80 @@
-﻿using System;
-using System.Web.Http;
-using ATM_Simulation_Demo.BAL;
+﻿using ATM_Simulation_Demo.BAL;
+using ATM_Simulation_Demo.BAL.ATM_Simulation_Demo.BAL.Interface;
+using ATM_Simulation_Demo.BAL.Interface;
+using ATM_Simulation_Demo.DAL.Pin;
 using ATM_Simulation_Demo.DAL.Transaction;
+using ATM_Simulation_Demo.DAL.Account;
 using ATM_Simulation_Demo.Models;
+using System;
+using System.Web.Http;
 
 namespace ATM_Simulation_Demo.Controllers
 {
     /// <summary>
-    /// API controller for managing user transactions.
+    /// API controller for managing transaction-related operations.
     /// </summary>
-    [RoutePrefix("api/transactions")]
+    //[RoutePrefix("api/transactions")]
     public class TransactionController : ApiController
     {
-        private readonly TransactionService _transactionService;
+        private readonly static IBLPinModule _pinModule = new PinModule();
+        private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
+        private readonly static IBLTransactionRepository _transactionRepo = new TransactionRepository();
+        private readonly IBLTransactionService _transactionService = new TransactionService(_accountRepo,_transactionRepo);
 
-        /// <summary>
-        /// Constructor for TransactionController.
-        /// </summary>
-        /// <param name="transactionService">Instance of TransactionService.</param>
-        public TransactionController(TransactionService transactionService)
-        {
-            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
-        }
 
         #region Actions
 
         /// <summary>
-        /// Add a transaction for a user.
+        /// Adds a transaction to the account's transaction history.
         /// </summary>
-        /// <param name="userId">User's ID.</param>
-        /// <param name="description">Transaction description.</param>
-        /// <param name="amount">Transaction amount.</param>
-        /// <returns>Added transaction information.</returns>
+        /// <param name="request">The request containing accountId and transaction details.</param>
+        /// <returns>Action result indicating the result of the operation.</returns>
         [HttpPost]
-        [Route("add")]
-        public IHttpActionResult AddTransaction(int userId, string description, decimal amount)
+        [Route("addTransaction")]
+        public IHttpActionResult AddTransaction([FromBody] AddTransactionRequest request)
         {
             try
             {
-                // Retrieve user based on userId
-                BLUserModel user = _transactionService.GetUserById(userId);
-
-                if (user != null)
-                {
-                    // Create a new transaction model
-                    var transaction = new BLTransactionModel
-                    {
-                        Description = description,
-                        Amount = amount,
-                        Date = DateTime.Now // You may want to use a service to get the current date
-                    };
-
-                    // Add transaction to user's history
-                    _transactionService.AddTransaction(user, transaction);
-                    return Ok(transaction);
-                }
-                else
-                {
-                    // Handle the case where the user is null (not found)
-                    return NotFound();
-                }
+                // Assuming AddTransactionRequest is a model containing accountId and transaction details
+                var account = _accountRepo.GetAccountByID(request.AccountId);
+                _transactionService.AddTransaction(account, request.Transaction);
+                return Ok("Transaction added successfully.");
             }
             catch (Exception ex)
             {
                 // Log or handle the exception as needed
-                return InternalServerError(ex);
+                return BadRequest("Internal Server Error");
             }
         }
 
         /// <summary>
-        /// View transaction history for a user.
+        /// View transaction history for a account.
         /// </summary>
-        /// <param name="userId">User's ID.</param>
-        /// <returns>List of transactions in the user's history.</returns>
+        /// <param name="accountId">The account's ID.</param>
+        /// <returns>List of transactions in the account's history.</returns>
         [HttpGet]
-        [Route("history/{userId}")]
-        public IHttpActionResult ViewTransactionHistory(int userId)
+        [Route("viewTransactionHistory/{accountId}")]
+        public IHttpActionResult ViewTransactionHistory(int accountId)
         {
             try
             {
-                // Retrieve user based on userId
-                BLUserModel user = _transactionService.GetUserById(userId);
-
-                if (user != null)
-                {
-                    // Get the transaction history for the user
-                    var transactionHistory = _transactionService.ViewTransactionHistory(user);
-                    return Ok(transactionHistory);
-                }
-                else
-                {
-                    // Handle the case where the user is null (not found)
-                    return NotFound();
-                }
+                var account = _accountRepo.GetAccountByID(accountId);
+                var transactions = _transactionService.ViewTransactionHistory(account);
+                return Ok(transactions);
             }
             catch (Exception ex)
             {
                 // Log or handle the exception as needed
-                return InternalServerError(ex);
+                return BadRequest("Internal Server Error");
             }
         }
 
-        // Add more actions as needed for your API
-
         #endregion
+    }
+
+    public class AddTransactionRequest
+    {
+        public int AccountId { get; set; }
+        public BLTransactionModel Transaction { get; set; }
     }
 }

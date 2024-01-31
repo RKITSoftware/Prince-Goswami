@@ -1,143 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using ATM_Simulation_Demo.BAL.Interface;
+using ATM_Simulation_Demo.Models;
 
 namespace ATM_Simulation_Demo.DAL.User
 {
-    using System;
-    using System.Collections.Generic;
-    using ATM_Simulation_Demo.BAL;
-    using ATM_Simulation_Demo.BAL.Interface;
-    using ATM_Simulation_Demo.Models;
-    using Microsoft.Extensions.Logging;
-
-    /// <summary>
-    /// Class for managing the user repository.
-    /// </summary>
     public class UserRepository : IBLUserRepository
     {
         private readonly List<BLUserModel> _usersDatabase;
-        private readonly IBLPinModule _pinModule;
-        private readonly ILogger<UserRepository> _logger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserRepository"/> class.
-        /// </summary>
-        /// <param name="pinModule">The PIN module.</param>
-        /// <param name="logger">The logger.</param>
-        public UserRepository(IBLPinModule pinModule, ILogger<UserRepository> logger)
+        public UserRepository()
         {
-            _usersDatabase = new List<BLUserModel>();
-            _pinModule = pinModule ?? throw new ArgumentNullException(nameof(pinModule));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            // Initialize or load user data
+            _usersDatabase = new List<BLUserModel>
+            {
+                new BLUserModel { UserId = 1, UserName = "User1", Password = "password1", Role = UserRole.User },
+                new BLUserModel { UserId = 2, UserName = "User2", Password = "password2", Role = UserRole.Admin },
+                // Add more users as needed
+            };
         }
 
-        /// <inheritdoc/>
-        public void AddUser(BLUserModel newUser)
+        public BLUserModel CreateUser(string userName, string password, UserRole role)
         {
-            if (newUser == null)
+            // Create a new user and add to the database
+            var newUser = new BLUserModel
             {
-                throw new ArgumentNullException(nameof(newUser), "User cannot be null.");
-            }
-
-            if (IsCardNumberExists(newUser.CardNumber))
-            {
-                throw new ArgumentException("User with the same card number already exists.", nameof(newUser));
-            }
+                UserId = _usersDatabase.Count + 1,
+                UserName = userName,
+                Password = password,
+                Role = role
+            };
 
             _usersDatabase.Add(newUser);
-            _logger.LogInformation("User added successfully.");
+
+            return newUser;
         }
 
-        /// <inheritdoc/>
-        public void UpdateUser(BLUserModel user)
+        public BLUserModel GetUser(int userId)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user), "User cannot be null.");
-            }
-
-            if (!IsCardNumberExists(user.CardNumber))
-            {
-                throw new ArgumentException("User can not be Found.", nameof(user));
-            }
-
-            _usersDatabase.Find(u => u.CardNumber == user.CardNumber).TransactionHistory = user.TransactionHistory; 
-            _logger.LogInformation("Transaction added successfully.");
+            // Retrieve user by userId
+            return _usersDatabase.FirstOrDefault(user => user.UserId == userId);
         }
 
-        /// <inheritdoc/>
-        public BLUserModel GetUser(string cardNumber, string pin)
-        {
-            if (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(pin))
-            {
-                throw new ArgumentException("Card number and PIN cannot be null or empty.");
-            }
-
-            return _usersDatabase.Find(u => u.CardNumber == cardNumber && _pinModule.VerifyPin(u, pin));
-        }
-
-        /// <inheritdoc/>
-        public BLUserModel GetUserByID(int id)
-        {
-            if (id <= 0)
-            {
-                throw new ArgumentException("Invalid");
-            }
-
-            return _usersDatabase.Find(u => u.id);
-        }
-
-        /// <inheritdoc/>
-        public bool IsCardNumberExists(string cardNumber)
-        {
-            if (string.IsNullOrEmpty(cardNumber))
-            {
-                throw new ArgumentException("Card number cannot be null or empty.", nameof(cardNumber));
-            }
-
-            return _usersDatabase.Exists(u => u.CardNumber == cardNumber);
-        }
-
-        /// <inheritdoc/>
-        public void ChangePin(BLUserModel user, string currentPin, string newPin)
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user), "User cannot be null.");
-            }
-
-            if (string.IsNullOrEmpty(currentPin) || string.IsNullOrEmpty(newPin))
-            {
-                throw new ArgumentException("Current and new PIN cannot be null or empty.");
-            }
-
-            _pinModule.ChangePin(user, currentPin, newPin);
-        }
-
-        /// <inheritdoc/>
-        public void UpdateMobileNumber(BLUserModel user, string newMobileNumber)
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user), "User cannot be null.");
-            }
-
-            if (string.IsNullOrEmpty(newMobileNumber))
-            {
-                throw new ArgumentException("New mobile number cannot be null or empty.", nameof(newMobileNumber));
-            }
-
-            user.MobileNumber = newMobileNumber;
-            _logger.LogInformation("Mobile number updated successfully.");
-        }
-     
-        /// <inheritdoc/>
         public List<BLUserModel> GetAllUsers()
         {
-            return _usersDatabase;
+            // Retrieve all users
+            return _usersDatabase.ToList();
+        }
+
+        public bool VerifyUserCredentials(string userName, string password)
+        {
+            // Verify user credentials
+            return _usersDatabase.Any(user => user.UserName == userName && user.Password == password);
+        }
+
+        public void ChangeRole(BLUserModel user, UserRole newRole)
+        {
+            // Change user role
+            user.Role = newRole;
+        }
+
+        public BLUserModel GetUserByUserName(string userName)
+        {
+            // Retrieve user by userName
+            return _usersDatabase.FirstOrDefault(user => user.UserName == userName);
+        }
+
+        public bool ChangePassword(BLUserModel user, string currentPassword, string newPassword)
+        {
+            // Change user password
+            if (user.Password == currentPassword)
+            {
+                user.Password = newPassword;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void DeleteUser(int userId)
+        {
+            // Delete user by userId
+            var user = _usersDatabase.FirstOrDefault(u => u.UserId == userId);
+            if (user != null)
+            {
+                _usersDatabase.Remove(user);
+            }
         }
     }
-
 }

@@ -1,122 +1,90 @@
-﻿using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.BAL;
-using ATM_Simulation_Demo.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using ATM_Simulation_Demo.BAL.Interface;
+using ATM_Simulation_Demo.DAL.Interface;
+using ATM_Simulation_Demo.Models;
 
-namespace ATM_Simulation_Demo.DAL.User
+namespace ATM_Simulation_Demo.BAL
 {
-    public class UserService
+    /// <summary>
+    /// Service class for managing user-related operations in the business logic layer.
+    /// </summary>
+    public class UserService : IBLUserService
     {
-        private readonly UserRepository _userRepository;
+        private readonly IBLUserRepository _userRepo;
         private readonly IBLPinModule _pinModule;
 
-        public UserService(UserRepository userRepository, IBLPinModule pinModule)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserService"/> class.
+        /// </summary>
+        /// <param name="userRepo">The user repository.</param>
+        /// <param name="pinModule">The PIN module.</param>
+        public UserService(IBLUserRepository userRepo, IBLPinModule pinModule)
         {
-            _userRepository = userRepository;
-            _pinModule = pinModule;
+            _userRepo = userRepo ?? throw new ArgumentNullException(nameof(userRepo));
+            _pinModule = pinModule ?? throw new ArgumentNullException(nameof(pinModule));
         }
 
-        public BLUserModel CreateUser(string name, string mobileNumber, DateTime DOB)
+        /// <inheritdoc/>
+        public BLUserModel GetUserByID(int userId)
         {
-            try
-            {
-                string PIN = DOBToPin(DOB);
-                BLUserModel newUser = new BLUserModel(name, PIN , mobileNumber);
-                _userRepository.AddUser(newUser);
-                return newUser;
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as needed
-                throw;
-            }
+            return _userRepo.GetUserByID(userId);
         }
 
+        /// <inheritdoc/>
         public BLUserModel GetUser(string cardNumber, string pin)
         {
-            try
-            {
-                return _userRepository.GetUser(cardNumber, pin);
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as needed
-                throw;
-            }
-        } 
-        
-        public BLUserModel GetUserByID(int id)
-        {
-            try
-            {
-                return _userRepository.GetUser(cardNumber, pin);
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as needed
-                throw;
-            }
+            return _userRepo.GetUser(cardNumber, pin);
         }
 
+        /// <inheritdoc/>
+        public BLUserModel CreateUser(string name, string mobileNumber, string dob)
+        {
+            // Logic to create a new user, generate PIN, etc.
+            // You may use _pinModule to generate a PIN and then call _userRepo.CreateUser
+
+            // For demonstration purposes, we'll just create a user with a fixed PIN.
+            string pin = "1234"; // Replace this with actual PIN generation logic
+
+            BLUserModel newUser = new BLUserModel
+            {
+                Name = name,
+                MobileNumber = mobileNumber,
+                DateOfBirth = dob,
+                PIN = pin,
+                // Set other properties as needed
+            };
+
+            _userRepo.CreateUser(newUser);
+            return newUser;
+        }
+
+        /// <inheritdoc/>
         public void ChangePin(BLUserModel user, string currentPin, string newPin)
         {
-            try
+            if (_pinModule.VerifyPin(user, currentPin))
             {
                 _pinModule.ChangePin(user, currentPin, newPin);
-                _userRepository.UpdateUser(user);
+                _userRepo.UpdateUser(user);
             }
-            catch (Exception ex)
+            else
             {
-                // Log or handle the exception as needed
-                throw;
+                throw new InvalidOperationException("Invalid PIN. Unable to change PIN.");
             }
         }
 
+        /// <inheritdoc/>
         public void UpdateMobileNumber(BLUserModel user, string newMobileNumber)
         {
-            try
-            {
-                user.MobileNumber = newMobileNumber;
-                _userRepository.UpdateUser(user);
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as needed
-                throw;
-            }
+            user.MobileNumber = newMobileNumber;
+            _userRepo.UpdateUser(user);
         }
 
-        public List<BLUserModel> GetAllUsers()
+        /// <inheritdoc/>
+        public List<BLUserModel> DisplayAllUsers()
         {
-            try
-            {
-                return _userRepository.GetAllUsers();
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as needed
-                throw;
-            }
+            return _userRepo.GetAllUsers();
         }
-
-        #region helper methods
-        /// <summary>
-        /// Generates 4 digit string from Date of Birth
-        /// </summary>
-        /// <param name="dateTime">Date of Birth in format of DateTime</param>
-        /// <returns></returns>
-        static string DOBToPin(DateTime dateTime)
-        {
-            // Get day and month as two-digit strings
-            string day = dateTime.Day.ToString("D2");
-            string month = dateTime.Month.ToString("D2");
-
-            // Concatenate and return DDMM
-            return day + month;
-        }
-        #endregion
     }
-
-
 }
+.0

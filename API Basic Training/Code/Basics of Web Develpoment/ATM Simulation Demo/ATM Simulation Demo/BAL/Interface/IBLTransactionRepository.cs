@@ -14,14 +14,14 @@ namespace ATM_Simulation_Demo.BAL
         /// </summary>
         /// <param name="user">The user to add the transaction for.</param>
         /// <param name="transaction">The transaction to add.</param>
-        void AddTransaction(BLUserModel user, BLTransactionModel transaction);
+        void AddTransaction(BLAccountModel user, BLTransactionModel transaction);
 
         /// <summary>
         /// View transaction history for a user.
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns>List of transactions in the user's history.</returns>
-        List<BLTransactionModel> ViewTransactionHistory(BLUserModel user);
+        List<BLTransactionModel> ViewTransactionHistory(BLAccountModel user);
     }
 
 }

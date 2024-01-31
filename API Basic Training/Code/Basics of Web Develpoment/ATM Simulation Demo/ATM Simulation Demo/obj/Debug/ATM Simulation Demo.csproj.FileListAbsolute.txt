@@ -1,5 +1,3 @@
-F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\obj\Debug\ATM Simulation Demo.csproj.AssemblyReference.cache
-F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\obj\Debug\ATM Simulation Demo.csproj.CoreCompileInputs.cache
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\ATM Simulation Demo.dll.config
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\ATM Simulation Demo.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\ATM Simulation Demo.pdb
@@ -56,7 +54,9 @@ F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simu
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Extensions.Logging.Abstractions.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Web.Infrastructure.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Newtonsoft.Json.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Swashbuckle.Core.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Buffers.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Memory.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Net.Http.Formatting.dll
@@ -65,6 +65,10 @@ F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simu
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Threading.Tasks.Extensions.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Web.Http.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Web.Http.WebHost.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Unity.Abstractions.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Unity.Container.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Unity.WebApi.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\WebActivatorEx.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Bcl.AsyncInterfaces.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Extensions.DependencyInjection.Abstractions.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Extensions.Logging.Abstractions.xml
@@ -73,11 +77,24 @@ F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simu
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Numerics.Vectors.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Runtime.CompilerServices.Unsafe.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Threading.Tasks.Extensions.xml
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Unity.Abstractions.pdb
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Unity.Container.pdb
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Newtonsoft.Json.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Net.Http.Formatting.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Web.Http.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Web.Http.WebHost.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\obj\Debug\ATM Simulation Demo.csproj.AssemblyReference.cache
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\obj\Debug\ATM Simulation Demo.csproj.CoreCompileInputs.cache
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\obj\Debug\ATM Simulation Demo.csproj.CopyComplete
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\obj\Debug\ATM Simulation Demo.dll
 F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\obj\Debug\ATM Simulation Demo.pdb
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Serilog.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Serilog.Sinks.Console.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Diagnostics.DiagnosticSource.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Serilog.xml
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Serilog.Sinks.Console.xml
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\System.Diagnostics.DiagnosticSource.xml
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.AspNet.WebApi.Versioning.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.AspNet.WebApi.Versioning.pdb
+F:\367 - Prince.G\git\API Basic Training\Code\Basics of Web Develpoment\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.AspNet.WebApi.Versioning.xml

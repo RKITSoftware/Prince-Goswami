@@ -1,19 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using ATM_Simulation_Demo.Models;
+using System;
 
-namespace ATM_Simulation_Demo.Models
+namespace ATM_Simulation_Demo
 {
+    /// <summary>
+    /// Enum representing user roles.
+    /// </summary>
+    public enum UserRole
+    {
+        User,
+        Admin,
+        DEO,
+        Customer,
+        // Add more roles as needed
+    }
 
     /// <summary>
-    /// Represents the model for a user in the system.
+    /// Model representing user details.
     /// </summary>
     public class BLUserModel
     {
-        #region Properties
-
-        public int Id { get; set; }
+        /// <summary>
+        /// Gets or sets the user's unique identifier.
+        /// </summary>
+        public int UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the user's name.
@@ -21,69 +31,24 @@ namespace ATM_Simulation_Demo.Models
         public string UserName { get; set; }
 
         /// <summary>
-        /// Gets or sets the card number associated with the user.
-        /// </summary>
-        public string CardNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the personal identification number (PIN) of the user.
-        /// </summary>
-        public string PIN { get; set; }
-
-        /// <summary>
-        /// Gets or sets the mobile number of the user.
+        /// Gets or sets the user's mobile number.
         /// </summary>
         public string MobileNumber { get; set; }
 
         /// <summary>
-        /// Gets or sets the balance in the user's account.
+        /// Gets or sets the user's date of birth.
         /// </summary>
-        public decimal Balance { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         /// <summary>
-        /// Gets or sets the transaction history of the user.
+        /// Gets or sets the user's role (e.g., Admin, DEO).
         /// </summary>
-        public List<BLTransactionModel> TransactionHistory { get; set; }
-        #endregion
-
-        #region Constructor
-        public  BLUserModel(string UserName, string PIN, string MobileNumber)
-        {
-            this.UserName = UserName;
-            this.CardNumber = CardNumberGenerator.GenerateCardNumber();
-            this.PIN = PIN;
-            this.MobileNumber = MobileNumber;
-            Balance = 0;
-            TransactionHistory = new List<BLTransactionModel>();
-        }
-        #endregion
-
-    }
-
-    #region Helper Class
-    /// <summary>
-    /// Class to generate a unique card number
-    /// </summary>
-    public class CardNumberGenerator
-    {
-        private static Random random = new Random();
+        public UserRole Role { get; set; }
 
         /// <summary>
-        /// Generates a unique card number.
+        /// Gets or sets the user's password.
         /// </summary>
-        /// <returns>The generated card number.</returns>
-        public static string GenerateCardNumber()
-        {
-            // You can customize the prefix based on your needs
-            string cardPrefix = "1234"; // Example prefix
+        public string Password { get; set; }
 
-            // Generate a unique identifier (you might want to use a more sophisticated approach)
-            int uniqueIdentifier = random.Next(100000, 999999);
-
-            // Concatenate the prefix and unique identifier to form the card number
-            string cardNumber = $"{cardPrefix}-{uniqueIdentifier:D6}";
-            return cardNumber;
-        }
     }
-    #endregion
 }

@@ -35,7 +35,7 @@ namespace ATM_Simulation_Demo.DAL.Transaction
         /// </summary>
         /// <param name="user">The user to add the transaction for.</param>
         /// <param name="transaction">The transaction to add.</param>
-        public void AddTransaction(BLUserModel user, BLTransactionModel transaction)
+        public void AddTransaction(BLAccountModel user, BLTransactionModel transaction)
         {
             user.TransactionHistory.Add(new BLTransactionModel
             {
@@ -52,7 +52,7 @@ namespace ATM_Simulation_Demo.DAL.Transaction
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns>List of transactions in the user's history.</returns>
-        public List<BLTransactionModel> ViewTransactionHistory(BLUserModel user)
+        public List<BLTransactionModel> ViewTransactionHistory(BLAccountModel user)
         {
             return user.TransactionHistory;
         }

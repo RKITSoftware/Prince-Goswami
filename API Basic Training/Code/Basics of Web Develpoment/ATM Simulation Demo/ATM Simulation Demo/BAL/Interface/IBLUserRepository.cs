@@ -1,65 +1,70 @@
-﻿using ATM_Simulation_Demo.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using ATM_Simulation_Demo.Models;
 
-namespace ATM_Simulation_Demo.BAL
+namespace ATM_Simulation_Demo.BAL.Interface
 {
-
     /// <summary>
-    /// Interface for managing the user repository.
+    /// Interface for managing user-related operations in the business logic layer.
     /// </summary>
     public interface IBLUserRepository
     {
         /// <summary>
-        /// Adds a new user to the repository.
+        /// Creates a new user.
         /// </summary>
-        /// <param name="newUser">The new user to add.</param>
-        void AddUser(BLUserModel newUser);
+        /// <param name="userName">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <param name="role">The role of the user.</param>
+        /// <returns>The newly created user.</returns>
+        BLUserModel CreateUser(string userName, string password, UserRole role);
 
         /// <summary>
-        /// Update current user with new user to the repository.
+        /// Retrieves a user by their user ID.
         /// </summary>
-        /// <param name="newUser">The new user to add.</param>
-        void UpdateUser(BLUserModel newUser);
+        /// <param name="userId">The ID of the user to retrieve.</param>
+        /// <returns>The user with the specified ID.</returns>
+        BLUserModel GetUser(int userId);
 
         /// <summary>
-        /// Retrieves a user based on card number and PIN.
-        /// </summary>
-        /// <param name="cardNumber">The card number of the user.</param>
-        /// <param name="pin">The PIN of the user.</param>
-        /// <returns>The user object if found, null otherwise.</returns>
-        BLUserModel GetUser(string cardNumber, string pin);
-
-        /// <summary>
-        /// Checks if a user with the given card number exists in the repository.
-        /// </summary>
-        /// <param name="cardNumber">The card number to check.</param>
-        /// <returns>True if the user exists, false otherwise.</returns>
-        bool IsCardNumberExists(string cardNumber);
-
-        /// <summary>
-        /// Changes the PIN for a user.
-        /// </summary>
-        /// <param name="user">The user to change the PIN for.</param>
-        /// <param name="currentPin">The current PIN of the user.</param>
-        /// <param name="newPin">The new PIN to set.</param>
-        void ChangePin(BLUserModel user, string currentPin, string newPin);
-
-        /// <summary>
-        /// Updates the mobile number for a user.
-        /// </summary>
-        /// <param name="user">The user to update the mobile number for.</param>
-        /// <param name="newMobileNumber">The new mobile number to set.</param>
-        void UpdateMobileNumber(BLUserModel user, string newMobileNumber);
-
-        /// <summary>
-        /// Retrieves a list of all users in the repository.
+        /// Retrieves all users.
         /// </summary>
         /// <returns>A list of all users.</returns>
         List<BLUserModel> GetAllUsers();
-    }
 
+        /// <summary>
+        /// Verifies the credentials of a user.
+        /// </summary>
+        /// <param name="userName">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>True if the credentials are valid, otherwise false.</returns>
+        bool VerifyUserCredentials(string userName, string password);
+
+        /// <summary>
+        /// Changes the role of a user.
+        /// </summary>
+        /// <param name="user">The user whose role will be changed.</param>
+        /// <param name="newRole">The new role for the user.</param>
+        void ChangeRole(BLUserModel user, UserRole newRole);
+
+        /// <summary>
+        /// Retrieves a user by their username.
+        /// </summary>
+        /// <param name="userName">The username of the user to retrieve.</param>
+        /// <returns>The user with the specified username.</returns>
+        BLUserModel GetUserByUserName(string userName);
+
+        /// <summary>
+        /// Changes the password of a user.
+        /// </summary>
+        /// <param name="user">The user whose password will be changed.</param>
+        /// <param name="currentPassword">The current password of the user.</param>
+        /// <param name="newPassword">The new password for the user.</param>
+        /// <returns>True if the password change was successful, otherwise false.</returns>
+        bool ChangePassword(BLUserModel user, string currentPassword, string newPassword);
+
+        /// <summary>
+        /// Deletes a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user to delete.</param>
+        void DeleteUser(int userId);
+    }
 }

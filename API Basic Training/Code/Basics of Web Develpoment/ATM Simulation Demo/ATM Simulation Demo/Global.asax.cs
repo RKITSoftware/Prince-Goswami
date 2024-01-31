@@ -1,3 +1,4 @@
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,14 @@ namespace ATM_Simulation_Demo
     {
         protected void Application_Start()
         {
+           // SwaggerConfig.Register();
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            //q1UnityConfig.RegisterComponents();
+
+            Log.Logger = new LoggerConfiguration()
+           .WriteTo.Console()
+           .CreateLogger();
+
         }
     }
 }
