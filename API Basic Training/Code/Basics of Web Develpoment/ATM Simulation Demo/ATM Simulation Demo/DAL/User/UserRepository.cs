@@ -15,8 +15,10 @@ namespace ATM_Simulation_Demo.DAL.User
             // Initialize or load user data
             _usersDatabase = new List<BLUserModel>
             {
-                new BLUserModel { UserId = 1, UserName = "User1", Password = "password1", Role = UserRole.User },
-                new BLUserModel { UserId = 2, UserName = "User2", Password = "password2", Role = UserRole.Admin },
+                new BLUserModel { UserId = 1, UserName = "User1", Password = "password", Role = UserRole.User },
+                new BLUserModel { UserId = 2, UserName = "User2", Password = "password", Role = UserRole.Admin },
+                new BLUserModel { UserId = 3, UserName = "User3", Password = "password", Role = UserRole.DEO},
+                new BLUserModel { UserId = 4, UserName = "User4", Password = "password", Role = UserRole.Customer},
                 // Add more users as needed
             };
         }

@@ -20,6 +20,7 @@ namespace ATM_Simulation_Demo
            .WriteTo.Console()
            .CreateLogger();
 
+            
         }
     }
 }

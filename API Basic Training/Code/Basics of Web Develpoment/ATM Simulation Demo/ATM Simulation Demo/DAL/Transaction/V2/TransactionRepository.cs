@@ -53,7 +53,8 @@ namespace ATM_Simulation_Demo.DAL.Transaction.V2
                     TransactionId = _transactionDatabase.Count + 1, // Generating a unique transaction ID
                     Date = DateTime.Now,
                     Description = transaction.Description,
-                    Amount = transaction.Amount
+                    Amount = transaction.Amount,
+                    Type = transaction.Type
                 });
             }
             return account;
@@ -73,11 +74,11 @@ namespace ATM_Simulation_Demo.DAL.Transaction.V2
 
         private bool VerifyTransaction(decimal balance, TransactionType transactionType, decimal amount)
         {
-            if (transactionType.ToString() == "Debit" && balance - amount >= 10)
+            if (transactionType.ToString() == "Debit" && balance - amount <= 10)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         #endregion
     }

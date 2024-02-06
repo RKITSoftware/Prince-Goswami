@@ -15,7 +15,6 @@ namespace ATM_Simulation_Demo.Controllers
     /// </summary>
 
 
-    //[EnableCors("*", "*", "*")]
     [RoutePrefix("api/users")]
     public class UserController : ApiController
     {

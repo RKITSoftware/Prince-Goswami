@@ -41,6 +41,9 @@ namespace ATM_Simulation_Demo
 
                         c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
 
+                        c.UseFullTypeNameInSchemaIds();
+
+
                         // If you want the output Swagger docs to be indented properly, enable the "PrettyPrint" option.
                         //
                         //c.PrettyPrint();

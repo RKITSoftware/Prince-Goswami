@@ -15,8 +15,7 @@ namespace ATM_Simulation_Demo.Controllers
     /// API controller for managing account-related operations.
     /// </summary>
     //[ApiVersion("1.0")]
-    [EnableCors("*", "*", "*")]
-    [RoutePrefix("api/accounts")]
+    [RoutePrefix("api/V2/accounts")]
     public class AccountV2Controller : ApiController
     {
         #region fields
@@ -138,7 +137,7 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
-        public List<BLAccountModel> fetch()
+        private List<BLAccountModel> fetch()
         {
             return _accountService.GetAllAccounts();
         }

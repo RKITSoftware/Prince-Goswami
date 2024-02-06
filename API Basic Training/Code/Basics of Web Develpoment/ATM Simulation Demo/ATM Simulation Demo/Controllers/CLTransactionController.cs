@@ -14,8 +14,7 @@ namespace ATM_Simulation_Demo.Controllers
     /// <summary>
     /// API controller for managing transaction-related operations.
     /// </summary>
-    [EnableCors(origins: "*", headers: "*", methods: "*")] // Enable CORS 
-    [RoutePrefix("api/transactions")]
+    [RoutePrefix("api/V1/transactions")]
     public class TransactionController : ApiController
     {
         #region fields
