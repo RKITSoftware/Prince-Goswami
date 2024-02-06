@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ATM_Simulation_Demo.Models
+namespace ATM_Simulation_Demo.Models.V1
 {
 
     /// <summary>
     /// Represents the model for a user in the system.
     /// </summary>
+    
     public class BLAccountModel
     {
         #region Properties

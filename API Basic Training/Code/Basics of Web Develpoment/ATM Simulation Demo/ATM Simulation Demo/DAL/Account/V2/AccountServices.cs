@@ -1,10 +1,10 @@
 ﻿using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.BAL;
-using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.V2;
 using System;
 using System.Collections.Generic;
+using ATM_Simulation_Demo.BAL.Interface.V2;
 
-namespace ATM_Simulation_Demo.DAL.Account
+namespace ATM_Simulation_Demo.DAL.Account.V2
 {
     public class AccountService : IBLAccountService
     {

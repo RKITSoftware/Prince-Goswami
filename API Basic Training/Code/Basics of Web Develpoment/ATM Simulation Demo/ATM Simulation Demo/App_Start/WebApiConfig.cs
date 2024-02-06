@@ -12,7 +12,7 @@ namespace ATM_Simulation_Demo
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            //config.EnableCors();
+            config.EnableCors();
             // Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -21,6 +21,18 @@ namespace ATM_Simulation_Demo
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                name: "ATMApi",
+                routeTemplate: "api/V1/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional , Controllers = ("CLAccountController", "CLTransactionController")  }
+            );
+            config.Routes.MapHttpRoute(
+                name: "ATMApiV2",
+                routeTemplate: "api/V2/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional , Controllers = ("CLAccountV2Controller", "CLTransactionV2Controller") }
+            );
+           
         }
     }
 }

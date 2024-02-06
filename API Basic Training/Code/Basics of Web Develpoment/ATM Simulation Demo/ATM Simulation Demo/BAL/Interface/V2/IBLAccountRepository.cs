@@ -1,11 +1,7 @@
-﻿using ATM_Simulation_Demo.Models;
-using System;
+﻿using ATM_Simulation_Demo.Models.V2;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ATM_Simulation_Demo.BAL
+namespace ATM_Simulation_Demo.BAL.Interface.V2
 {
 
     /// <summary>

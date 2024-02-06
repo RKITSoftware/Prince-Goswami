@@ -1,10 +1,13 @@
-﻿using ATM_Simulation_Demo.DAL.Pin;
+﻿
+using ATM_Simulation_Demo.DAL.Pin;
 using System;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Collections.Generic;
-using ATM_Simulation_Demo.BAL.Interface.V1;
-using ATM_Simulation_Demo.Models.V1;
-using ATM_Simulation_Demo.DAL.Account.V1;
+using ATM_Simulation_Demo.BAL.Interface.V2;
+using ATM_Simulation_Demo.DAL.Account.v2;
+using ATM_Simulation_Demo.DAL.Account.V2;
+using ATM_Simulation_Demo.Models.V2;
 
 namespace ATM_Simulation_Demo.Controllers
 {
@@ -12,16 +15,16 @@ namespace ATM_Simulation_Demo.Controllers
     /// API controller for managing account-related operations.
     /// </summary>
     //[ApiVersion("1.0")]
-    //[EnableCors("*", "*", "*")]
+    [EnableCors("*", "*", "*")]
     [RoutePrefix("api/accounts")]
-    public class AccountController : ApiController
+    public class AccountV2Controller : ApiController
     {
         #region fields
-        private readonly static IBLPinModule _pinModule = new PinModule();
+        private readonly static IBLPinModule _pinModule = new PinModuleV2();
         private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
         private readonly IBLAccountService _accountService = new AccountService(_accountRepo, _pinModule);
 
-   
+
         // Cache manager instance for caching responses
         private static CacheManager cacheManager = new CacheManager();
 
@@ -148,26 +151,9 @@ namespace ATM_Simulation_Demo.Controllers
         {
             return Ok(cacheManager.GetCachedResponse(Request, fetch));
         }
-        
+
 
         #endregion
     }
-
-    #region Request Model
-    public class ChangePinRequest
-    {
-        public int accountId { get; set; }
-        public string currentPin { get; set; }
-        public string newPin { get; set; }
-
-    };
-
-    public class UpdateMobileNumberRequest
-    {
-        public int accountId { get; set; }
-
-        public string newMobileNumber { get; set; }
-    }
-    #endregion
 }
 

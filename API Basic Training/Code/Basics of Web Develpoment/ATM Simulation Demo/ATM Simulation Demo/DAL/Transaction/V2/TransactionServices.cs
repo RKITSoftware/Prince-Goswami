@@ -1,42 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using ATM_Simulation_Demo.BAL;
-using ATM_Simulation_Demo.Models;
-using ATM_Simulation_Demo.BAL.ATM_Simulation_Demo.BAL.Interface;
+using ATM_Simulation_Demo.Models.V2;
+using ATM_Simulation_Demo.BAL.Interface.V2;
 
 namespace ATM_Simulation_Demo.DAL.Transaction.V2
 {
     public class TransactionService : IBLTransactionService
     {
-        private readonly IBLAccountRepository _userRepository;
+        private readonly IBLAccountRepository _accountRepository;
         private readonly IBLTransactionRepository _transactionRepository;
 
-        public TransactionService(IBLAccountRepository userRepository, IBLTransactionRepository transactionRepository)
+        public TransactionService(IBLAccountRepository accountRepository, IBLTransactionRepository transactionRepository)
         {
-            _userRepository = userRepository;
+            _accountRepository = accountRepository;
             _transactionRepository = transactionRepository;
         }
 
         /// <summary>
-        /// Adds a transaction to the user's transaction history.
+        /// Adds a transaction to the account's transaction history.
         /// </summary>
-        /// <param name="user">The user to add the transaction for.</param>
+        /// <param name="account">The account to add the transaction for.</param>
         /// <param name="transaction">The transaction to add.</param>
-        public void AddTransaction(BLAccountModel user, BLTransactionV2Model transaction)
+        public decimal AddTransaction(int accountId, BLTransactionModel transaction)
         {
             try
             {
-                if (user != null)
+                if (accountId > 0)
                 {
-                    if (VerifyTransaction(user.Balance, transaction.Type, transaction.Amount))
-                    {
-                        user.TransactionHistory.Add(transaction);
-                        _userRepository.UpdateAccount(user);
-                    }
+                    var account = _transactionRepository.AddTransaction(_accountRepository.GetAccountByID(accountId), transaction);
+                    _accountRepository.UpdateAccount(account);
+                    return account.Balance;
                 }
                 else
                 {
-                    // Handle the case where the user is null (not found)
+                    // Handle the case where the account is null (not found)
                     throw new Exception("User not found");
                 }
             }
@@ -48,15 +45,15 @@ namespace ATM_Simulation_Demo.DAL.Transaction.V2
         }
 
         /// <summary>
-        /// View transaction history for a user.
+        /// View transaction history for a account.
         /// </summary>
-        /// <param name="user">The user.</param>
-        /// <returns>List of transactions in the user's history.</returns>
-        public List<BLTransactionModel> ViewTransactionHistory(BLAccountModel user)
+        /// <param name="account">The account.</param>
+        /// <returns>List of transactions in the account's history.</returns>
+        public List<BLTransactionModel> ViewTransactionHistory(int accountId)
         {
             try
             {
-                return user?.TransactionHistory ?? new List<BLTransactionModel>();
+                return _accountRepository.GetAccountByID(accountId)?.TransactionHistory ?? new List<BLTransactionModel>();
             }
             catch (Exception ex)
             {
@@ -65,14 +62,6 @@ namespace ATM_Simulation_Demo.DAL.Transaction.V2
             }
         }
 
-        private bool VerifyTransaction(decimal balance, TransactionType transactionType, decimal amount)
-        {
-            if(transactionType.ToString() == "Debit" && balance-amount >= 10)
-            {
-                return true;
-            }
-            return false;
-        }
     }
 
 }

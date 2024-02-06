@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.V1;
 
-namespace ATM_Simulation_Demo.BAL.Interface
+namespace ATM_Simulation_Demo.BAL.Interface.V1
 {
     /// <summary>
     /// Interface for account-related operations in the ATM simulation.

@@ -208,17 +208,27 @@
     <Compile Include="BAL\Auth\CustomAuthenticationFilter.cs" />
     <Compile Include="BAL\Auth\CustomAuthorizationFilter.cs" />
     <Compile Include="BAL\Caching\CacheManager.cs" />
-    <Compile Include="BAL\Interface\IBLTransactionService.cs" />
-    <Compile Include="BAL\Interface\IBLAccountService.cs" />
-    <Compile Include="BAL\Interface\IBLAccountRepository.cs" />
-    <Compile Include="BAL\Interface\IBLPinModule.cs" />
-    <Compile Include="BAL\Interface\IBLTransactionRepository.cs" />
+    <Compile Include="BAL\Interface\V2\IBLPinModule.cs" />
+    <Compile Include="BAL\Interface\V1\IBLTransactionService.cs" />
+    <Compile Include="BAL\Interface\V1\IBLAccountService.cs" />
+    <Compile Include="BAL\Interface\V1\IBLAccountRepository.cs" />
+    <Compile Include="BAL\Interface\V1\IBLPinModule.cs" />
+    <Compile Include="BAL\Interface\V1\IBLTransactionRepository.cs" />
     <Compile Include="BAL\Interface\IBLUserRepository.cs" />
     <Compile Include="BAL\Interface\IBLUserService.cs" />
     <Compile Include="AddAuthorizationHeaderParameterOperationFilter.cs" />
+    <Compile Include="BAL\Interface\V2\IBLAccountRepository.cs" />
+    <Compile Include="BAL\Interface\V2\IBLAccountService.cs" />
+    <Compile Include="BAL\Interface\V2\IBLTransactionRepository.cs" />
+    <Compile Include="BAL\Interface\V2\IBLTransactionService.cs" />
+    <Compile Include="Controllers\CLAccountV2Controller.cs" />
+    <Compile Include="Controllers\CLTransactionV2Controller.cs" />
     <Compile Include="Controllers\CLTransactionController.cs" />
     <Compile Include="Controllers\CLAccountController.cs" />
     <Compile Include="Controllers\CLUserController.cs" />
+    <Compile Include="DAL\Account\V2\AccountRepository.cs" />
+    <Compile Include="DAL\Account\V2\AccountServices.cs" />
+    <Compile Include="DAL\Pin\PinModuleV2.cs" />
     <Compile Include="DAL\Transaction\V2\TransactionRepository.cs" />
     <Compile Include="DAL\Transaction\V2\TransactionServices.cs" />
     <Compile Include="DAL\User\UserRepository.cs" />
@@ -226,16 +236,16 @@
     <Compile Include="DAL\Pin\PinModule.cs" />
     <Compile Include="DAL\Transaction\V1\TransactionRepository.cs" />
     <Compile Include="DAL\Transaction\V1\TransactionServices.cs" />
-    <Compile Include="DAL\Account\AccountRepository.cs" />
-    <Compile Include="DAL\Account\AccountServices.cs" />
+    <Compile Include="DAL\Account\V1\AccountRepository.cs" />
+    <Compile Include="DAL\Account\V1\AccountServices.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\BLAccountV2Model.cs" />
-    <Compile Include="Models\BLTransactionV2Model.cs" />
-    <Compile Include="Models\BLTransactionModel.cs" />
+    <Compile Include="Models\V2\BLAccountModel.cs" />
+    <Compile Include="Models\V2\BLTransactionModel.cs" />
+    <Compile Include="Models\V1\BLTransactionModel.cs" />
     <Compile Include="Models\BLUserModel.cs" />
-    <Compile Include="Models\BLAccountModel.cs" />
+    <Compile Include="Models\V1\BLAccountModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TokenManager.cs" />
   </ItemGroup>

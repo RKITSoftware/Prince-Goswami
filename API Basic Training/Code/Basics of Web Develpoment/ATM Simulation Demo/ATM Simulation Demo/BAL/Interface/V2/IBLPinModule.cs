@@ -1,11 +1,6 @@
-﻿using ATM_Simulation_Demo.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ATM_Simulation_Demo.Models.V2;
 
-namespace ATM_Simulation_Demo.BAL.Interface
+namespace ATM_Simulation_Demo.BAL.Interface.V2
 {
     /// <summary>
     /// Interface for managing PINs for users.

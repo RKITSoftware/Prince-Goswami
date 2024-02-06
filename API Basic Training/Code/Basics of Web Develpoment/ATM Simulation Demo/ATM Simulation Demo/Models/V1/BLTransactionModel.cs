@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.Web.Http;
+using System;
 
-namespace ATM_Simulation_Demo.Models
+namespace ATM_Simulation_Demo.Models.V1
 {
 
     /// <summary>

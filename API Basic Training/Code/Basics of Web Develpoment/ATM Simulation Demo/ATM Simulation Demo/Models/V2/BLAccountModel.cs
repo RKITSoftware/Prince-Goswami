@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Microsoft.Web.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ATM_Simulation_Demo.Models
+namespace ATM_Simulation_Demo.Models.V2
 {
 
     /// <summary>
     /// Represents the model for a user in the system.
     /// </summary>
-    public class BLAccountV2Model
+    public class BLAccountModel
     {
         #region Properties
 
@@ -46,7 +47,7 @@ namespace ATM_Simulation_Demo.Models
         /// <summary>
         /// Gets or sets the transaction history of the user.
         /// </summary>
-        public List<BLTransactionV2Model> TransactionHistory { get; set; }
+        public List<BLTransactionModel> TransactionHistory { get; set; }
         #endregion
 
         #region Constructor

@@ -1,25 +1,24 @@
 ﻿
 using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.BAL.Interface.V1;
-using ATM_Simulation_Demo.DAL.Account.V1;
 using ATM_Simulation_Demo.DAL.Pin;
-using ATM_Simulation_Demo.DAL.Transaction.V1;
-using ATM_Simulation_Demo.Models.V1;
 using System;
 using System.Web.Http;
-using System.Web.Http.Cors;
+using ATM_Simulation_Demo.BAL.Interface.V2;
+using ATM_Simulation_Demo.DAL.Account.v2;
+using ATM_Simulation_Demo.DAL.Transaction.V2;
+using ATM_Simulation_Demo.Models.V2;
 
 namespace ATM_Simulation_Demo.Controllers
 {
     /// <summary>
     /// API controller for managing transaction-related operations.
     /// </summary>
-    [EnableCors(origins: "*", headers: "*", methods: "*")] // Enable CORS 
+    //[EnableCors(origins: "*", headers: "*", methods: "*")] // Enable CORS 
     [RoutePrefix("api/transactions")]
-    public class TransactionController : ApiController
+    public class TransactionV2Controller : ApiController
     {
         #region fields
-        private readonly static IBLPinModule _pinModule = new PinModule();
+        private readonly static BAL.Interface.V2.IBLPinModule _pinModule = new PinModuleV2();
         private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
         private readonly static IBLTransactionRepository _transactionRepo = new TransactionRepository();
         private readonly IBLTransactionService _transactionService = new TransactionService(_accountRepo,_transactionRepo);
@@ -36,13 +35,12 @@ namespace ATM_Simulation_Demo.Controllers
         [CustomAuthorizationFilter(Roles = "DEO,User")]
         [HttpPost]
         [Route("addTransaction")]
-        public IHttpActionResult AddTransaction(AddTransactionRequest request)
+        public IHttpActionResult AddTransaction(AddTransactionRequestV2 request)
         {
             try
             {
                 // Assuming AddTransactionRequest is a model containing accountId and transaction details
-                var account = _accountRepo.GetAccountByID(request.AccountId);
-                _transactionService.AddTransaction(account, request.Transaction);
+                _transactionService.AddTransaction(request.AccountId, request.Transaction);
                 return Ok("Transaction added successfully.");
             }
             catch (Exception ex)
@@ -65,8 +63,7 @@ namespace ATM_Simulation_Demo.Controllers
         {
             try
             {
-                var account = _accountRepo.GetAccountByID(accountId);
-                var transactions = _transactionService.ViewTransactionHistory(account);
+                var transactions = _transactionService.ViewTransactionHistory(accountId);
                 return Ok(transactions);
             }
             catch (Exception ex)
@@ -79,7 +76,7 @@ namespace ATM_Simulation_Demo.Controllers
         #endregion
     }
 
-    public class AddTransactionRequest
+    public class AddTransactionRequestV2
     {
         public int AccountId { get; set; }
         public BLTransactionModel Transaction { get; set; }

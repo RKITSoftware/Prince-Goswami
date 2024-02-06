@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.Web.Http;
+using System;
 
-namespace ATM_Simulation_Demo.Models
+namespace ATM_Simulation_Demo.Models.V2
 {
     /// <summary>
     /// Enum representing transaction types.
@@ -15,7 +16,8 @@ namespace ATM_Simulation_Demo.Models
     /// <summary>
     /// Represents a transaction in the system.
     /// </summary>
-    public class BLTransactionV2Model
+
+    public class BLTransactionModel
     {
         /// <summary>
         /// Gets or sets the unique identifier for the transaction.

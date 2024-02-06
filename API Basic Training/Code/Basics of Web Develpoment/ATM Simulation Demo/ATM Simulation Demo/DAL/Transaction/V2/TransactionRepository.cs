@@ -1,5 +1,5 @@
-﻿using ATM_Simulation_Demo.BAL;
-using ATM_Simulation_Demo.Models;
+﻿using ATM_Simulation_Demo.BAL.Interface.V2;
+using ATM_Simulation_Demo.Models.V2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,32 +31,54 @@ namespace ATM_Simulation_Demo.DAL.Transaction.V2
 
         /// <inheritdoc />
         /// <summary>
-        /// Adds a transaction to the user's transaction history.
+        /// Adds a transaction to the account's transaction history.
         /// </summary>
-        /// <param name="user">The user to add the transaction for.</param>
+        /// <param name="account">The account to add the transaction for.</param>
         /// <param name="transaction">The transaction to add.</param>
-        public void AddTransaction(BLAccountModel user, BLTransactionModel transaction)
+        public BLAccountModel AddTransaction(BLAccountModel account, BLTransactionModel transaction)
         {
-            user.TransactionHistory.Add(new BLTransactionModel
+            if (VerifyTransaction(account.Balance, transaction.Type, transaction.Amount))
             {
-                TransactionId = _transactionDatabase.Count + 1, // Generating a unique transaction ID
-                Date = DateTime.Now,
-                Description = transaction.Description,
-                Amount = transaction.Amount
-            });
+                //update balance
+                if(transaction.Type.ToString() == "Debit")
+                {
+                    transaction.Amount *= -1;
+                }
+
+                account.Balance += transaction.Amount;
+
+                //add transaction
+                account.TransactionHistory.Add(new BLTransactionModel
+                {
+                    TransactionId = _transactionDatabase.Count + 1, // Generating a unique transaction ID
+                    Date = DateTime.Now,
+                    Description = transaction.Description,
+                    Amount = transaction.Amount
+                });
+            }
+            return account;
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// View transaction history for a user.
+        /// View transaction history for a account.
         /// </summary>
-        /// <param name="user">The user.</param>
-        /// <returns>List of transactions in the user's history.</returns>
-        public List<BLTransactionModel> ViewTransactionHistory(BLAccountModel user)
+        /// <param name="account">The account.</param>
+        /// <returns>List of transactions in the account's history.</returns>
+        public List<BLTransactionModel> ViewTransactionHistory(BLAccountModel account)
         {
-            return user.TransactionHistory;
+            return account.TransactionHistory;
         }
 
+
+        private bool VerifyTransaction(decimal balance, TransactionType transactionType, decimal amount)
+        {
+            if (transactionType.ToString() == "Debit" && balance - amount >= 10)
+            {
+                return true;
+            }
+            return false;
+        }
         #endregion
     }
 

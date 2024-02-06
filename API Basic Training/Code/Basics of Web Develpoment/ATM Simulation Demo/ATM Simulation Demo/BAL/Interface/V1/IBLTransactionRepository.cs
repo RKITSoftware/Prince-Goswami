@@ -1,8 +1,8 @@
-﻿using ATM_Simulation_Demo.Models;
+﻿using ATM_Simulation_Demo.Models.V1;
 using System.Collections.Generic;
 
 
-namespace ATM_Simulation_Demo.BAL
+namespace ATM_Simulation_Demo.BAL.Interface.V1
 {
     /// <summary>
     /// Interface defining methods for transaction data access.

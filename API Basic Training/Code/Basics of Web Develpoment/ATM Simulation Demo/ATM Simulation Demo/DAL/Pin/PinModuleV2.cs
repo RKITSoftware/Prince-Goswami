@@ -1,13 +1,13 @@
-﻿using ATM_Simulation_Demo.BAL.Interface.V1;
-using ATM_Simulation_Demo.Models.V1;
+﻿using ATM_Simulation_Demo.Models.V2;
 using System;
+using IBLPinModule = ATM_Simulation_Demo.BAL.Interface.V2.IBLPinModule;
 
 namespace ATM_Simulation_Demo.DAL.Pin
 {
     /// <summary>
     /// Implementation of the PIN module interface.
     /// </summary>
-    public class PinModule : IBLPinModule
+    public class PinModuleV2 : IBLPinModule
     {
         #region Public Methods
 

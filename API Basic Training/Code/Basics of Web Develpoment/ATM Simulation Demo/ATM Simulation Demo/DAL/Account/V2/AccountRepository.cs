@@ -1,19 +1,20 @@
 ﻿
-namespace ATM_Simulation_Demo.DAL.Account
+using System;
+using System.Collections.Generic;
+using ATM_Simulation_Demo.BAL.Interface;
+using ATM_Simulation_Demo.BAL.Interface.V2;
+using ATM_Simulation_Demo.Models.V2;
+
+namespace ATM_Simulation_Demo.DAL.Account.v2
 {
-    using System;
-    using System.Collections.Generic;
-    using ATM_Simulation_Demo.BAL;
-    using ATM_Simulation_Demo.BAL.Interface;
-    using ATM_Simulation_Demo.Models;
-    using Microsoft.Extensions.Logging;
+
 
     /// <summary>
     /// Class for managing the account repository.
     /// </summary>
     public class AccountRepository : IBLAccountRepository
     {
-        private static List<BLAccountModel> _accountsDatabase =  new List<BLAccountModel>();
+        private static List<BLAccountModel> _accountsDatabase = new List<BLAccountModel>();
         public readonly IBLPinModule _pinModule;
         //private readonly ILogger<AccountRepository> _logger;
         //private IBLPinModule pinModule;
@@ -67,7 +68,7 @@ namespace ATM_Simulation_Demo.DAL.Account
                 throw new ArgumentException("Account can not be Found.", nameof(account));
             }
 
-            _accountsDatabase.Find(u => u.CardNumber == account.CardNumber).TransactionHistory = account.TransactionHistory; 
+            _accountsDatabase.Find(u => u.CardNumber == account.CardNumber).TransactionHistory = account.TransactionHistory;
             //_logger.LogInformation("Transaction added successfully.");
         }
 
@@ -136,7 +137,7 @@ namespace ATM_Simulation_Demo.DAL.Account
             account.MobileNumber = newMobileNumber;
             //_logger.LogInformation("Mobile number updated successfully.");
         }
-     
+
         /// <inheritdoc/>
         public List<BLAccountModel> GetAllAccounts()
         {
