@@ -11,11 +11,9 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// <summary>
         /// Creates a new user.
         /// </summary>
-        /// <param name="userName">The username of the user.</param>
-        /// <param name="password">The password of the user.</param>
-        /// <param name="role">The role of the user.</param>
+        /// <param name="newUser">The user to be created.</param>
         /// <returns>The newly created user.</returns>
-        BLUserModel CreateUser(string userName, string password, UserRole role);
+        BLUserModel CreateUser(BLUserModel newUser);
 
         /// <summary>
         /// Retrieves a user by their user ID.
@@ -23,6 +21,13 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// <param name="userId">The ID of the user to retrieve.</param>
         /// <returns>The user with the specified ID.</returns>
         BLUserModel GetUser(int userId);
+        
+        /// <summary>
+        /// Retrieves a user by their user ID.
+        /// </summary>
+        /// <param name="user">The user to update.</param>
+        /// <returns>The updated user.</returns>
+        BLUserModel UpdateUser(BLUserModel user);
 
         /// <summary>
         /// Retrieves all users.
@@ -38,28 +43,30 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// <returns>True if the credentials are valid, otherwise false.</returns>
         bool VerifyUserCredentials(string userName, string password);
 
-        /// <summary>
-        /// Changes the role of a user.
-        /// </summary>
-        /// <param name="user">The user whose role will be changed.</param>
-        /// <param name="newRole">The new role for the user.</param>
-        void ChangeRole(BLUserModel user, UserRole newRole);
 
         /// <summary>
-        /// Retrieves a user by their username.
+        /// Retrieves a user by their credentials.
         /// </summary>
         /// <param name="userName">The username of the user to retrieve.</param>
+        /// <param name="password">The password of the user to retrieve.</param>
         /// <returns>The user with the specified username.</returns>
-        BLUserModel GetUserByUserName(string userName);
+        BLUserModel GetUserByCredentials(string userName, string password);
 
-        /// <summary>
-        /// Changes the password of a user.
-        /// </summary>
-        /// <param name="user">The user whose password will be changed.</param>
-        /// <param name="currentPassword">The current password of the user.</param>
-        /// <param name="newPassword">The new password for the user.</param>
-        /// <returns>True if the password change was successful, otherwise false.</returns>
-        bool ChangePassword(BLUserModel user, string currentPassword, string newPassword);
+        ///// <summary>
+        ///// Changes the role of a user.
+        ///// </summary>
+        ///// <param name="user">The user whose role will be changed.</param>
+        ///// <param name="newRole">The new role for the user.</param>
+        //void ChangeRole(BLUserModel user, UserRole newRole);
+
+        ///// <summary>
+        ///// Changes the password of a user.
+        ///// </summary>
+        ///// <param name="user">The user whose password will be changed.</param>
+        ///// <param name="currentPassword">The current password of the user.</param>
+        ///// <param name="newPassword">The new password for the user.</param>
+        ///// <returns>True if the password change was successful, otherwise false.</returns>
+        //bool ChangePassword(BLUserModel user, string currentPassword, string newPassword);
 
         /// <summary>
         /// Deletes a user.

@@ -2,26 +2,33 @@
 using ATM_Simulation_Demo.BAL;
 using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.DAL.Pin;
-using ATM_Simulation_Demo.DAL.Transaction;
 using ATM_Simulation_Demo.DAL.Account;
-using Microsoft.Web.Http;
-using Serilog;
 using System;
-using System.Diagnostics;
 using System.Web.Http;
+using System.Web.Http.Cors;
+using System.Collections.Generic;
+using ATM_Simulation_Demo.Models;
+using System.Web.UI;
+
 namespace ATM_Simulation_Demo.Controllers
 {
     /// <summary>
     /// API controller for managing account-related operations.
     /// </summary>
     //[ApiVersion("1.0")]
+    //[EnableCors("*", "*", "*")]
     [RoutePrefix("api/accounts")]
     public class AccountController : ApiController
     {
         #region fields
-            private readonly static IBLPinModule _pinModule= new PinModule();
-            private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
-            private readonly IBLAccountService _accountService = new AccountService(_accountRepo,_pinModule);
+        private readonly static IBLPinModule _pinModule = new PinModule();
+        private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
+        private readonly IBLAccountService _accountService = new AccountService(_accountRepo, _pinModule);
+
+   
+        // Cache manager instance for caching responses
+        private static CacheManager cacheManager = new CacheManager();
+
         #endregion
 
         #region Actions
@@ -62,6 +69,9 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="mobileNumber">Account's mobile number.</param>
         /// <param name="DOB">Account's date of birth.</param>
         /// <returns>Newly created account information.</returns>
+        /// 
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPost]
         [Route("create")]
         public IHttpActionResult CreateAccount(string name, string mobileNumber)
@@ -78,13 +88,15 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
-       
+
         /// <summary>
         /// Changes the PIN for a account.
         /// </summary>
         /// <param name="request">The request containing currentPin, newPin, and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        [HttpPost]
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "User")]
+        [HttpPatch]
         [Route("changePin")]
         public IHttpActionResult ChangePin(ChangePinRequest request)
         {
@@ -107,15 +119,17 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing newMobileNumber and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        [HttpPost]
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "DEO,User")]
+        [HttpPatch]
         [Route("UpdateMobileNumber")]
-        public IHttpActionResult UpdateMobileNumber([FromBody] UpdateMobileNumberRequest request)
+        public IHttpActionResult UpdateMobileNumber(UpdateMobileNumberRequest request)
         {
             try
             {
                 // Assuming UpdateMobileNumberRequest is a model containing newMobileNumber and accountId properties
                 var account = _accountService.GetAccountByID(request.accountId);
-                _accountService.UpdateMobileNumber(account , request.newMobileNumber);
+                _accountService.UpdateMobileNumber(account, request.newMobileNumber);
                 return Ok("Mobile number updated successfully.");
             }
             catch (Exception ex)
@@ -124,6 +138,22 @@ namespace ATM_Simulation_Demo.Controllers
                 return BadRequest("Internal Server Error");
             }
         }
+
+        public List<BLAccountModel> fetch()
+        {
+            return _accountService.GetAllAccounts();
+        }
+
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin,DEO")]
+        [HttpGet]
+        [Route("GetAllAccounts")]
+        public IHttpActionResult GetAllAccounts()
+        {
+            return Ok(cacheManager.GetCachedResponse(Request, fetch));
+        }
+        
+
         #endregion
     }
 
@@ -140,7 +170,7 @@ namespace ATM_Simulation_Demo.Controllers
     {
         public int accountId { get; set; }
 
-        public string newMobileNumber { get; set;}
+        public string newMobileNumber { get; set; }
     }
     #endregion
 }

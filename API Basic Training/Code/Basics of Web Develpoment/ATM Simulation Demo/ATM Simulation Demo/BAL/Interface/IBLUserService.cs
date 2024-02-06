@@ -1,4 +1,5 @@
 ﻿using ATM_Simulation_Demo.Models;
+using System;
 using System.Collections.Generic;
 
 namespace ATM_Simulation_Demo.BAL.Interface
@@ -16,41 +17,47 @@ namespace ATM_Simulation_Demo.BAL.Interface
         BLUserModel GetUserByID(int userId);
 
         /// <summary>
-        /// Retrieves a user by their card number and PIN.
+        /// Retrieves a user by their username and password.
         /// </summary>
-        /// <param name="cardNumber">The card number of the user.</param>
-        /// <param name="pin">The PIN of the user.</param>
-        /// <returns>The user object if found, null otherwise.</returns>
-        BLUserModel GetUser(string cardNumber, string pin);
+        /// <param name="userName">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>The user with the specified username and password.</returns>
+        BLUserModel GetUserByCredentials(string userName, string password);
 
         /// <summary>
         /// Creates a new user.
         /// </summary>
-        /// <param name="name">The name of the user.</param>
-        /// <param name="mobileNumber">The mobile number of the user.</param>
-        /// <param name="dob">The date of birth of the user.</param>
+        /// <param name="userName">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <param name="role">The role of the user.</param>
         /// <returns>The newly created user.</returns>
-        BLUserModel CreateUser(string name, string mobileNumber, string dob);
+        BLUserModel CreateUser(string userName, string mobileNumber, string password, DateTime DOB, UserRole role);
 
         /// <summary>
-        /// Changes the PIN for a user.
+        /// Changes the password for a user.
         /// </summary>
-        /// <param name="user">The user to change the PIN for.</param>
-        /// <param name="currentPin">The current PIN of the user.</param>
-        /// <param name="newPin">The new PIN to set.</param>
-        void ChangePin(BLUserModel user, string currentPin, string newPin);
+        /// <param name="user">The user whose password will be changed.</param>
+        /// <param name="currentPassword">The current password of the user.</param>
+        /// <param name="newPassword">The new password for the user.</param>
+        void ChangePassword(BLUserModel user, string currentPassword, string newPassword);
 
         /// <summary>
-        /// Updates the mobile number for a user.
+        /// Updates the role for a user.
         /// </summary>
-        /// <param name="user">The user to update the mobile number for.</param>
-        /// <param name="newMobileNumber">The new mobile number to set.</param>
-        void UpdateMobileNumber(BLUserModel user, string newMobileNumber);
+        /// <param name="user">The user whose role will be updated.</param>
+        /// <param name="newRole">The new role for the user.</param>
+        void UpdateRole(BLUserModel user, UserRole newRole);
 
         /// <summary>
-        /// Displays all users for testing purposes.
+        /// Deletes a user by their user ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user to delete.</param>
+        void DeleteUser(int userId);
+
+        /// <summary>
+        /// Retrieves all users.
         /// </summary>
         /// <returns>A list of all users.</returns>
-        List<BLUserModel> DisplayAllUsers();
+        List<BLUserModel> GetAllUsers();
     }
 }

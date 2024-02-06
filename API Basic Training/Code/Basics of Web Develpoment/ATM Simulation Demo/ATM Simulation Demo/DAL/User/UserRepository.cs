@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.Models;
 
@@ -20,17 +21,9 @@ namespace ATM_Simulation_Demo.DAL.User
             };
         }
 
-        public BLUserModel CreateUser(string userName, string password, UserRole role)
+        public BLUserModel CreateUser(BLUserModel newUser)
         {
-            // Create a new user and add to the database
-            var newUser = new BLUserModel
-            {
-                UserId = _usersDatabase.Count + 1,
-                UserName = userName,
-                Password = password,
-                Role = role
-            };
-
+            newUser.UserId = _usersDatabase.Count + 1;
             _usersDatabase.Add(newUser);
 
             return newUser;
@@ -41,6 +34,20 @@ namespace ATM_Simulation_Demo.DAL.User
             // Retrieve user by userId
             return _usersDatabase.FirstOrDefault(user => user.UserId == userId);
         }
+
+        public BLUserModel UpdateUser(BLUserModel updatedUser)
+        {
+            BLUserModel user = _usersDatabase.FirstOrDefault(u => u.UserId == updatedUser.UserId);
+            user = updatedUser;
+            return user;
+        }
+
+        public BLUserModel GetUserByCredentials(string userName, string password)
+        {
+            // Retrieve user by userId
+            return _usersDatabase.FirstOrDefault(user => user.UserName == userName && user.Password == password);
+        }
+
 
         public List<BLUserModel> GetAllUsers()
         {
@@ -54,30 +61,7 @@ namespace ATM_Simulation_Demo.DAL.User
             return _usersDatabase.Any(user => user.UserName == userName && user.Password == password);
         }
 
-        public void ChangeRole(BLUserModel user, UserRole newRole)
-        {
-            // Change user role
-            user.Role = newRole;
-        }
-
-        public BLUserModel GetUserByUserName(string userName)
-        {
-            // Retrieve user by userName
-            return _usersDatabase.FirstOrDefault(user => user.UserName == userName);
-        }
-
-        public bool ChangePassword(BLUserModel user, string currentPassword, string newPassword)
-        {
-            // Change user password
-            if (user.Password == currentPassword)
-            {
-                user.Password = newPassword;
-                return true;
-            }
-
-            return false;
-        }
-
+      
         public void DeleteUser(int userId)
         {
             // Delete user by userId

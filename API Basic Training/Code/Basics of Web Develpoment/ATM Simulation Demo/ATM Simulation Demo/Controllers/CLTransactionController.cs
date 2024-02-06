@@ -7,20 +7,23 @@ using ATM_Simulation_Demo.DAL.Account;
 using ATM_Simulation_Demo.Models;
 using System;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace ATM_Simulation_Demo.Controllers
 {
     /// <summary>
     /// API controller for managing transaction-related operations.
     /// </summary>
-    //[RoutePrefix("api/transactions")]
+    //[EnableCors(origins: "*", headers: "*", methods: "*")] // Enable CORS 
+    [RoutePrefix("api/transactions")]
     public class TransactionController : ApiController
     {
+        #region fields
         private readonly static IBLPinModule _pinModule = new PinModule();
         private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
         private readonly static IBLTransactionRepository _transactionRepo = new TransactionRepository();
         private readonly IBLTransactionService _transactionService = new TransactionService(_accountRepo,_transactionRepo);
-
+        #endregion
 
         #region Actions
 
@@ -29,9 +32,11 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing accountId and transaction details.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "DEO,User")]
         [HttpPost]
         [Route("addTransaction")]
-        public IHttpActionResult AddTransaction([FromBody] AddTransactionRequest request)
+        public IHttpActionResult AddTransaction(AddTransactionRequest request)
         {
             try
             {
@@ -52,6 +57,8 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="accountId">The account's ID.</param>
         /// <returns>List of transactions in the account's history.</returns>
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin,DEO,User")]
         [HttpGet]
         [Route("viewTransactionHistory/{accountId}")]
         public IHttpActionResult ViewTransactionHistory(int accountId)

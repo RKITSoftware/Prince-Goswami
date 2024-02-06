@@ -34,6 +34,13 @@ namespace ATM_Simulation_Demo
                         //
                         c.SingleApiVersion("v1", "ATM_Simulation_Demo");
 
+                        c.ApiKey("BearerToken")
+                                          .Description("Bearer Token Authentication")
+                                          .Name("Authorization")
+                                          .In("header");
+
+                        c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
+
                         // If you want the output Swagger docs to be indented properly, enable the "PrettyPrint" option.
                         //
                         //c.PrettyPrint();
@@ -244,6 +251,7 @@ namespace ATM_Simulation_Demo
                         //    appName: "Swagger UI"
                         //    //additionalQueryStringParams: new Dictionary<string, string>() { { "foo", "bar" } }
                         //);
+
 
                         // If your API supports ApiKey, you can override the default values.
                         // "apiKeyIn" can either be "query" or "header"

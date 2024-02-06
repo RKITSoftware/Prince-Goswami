@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.Web.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace ATM_Simulation_Demo
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-           
+            //config.EnableCors();
             // Web API routes
             config.MapHttpAttributeRoutes();
 
