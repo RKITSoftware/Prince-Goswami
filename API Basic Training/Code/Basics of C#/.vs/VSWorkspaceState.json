@@ -1,16 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Arrrays\\Arrays",
-    "\\Arrrays\\Arrays\\Arrays",
-    "\\DataType&Variable\\Datatype&Variable",
-    "\\Define & calling Methods\\Methods",
-    "\\HelloWorld\\HelloWorld",
-    "\\Operators\\Operators&Expressions",
-    "\\Operators\\Operators&Expressions\\Operators&Expressions",
-    "\\Statements\\Statements",
-    "\\Statements\\Statements\\Statements"
+    "\\Enumration",
+    "\\Enumration\\ConsoleApp1",
+    "\\Enumration\\ConsoleApp1\\ConsoleApp1",
+    "\\ExceptionHandling\\ExceptionHandling"
   ],
-  "SelectedNode": "\\Define & calling Methods",
+  "SelectedNode": "\\Enumration\\ConsoleApp1\\ConsoleApp1\\Program.cs",
   "PreviewInSolutionExplorer": false
 }

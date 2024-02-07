@@ -34,7 +34,7 @@ namespace Test_of_Basic_C__training
         /// <param name="user">The user to change the PIN for.</param>
         /// <param name="currentPin">The current PIN for verification.</param>
         /// <param name="newPin">The new PIN to set.</param>
-        public void ChangePin(User user, string currentPin, string newPin)
+        public bool ChangePin(User user, string currentPin, string newPin)
         {
             if (VerifyPin(user, currentPin))
             {
@@ -42,15 +42,18 @@ namespace Test_of_Basic_C__training
                 {
                     user.PIN = newPin;
                     Console.WriteLine("PIN changed successfully.");
+                    return true;
                 }
                 else
                 {
                     Console.WriteLine("Invalid new PIN. Please use a 4-digit numeric PIN.");
+                    return false;
                 }
             }
             else
             {
                 Console.WriteLine("Current PIN verification failed. PIN not changed.");
+                return false;
             }
         }
         #endregion

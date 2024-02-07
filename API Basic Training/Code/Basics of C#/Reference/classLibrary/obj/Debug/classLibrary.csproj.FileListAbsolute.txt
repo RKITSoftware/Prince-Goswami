@@ -1,0 +1,6 @@
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\classLibrary\bin\Debug\classLibrary.dll
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\classLibrary\bin\Debug\classLibrary.pdb
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\classLibrary\obj\Debug\classLibrary.csproj.AssemblyReference.cache
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\classLibrary\obj\Debug\classLibrary.csproj.CoreCompileInputs.cache
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\classLibrary\obj\Debug\classLibrary.dll
+F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\classLibrary\obj\Debug\classLibrary.pdb

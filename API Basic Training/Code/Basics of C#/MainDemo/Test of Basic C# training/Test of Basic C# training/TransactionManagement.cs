@@ -85,6 +85,7 @@ public class TransactionManagement
     {
         Transaction transaction = new Transaction(description, amount);
         user.AddTransaction(transaction);
+        database.UpdateUserData(user);
     }
     #endregion
 }

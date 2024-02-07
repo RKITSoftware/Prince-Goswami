@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Test_of_Basic_C__training
 {
@@ -32,7 +33,6 @@ namespace Test_of_Basic_C__training
                     string mobileNumber = Console.ReadLine();
                     Console.Write("Enter your birth date (dd-MM-yyyy) : ");
                     string dob = Console.ReadLine();
-
                     string newPin = ConvertToPin(dob);
                     User newUser = new User(name, newPin, mobileNumber);
                     databaseManagement.AddUser(newUser);

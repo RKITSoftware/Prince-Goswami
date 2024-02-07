@@ -2,8 +2,14 @@
 
 namespace DateTimeDemo
 {
-    internal class Program
+    /// <summary>
+    /// This program demonstrates DateTime class in C#.
+    /// </summary>
+    public class Program
     {
+        /// <summary>
+        /// The main entry point for the program.
+        /// </summary>
         static void Main(string[] args)
         {
 
@@ -106,6 +112,7 @@ namespace DateTimeDemo
             Console.WriteLine("Formatted Date and Time: " + formattedDateTime);
             #endregion
 
+            string date = DateTime.Now.ToString(customFormat);
             // Wait for user input before closing the console window
             Console.ReadLine();
         }

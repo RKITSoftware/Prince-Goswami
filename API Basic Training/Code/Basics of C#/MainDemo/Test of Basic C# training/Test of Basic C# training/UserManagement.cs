@@ -88,17 +88,16 @@ public class User : UserBase
     #region Constructor
 
     // Constructor
-    public User(string userName, string pin, string mobileNumber, decimal balance = 0)
+    public User(string userName, string pin, string mobileNumber, List<Transaction> transactionHistory = null, decimal balance = 0)
     {
+        if(transactionHistory == null) transactionHistory = new List<Transaction>();
         UserName = userName;
         CardNumber = CardNumberGenerator.GenerateCardNumber();
         PIN = pin;
         MobileNumber = mobileNumber;
         Balance = balance;
-        TransactionHistory = new List<Transaction>();
-        Console.WriteLine("Your account has been created.\n" +
-            "Your card number is " + CardNumber +
-            "\nYour card PIN is " + pin);
+        TransactionHistory = transactionHistory;
+        
     }
 
     #endregion

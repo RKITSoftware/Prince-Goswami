@@ -1,7 +1,13 @@
 ﻿using System;
 
+/// <summary>
+/// This program demonstrates String class in C#.
+/// </summary>
 class StringOperations
 {
+    /// <summary>
+    /// The main entry point for the program.
+    /// </summary>
     static void Main()
     {
         // Creating strings

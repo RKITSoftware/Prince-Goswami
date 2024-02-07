@@ -1,10 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
+/// <summary>
+/// This program demonstrates File Opereations in C#.
+/// </summary>
 class Program
 {
+    /// <summary>
+    /// The main entry point for the program.
+    /// </summary>
     static void Main()
     {
+
+
+        string s = "1,2,3";
+        List<string> list = new List<string>();
+        list = s.Split(new char[] { ',' });
+        Console.Write(Convert.ToString(list));
+
+
         Console.WriteLine("Simple Note Taker");
 
         // Specify the file path for notes
@@ -38,6 +53,7 @@ class Program
         }
     }
 
+    #region Note Writing
 
     /// <summary>
     /// Writes a new note to the specified file.
@@ -68,6 +84,9 @@ class Program
         }
     }
 
+    #endregion
+
+    #region Note Reading
 
     /// <summary>
     /// Reads all notes from the specified file and displays them.
@@ -99,4 +118,6 @@ class Program
             Console.WriteLine($"Error reading from the notes file: {ex.Message}");
         }
     }
+
+    #endregion
 }
