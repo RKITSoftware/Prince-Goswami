@@ -46,42 +46,60 @@ public class User : UserBase
     #endregion
 
     #region Properties
-
+    /// <summary>
+    /// Gets or sets the user's name.
+    /// </summary>
     public string UserName
     {
         get { return userName; }
         set { userName = value; }
     }
 
+    /// <summary>
+    /// Gets or sets the card number associated with the user.
+    /// </summary>
     public string CardNumber
     {
         get { return cardNumber; }
         set { cardNumber = value; }
     }
 
+    /// <summary>
+    /// Gets or sets the Personal Identification Number (PIN) for the user.
+    /// </summary>
     public string PIN
     {
         get { return pin; }
         set { pin = value; }
     }
 
+    /// <summary>
+    /// Gets or sets the mobile number of the user.
+    /// </summary>
     public string MobileNumber
     {
         get { return mobileNumber; }
         set { mobileNumber = value; }
     }
 
+    /// <summary>
+    /// Gets or sets the current balance of the user.
+    /// </summary>
     public decimal Balance
     {
         get { return balance; }
         set { balance = value; }
     }
 
+    /// <summary>
+    /// Gets or sets the transaction history associated with the user.
+    /// </summary>
     public List<Transaction> TransactionHistory
     {
         get { return transactionHistory; }
         set { transactionHistory = value; }
     }
+
 
     #endregion
 
@@ -104,16 +122,19 @@ public class User : UserBase
 
     #region Methods from the abstract class
 
+    /// <inheritdoc/>
     public override void UpdateBalance(decimal amount)
     {
         Balance += amount;
     }
 
+    /// <inheritdoc/>
     public override void AddTransaction(Transaction transaction)
     {
         TransactionHistory.Add(transaction);
     }
 
+    /// <inheritdoc/>
     public override void DisplayUserDetails()
     {
         Console.WriteLine($"Card Number: {CardNumber}");
@@ -150,6 +171,7 @@ public class Transaction
 }
 
 
+#region helper Class
 /// <summary>
 /// Class to generate a unique card number
 /// </summary>
@@ -174,3 +196,4 @@ public class CardNumberGenerator
         return cardNumber;
     }
 }
+#endregion
