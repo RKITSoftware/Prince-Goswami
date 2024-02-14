@@ -1,20 +1,13 @@
-﻿using ServiceStack.DataAnnotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System;
 
 namespace ORM_Tools.Models
 {
-    [Alias("BNK01")]
     public class BNK01
     {
 
         /// <summary>
         /// BankID
         /// </summary>
-        [AutoIncrement]
-        [PrimaryKey]
         public int K01F01 { get; set; }
 
         /// <summary>
