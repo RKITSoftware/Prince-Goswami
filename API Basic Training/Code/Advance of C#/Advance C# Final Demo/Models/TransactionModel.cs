@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Advance_C__Final_Demo.BL.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -23,7 +24,7 @@ namespace Advance_C__Final_Demo.Models
         /// <summary>
         /// Gets or sets the type of transaction (e.g., Deposit, Withdrawal).
         /// </summary>
-        public string N01F03 { get; set; }
+        public TransactionType N01F03 { get; set; }
 
         /// <summary>
         /// Gets or sets the amount involved in the transaction.
@@ -41,7 +42,7 @@ namespace Advance_C__Final_Demo.Models
     public class TransactionRequest
     {
         public int UserId { get; set; }
-        public string TransactionType { get; set; }
+        public TransactionType  TransactionType { get; set; }
         public decimal Amount { get; set; }
     }
 }

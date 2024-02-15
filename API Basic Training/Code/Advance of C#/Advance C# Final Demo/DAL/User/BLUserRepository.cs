@@ -1,4 +1,5 @@
-﻿using Advance_C__Final_Demo.BL.Interface;
+﻿using Advance_C__Final_Demo.BL.Enum;
+using Advance_C__Final_Demo.BL.Interface;
 using Advance_C__Final_Demo.Models;
 using MySql.Data.MySqlClient;
 using System;
@@ -184,7 +185,7 @@ namespace Advance_C__Final_Demo.DAL.User
                             {
                                 N01F01 = Convert.ToInt32(reader["N01F01"]),
                                 N01F02 = Convert.ToInt32(reader["N01F02"]),
-                                N01F03 = reader["N01F03"].ToString(),
+                                N01F03 = EnumConverter.ConvertToEnum<TransactionType>(reader["N01F03"].ToString()),
                                 N01F04 = Convert.ToDecimal(reader["N01F04"]),
                                 N01F05 = Convert.ToDateTime(reader["N01F05"])
                             };

@@ -47,6 +47,20 @@ namespace Advance_C__Final_Demo.BL.Interface
         /// <returns>The list of transactions for the user.</returns>
         List<TRN01> GetTransactionHistory(int userId);
 
+        /// <summary>
+        /// Get user details by user ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user to retrieve.</param>
+        /// <returns>The user details.</returns>
+        void Delete(int userId);
+
+        /// <summary>
+        /// Get user details by user ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user to retrieve.</param>
+        /// <returns>The user details.</returns>
+        void AddUser(USR01 newUser);
+
         // Add other necessary methods for user-related services
     }
 

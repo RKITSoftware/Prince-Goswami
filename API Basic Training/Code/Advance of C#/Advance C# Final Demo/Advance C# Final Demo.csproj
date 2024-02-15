@@ -146,6 +146,7 @@
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="BL\Enum\Class1.cs" />
     <Compile Include="BL\Interface\IBLTransactionRepository.cs" />
     <Compile Include="BL\Interface\IBLTransactionService.cs" />
     <Compile Include="BL\Interface\IBLUserRepository.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="DAL\Transaction\BLTransactionRepository.cs" />
     <Compile Include="DAL\User\BLUserRepository.cs" />
     <Compile Include="DAL\User\BLUserService.cs" />
+    <Compile Include="EnumConverter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
