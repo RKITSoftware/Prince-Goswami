@@ -1,9 +1,10 @@
 ﻿using ATM_Simulation_Demo.BAL.Interface;
+using ATM_Simulation_Demo.DAL;
 using ATM_Simulation_Demo.Models;
 using MySql.Data.MySqlClient;
 using System;
 
-namespace ATM_Simulation_Demo.DAL.Pin
+namespace ATM_Simulation_Demo.DAL
 {
     /// <summary>
     /// Implementation of the PIN module interface.

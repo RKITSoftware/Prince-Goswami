@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ATM_Simulation_Demo.BAL.Security
+namespace ATM_Simulation_Demo.Others.Security
 {
     public static class BLCrypto
     {

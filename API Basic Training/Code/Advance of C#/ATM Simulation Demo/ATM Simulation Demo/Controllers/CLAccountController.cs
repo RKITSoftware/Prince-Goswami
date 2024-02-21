@@ -1,13 +1,15 @@
 ﻿
-using ATM_Simulation_Demo.DAL.Pin;
+using ATM_Simulation_Demo.DAL;
 using System;
 using System.Web.Http;
-using System.Web.Http.Cors;
-using System.Collections.Generic;
 using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.DAL.Account;
-using ATM_Simulation_Demo.DAL.Account;
-using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.BAL.Services;
+using ATM_Simulation_Demo.Others.Caching;
+using ATM_Simulation_Demo.Others.Auth.User;
+using System.Net.Http;
+using System.Net;
+using System.Web.ModelBinding;
+using ATM_Simulation_Demo.Others.Auth.Account;
 
 namespace ATM_Simulation_Demo.Controllers
 {
@@ -37,26 +39,33 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="cardNumber">Account's card number.</param>
         /// <param name="pin">Account's PIN.</param>
         /// <returns>Account information if found, otherwise NotFound.</returns>
+        [AllowAnonymous]
         [HttpGet]
         [Route("{cardNumber}/{pin}")]
-        public IHttpActionResult GetAccount(string cardNumber, string pin)
+        public HttpResponseMessage Login(string cardNumber, string pin)
         {
             try
             {
                 var account = _accountService.GetAccount(cardNumber, pin);
                 if (account != null)
                 {
-                    return Ok(account);
+                    // Generate a JWT token using the authentication service
+                    string token = TokenManager.GenerateToken(account.C01F01);
+
+                    // Return an OK response with the JWT token
+                    return Request.CreateErrorResponse(HttpStatusCode.OK, token);
                 }
                 else
                 {
-                    return NotFound();
+                    // Return an Unauthorized response with an error message
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
                 }
             }
             catch (Exception ex)
             {
-                // Log or handle the exception
-                return InternalServerError(ex);
+                // Log or handle any exceptions that might occur during token generation or validation
+                // Log.Error($"An error occurred during authentication: {ex}");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "An error occurred");
             }
         }
 
@@ -68,8 +77,8 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="DOB">Account's date of birth.</param>
         /// <returns>Newly created account information.</returns>
         /// 
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "Admin")]
+        [Others.Auth.User.CustomAuthenticationFilter]
+        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPost]
         [Route("create")]
         public IHttpActionResult CreateAccount(CreateAccountRequest request)
@@ -92,8 +101,8 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing currentPin, newPin, and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "User")]
+        [Others.Auth.Account.CustomAuthenticationFilter]
+        [Others.Auth.Account.CustomAuthorizationFilter]
         [HttpPatch]
         [Route("changePin")]
         public IHttpActionResult ChangePin(ChangePinRequest request)
@@ -101,7 +110,7 @@ namespace ATM_Simulation_Demo.Controllers
             try
             {
                 // Assuming ChangePinRequest is a model containing currentPin, newPin, and accountId properties
-                var account = _accountService.GetAccountByID(request.accountId);
+                var account = _accountService.GetAccountByID(TokenManager.sessionId);
                 _accountService.ChangePin(account, request.currentPin, request.newPin);
                 return Ok("PIN changed successfully.");
             }
@@ -117,17 +126,17 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing newMobileNumber and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "DEO,User")]
+        [Others.Auth.Account.CustomAuthenticationFilter]
+        //[customauthorizationfilter(roles = "deo,user")]
         [HttpPatch]
         [Route("UpdateMobileNumber")]
-        public IHttpActionResult UpdateMobileNumber(UpdateMobileNumberRequest request)
+        public IHttpActionResult UpdateMobileNumber( string newMobileNumber)
         {
             try
             {
                 // Assuming UpdateMobileNumberRequest is a model containing newMobileNumber and accountId properties
-                var account = _accountService.GetAccountByID(request.accountId);
-                _accountService.UpdateMobileNumber(account, request.newMobileNumber);
+                var account = _accountService.GetAccountByID(TokenManager.sessionId);
+                _accountService.UpdateMobileNumber(account, newMobileNumber);
                 return Ok("Mobile number updated successfully.");
             }
             catch (Exception ex)
@@ -137,6 +146,8 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
+        [Others.Auth.User.CustomAuthenticationFilter]
+        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
         [HttpGet]
         [Route("GetAllAccounts")]
         public IHttpActionResult GetAllAccounts()
@@ -159,6 +170,33 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="cardNumber">Account's card number.</param>
         /// <param name="pin">Account's PIN.</param>
         /// <returns>Account information if found, otherwise NotFound.</returns>
+        [Others.Auth.User.CustomAuthenticationFilter]
+        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
+        [HttpDelete]
+        [Route("DeleteAccount")]
+        public IHttpActionResult Delete()
+        {
+            try
+            {
+                _accountService.Delete(TokenManager.sessionId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get account information based on card number and PIN.
+        /// </summary>
+        /// <param name="cardNumber">Account's card number.</param>
+        /// <param name="pin">Account's PIN.</param>
+        /// <returns>Account information if found, otherwise NotFound.</returns>
+
+        [Others.Auth.User.CustomAuthenticationFilter]
+        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
         [HttpDelete]
         [Route("{id}")]
         public IHttpActionResult Delete(int id)
@@ -174,23 +212,19 @@ namespace ATM_Simulation_Demo.Controllers
                 return InternalServerError(ex);
             }
         }
+
+
         #endregion
 
         #region Request Model
         public class ChangePinRequest
         {
-            public int accountId { get; set; }
             public string currentPin { get; set; }
             public string newPin { get; set; }
 
         };
 
-        public class UpdateMobileNumberRequest
-        {
-            public int accountId { get; set; }
-
-            public string newMobileNumber { get; set; }
-        }
+     
 
         public class CreateAccountRequest
         {

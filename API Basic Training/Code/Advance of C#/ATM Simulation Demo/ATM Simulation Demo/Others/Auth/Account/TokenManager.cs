@@ -1,9 +1,10 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 
-namespace ATM_Simulation_Demo
+namespace ATM_Simulation_Demo.Others.Auth.Account
 {
     /// <summary>
     /// Utility class for managing JSON Web Tokens (JWT).
@@ -16,6 +17,8 @@ namespace ATM_Simulation_Demo
 
         #endregion
 
+        public static int sessionId;
+
         #region Token Generation
 
         /// <summary>
@@ -23,7 +26,7 @@ namespace ATM_Simulation_Demo
         /// </summary>
         /// <param name="userName">The username to include in the JWT token.</param>
         /// <returns>The generated JWT token as a string.</returns>
-        public static string GenerateToken(string userName, UserRole role)
+        public static string GenerateToken(int accountId)
         {
             byte[] key = Convert.FromBase64String(SecretKey);
 
@@ -31,7 +34,7 @@ namespace ATM_Simulation_Demo
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userName), new Claim(ClaimTypes.Role, role.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, accountId.ToString()) }),
                 Expires = DateTime.UtcNow.AddMinutes(3), // Consider making this configurable
                 SigningCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
@@ -103,36 +106,37 @@ namespace ATM_Simulation_Demo
         }
 
         #endregion
-    }
 
-    #region AuthServices
-    /// <summary>
-    /// Contains methods for token Authentication
-    /// </summary>
-    public static class TokenAuthenticationService
-    {
-        ///// <summary>
-        ///// Validates the provided username and password.
-        ///// </summary>
-        ///// <param name="userName">The username to validate.</param>
-        ///// <param name="password">The password associated with the username.</param>
-        ///// <returns>True if the credentials are valid; otherwise, false.</returns>
-        //public static bool ValidateCredentials(string userName, string password)
-        //{
-        //    // Replace this with your actual logic to validate credentials
-        //    return userName == "admin" && password == "password";
-        //}
-
-        /// <summary>
-        /// Generates a JWT token for the specified username.
-        /// </summary>
-        /// <param name="userName">The username to include in the JWT token.</param>
-        /// <returns>The generated JWT token as a string.</returns>
-        public static string GenerateToken(string userName, UserRole role)
+        #region ValidateUserId
+        public static void setSessionId(string token)
         {
-            // Use TokenManager or your token generation logic here
-            return TokenManager.GenerateToken(userName, role);
+            try
+            {
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+                JwtSecurityToken jwtToken = (JwtSecurityToken)handler.ReadToken(token);
+
+                // Retrieve user ID from the claims
+                var claims = jwtToken?.Claims;
+                var userIdClaim = claims?.FirstOrDefault(c => c.Type == "nameid");
+
+                // Compare the user ID from the token with the expected user ID
+                sessionId = int.Parse(userIdClaim.Value);
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                // Handle token expiration (returning false in this case)
+                Console.WriteLine("Token has expired.");
+                throw new Exception("Token has Expired");
+            }
+            catch (Exception ex)
+            {
+                // Handle other token validation exceptions
+                throw new Exception($"Token validation error: {ex.Message}");
+                
+            }
         }
+        #endregion
     }
-    #endregion
+
 }

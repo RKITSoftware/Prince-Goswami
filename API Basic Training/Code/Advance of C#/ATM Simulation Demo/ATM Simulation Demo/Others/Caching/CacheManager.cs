@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 
-namespace ATM_Simulation_Demo
+namespace ATM_Simulation_Demo.Others.Caching
 {
     /// <summary>
     /// Manages HTTP caching for a specified data type.

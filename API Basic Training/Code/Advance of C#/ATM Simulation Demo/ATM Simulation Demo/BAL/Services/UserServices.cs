@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.BAL.Security;
+using ATM_Simulation_Demo.Others.Security;
 using ATM_Simulation_Demo.Models;
 
-namespace ATM_Simulation_Demo.BAL
+namespace ATM_Simulation_Demo.BAL.Services
 {
     /// <summary>
     /// Service class for managing user-related operations in the business logic layer.

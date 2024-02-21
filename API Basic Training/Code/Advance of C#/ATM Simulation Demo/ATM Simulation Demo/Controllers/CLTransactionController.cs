@@ -1,12 +1,11 @@
 ﻿
 using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.DAL.Pin;
+using ATM_Simulation_Demo.DAL;
 using System;
 using System.Web.Http;
-using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.DAL.Account;
-using ATM_Simulation_Demo.DAL.Transaction;
+using ATM_Simulation_Demo.BAL.Services;
 using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.DAL;
 
 namespace ATM_Simulation_Demo.Controllers
 {

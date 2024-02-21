@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
+using ATM_Simulation_Demo.Others.Auth.User;
 using System.Net.Http;
 using System.Net;
 using System.Web.Http;
-using ATM_Simulation_Demo.BAL;
 using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.DAL.User;
+using ATM_Simulation_Demo.DAL;
 using System.Web.Http.Cors;
+using ATM_Simulation_Demo.BAL.Services;
 
 namespace ATM_Simulation_Demo.Controllers
 {
     /// <summary>
     /// API controller for managing user-related operations.
     /// </summary>
-
-
     [RoutePrefix("api/users")]
     public class UserController : ApiController
     {
@@ -36,7 +34,7 @@ namespace ATM_Simulation_Demo.Controllers
                 if (user != null)
                 {
                     // Generate a JWT token using the authentication service
-                    string token = TokenAuthenticationService.GenerateToken(user.R01F02, user.R01F05);
+                    string token = UserTokenManager.GenerateUserToken(user.R01F02, user.R01F05);
 
                     // Return an OK response with the JWT token
                     return Request.CreateErrorResponse(HttpStatusCode.OK, token);
@@ -60,8 +58,8 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>User information if found, otherwise NotFound.</returns>
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "Admin,DEO,User")]
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin,User")]
         [HttpGet]
         [Route("{userId}")]
         public IHttpActionResult GetUser(int userId)
@@ -92,8 +90,8 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="password">User's password.</param>
         /// <param name="role">User's role.</param>
         /// <returns>Newly created user information.</returns>
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "Admin,DEO")]
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPost]
         [Route("create")]
         public IHttpActionResult CreateUser(CreateUserRequest request)
@@ -115,8 +113,8 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing userId, currentPassword, and newPassword.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "Admin,DEO,User")]
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin,User")]
         [HttpPatch]
         [Route("changePassword")]
         public IHttpActionResult ChangePassword(ChangePasswordRequest request)
@@ -140,8 +138,8 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing userId and newRole.</param>
         /// <returns>Action result indicating the result of the operation.</returns>  
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "Admin")]
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPatch]
         [Route("updateRole")]
         public IHttpActionResult UpdateRole(UpdateRoleRequest request)
@@ -164,8 +162,8 @@ namespace ATM_Simulation_Demo.Controllers
         /// Get all users.
         /// </summary>
         /// <returns>List of all users.</returns>
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "Admin,DEO")]
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpGet]
         [Route("allUsers")]
         public IHttpActionResult GetAllUsers()
@@ -182,8 +180,8 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "Admin,DEO")]
+        [CustomAuthenticationFilter]
+        [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpDelete]
         [Route("DeleteUser/{userID}")]
         public void DeleteUser(int userId)

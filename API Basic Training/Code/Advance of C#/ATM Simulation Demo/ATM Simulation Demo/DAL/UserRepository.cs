@@ -9,9 +9,9 @@ using ATM_Simulation_Demo.Models;
 using ServiceStack.Data;
 using System.Data.Odbc;
 using System.Web;
-using ATM_Simulation_Demo.BAL.Security;
+using ATM_Simulation_Demo.Others.Security;
 
-namespace ATM_Simulation_Demo.DAL.User
+namespace ATM_Simulation_Demo.DAL
 {
     public class UserRepository : IBLUserRepository
     {

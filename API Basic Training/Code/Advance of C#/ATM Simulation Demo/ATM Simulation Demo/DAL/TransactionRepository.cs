@@ -4,7 +4,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 
-namespace ATM_Simulation_Demo.DAL.Transaction
+namespace ATM_Simulation_Demo.DAL
 {
     public class TransactionRepository : IBLTransactionRepository
     {

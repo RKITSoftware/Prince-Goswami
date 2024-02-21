@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using ATM_Simulation_Demo.BAL.Interface;
 
-namespace ATM_Simulation_Demo.DAL.Account
+namespace ATM_Simulation_Demo.BAL.Services
 {
     public class AccountService : IBLAccountService
     {
@@ -62,6 +62,7 @@ namespace ATM_Simulation_Demo.DAL.Account
         {
             try
             {
+                
                 _pinModule.ChangePin(Account, currentPin, newPin);
             }
             catch (Exception ex)

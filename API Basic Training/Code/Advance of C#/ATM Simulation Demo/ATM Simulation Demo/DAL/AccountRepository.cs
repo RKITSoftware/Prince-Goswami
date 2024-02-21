@@ -4,10 +4,10 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using ATM_Simulation_Demo.DAL;
-using ATM_Simulation_Demo.BAL.Security;
+using ATM_Simulation_Demo.Others.Security;
 using System.Security.Principal;
 
-namespace ATM_Simulation_Demo.DAL.Account
+namespace ATM_Simulation_Demo.DAL
 {
     public class AccountRepository : IBLAccountRepository
     {

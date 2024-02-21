@@ -7,7 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Filters;
 using System.Web.Http.Results;
 
-namespace ATM_Simulation_Demo
+namespace ATM_Simulation_Demo.Others.Auth.Account
 {
     public class CustomAuthenticationFilter : AuthorizeAttribute, IAuthenticationFilter
     {

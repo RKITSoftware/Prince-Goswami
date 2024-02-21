@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ATM_Simulation_Demo.Models;
 using ATM_Simulation_Demo.BAL.Interface;
 
-namespace ATM_Simulation_Demo.DAL.Transaction
+namespace ATM_Simulation_Demo.BAL.Services
 {
     public class TransactionService : IBLTransactionService
     {
