@@ -4,12 +4,13 @@ using System;
 using System.Web.Http;
 using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.BAL.Services;
-using ATM_Simulation_Demo.Others.Caching;
 using ATM_Simulation_Demo.Others.Auth.User;
 using System.Net.Http;
 using System.Net;
 using System.Web.ModelBinding;
 using ATM_Simulation_Demo.Others.Auth.Account;
+using System.Collections.Generic;
+using ATM_Simulation_Demo.Models;
 
 namespace ATM_Simulation_Demo.Controllers
 {
@@ -26,8 +27,6 @@ namespace ATM_Simulation_Demo.Controllers
         private readonly IBLAccountService _accountService = new AccountService(_accountRepo, _pinModule);
 
 
-        // Cache manager instance for caching responses
-        private static CacheManager cacheManager = new CacheManager();
 
         #endregion
 
@@ -127,7 +126,7 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="request">The request containing newMobileNumber and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
         [Others.Auth.Account.CustomAuthenticationFilter]
-        //[customauthorizationfilter(roles = "deo,user")]
+        [Others.Auth.Account.CustomAuthorizationFilter]
         [HttpPatch]
         [Route("UpdateMobileNumber")]
         public IHttpActionResult UpdateMobileNumber( string newMobileNumber)
@@ -150,19 +149,10 @@ namespace ATM_Simulation_Demo.Controllers
         [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
         [HttpGet]
         [Route("GetAllAccounts")]
-        public IHttpActionResult GetAllAccounts()
+        public IHttpActionResult fetch()
         {
             return Ok(_accountService.GetAllAccounts());
         }
-
-        ////[CustomAuthenticationFilter]
-        ////[CustomAuthorizationFilter(Roles = "Admin,DEO")]
-        //[HttpGet]
-        //[Route("GetAllAccounts")]
-        //public IHttpActionResult GetAllAccounts()
-        //{
-        //    return Ok(cacheManager.GetCachedResponse(Request, fetch));
-        //}
 
         /// <summary>
         /// Get account information based on card number and PIN.

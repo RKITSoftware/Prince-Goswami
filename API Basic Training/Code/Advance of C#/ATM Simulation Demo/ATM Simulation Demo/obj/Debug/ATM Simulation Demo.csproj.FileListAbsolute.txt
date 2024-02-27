@@ -306,3 +306,7 @@ F:\367 - Prince.G\git\API Basic Training\Code\Advance of C#\ATM Simulation Demo\
 F:\367 - Prince.G\git\API Basic Training\Code\Advance of C#\ATM Simulation Demo\ATM Simulation Demo\bin\ServiceStack.OrmLite.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Advance of C#\ATM Simulation Demo\ATM Simulation Demo\bin\ServiceStack.OrmLite.MySql.xml
 F:\367 - Prince.G\git\API Basic Training\Code\Advance of C#\ATM Simulation Demo\ATM Simulation Demo\bin\ServiceStack.Text.xml
+F:\367 - Prince.G\git\API Basic Training\Code\Advance of C#\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Extensions.Caching.Abstractions.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Advance of C#\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Extensions.Caching.Memory.dll
+F:\367 - Prince.G\git\API Basic Training\Code\Advance of C#\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Extensions.Caching.Abstractions.xml
+F:\367 - Prince.G\git\API Basic Training\Code\Advance of C#\ATM Simulation Demo\ATM Simulation Demo\bin\Microsoft.Extensions.Caching.Memory.xml

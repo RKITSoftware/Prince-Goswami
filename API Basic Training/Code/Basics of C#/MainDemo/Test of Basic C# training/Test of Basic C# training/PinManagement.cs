@@ -13,7 +13,7 @@ namespace Test_of_Basic_C__training
         /// </summary>
         /// <param name="user">The user to assign the PIN to.</param>
         /// <param name="newPin">The new PIN to assign.</param>
-        public void AssignPin(User user, string newPin)
+        public void AssignPin(UserModel user, string newPin)
         {
             if (IsPinValid(newPin))
             {
@@ -34,26 +34,32 @@ namespace Test_of_Basic_C__training
         /// <param name="user">The user to change the PIN for.</param>
         /// <param name="currentPin">The current PIN for verification.</param>
         /// <param name="newPin">The new PIN to set.</param>
-        public bool ChangePin(User user, string currentPin, string newPin)
+        public UserModel ChangePin(UserModel user, string currentPin, string newPin)
         {
-            if (VerifyPin(user, currentPin))
+            try
             {
-                if (IsPinValid(newPin))
+                if (VerifyPin(user, currentPin))
                 {
-                    user.PIN = newPin;
-                    Console.WriteLine("PIN changed successfully.");
-                    return true;
+                    if (IsPinValid(newPin))
+                    {
+                        user.PIN = newPin;
+                        return user;
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid new PIN. Please use a 4-digit numeric PIN.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid new PIN. Please use a 4-digit numeric PIN.");
-                    return false;
+                    throw new Exception("Current PIN verification failed. PIN not changed.");
+
                 }
+
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Current PIN verification failed. PIN not changed.");
-                return false;
+                throw;
             }
         }
         #endregion
@@ -65,7 +71,7 @@ namespace Test_of_Basic_C__training
         /// <param name="user">The user to verify the PIN for.</param>
         /// <param name="enteredPin">The entered PIN to verify.</param>
         /// <returns>True if the entered PIN matches the user's PIN, otherwise false.</returns>
-        public bool VerifyPin(User user, string enteredPin)
+        public bool VerifyPin(UserModel user, string enteredPin)
         {
             return user.PIN == enteredPin;
         }

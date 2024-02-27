@@ -15,19 +15,19 @@ public class WeatherService : IWeatherService
         string cacheKey = $"weather_{city.ToLower()}";
 
         //// Try to get weather data from cache
-        //if (Cache.TryGetValue(cacheKey, out BLWeatherData cachedData))
-        //{
-        //    return cachedData;
-        //}
+        if (Cache.TryGetValue(cacheKey, out BLWeatherData cachedData))
+        {
+            return cachedData;
+        }
 
         // If not in cache, fetch the data from the external API
         BLWeatherData newData = FetchWeatherData(city);
 
         //// Cache the data for a short duration (e.g., 5 minutes)
-        //var cacheEntryOptions = new MemoryCacheEntryOptions
-        //{
-        //    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-        //};
+        var cacheEntryOptions = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+        };
 
         //Cache.Set(cacheKey, newData, cacheEntryOptions);
 

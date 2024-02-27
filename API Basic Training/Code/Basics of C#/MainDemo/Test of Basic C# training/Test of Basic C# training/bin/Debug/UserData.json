@@ -4,19 +4,49 @@
     "CardNumber": "1234-396422",
     "PIN": "1504",
     "MobileNumber": "7894561230",
-    "Balance": 123.0,
+    "Balance": 450.0,
     "TransactionHistory": [
       {
         "Date": "2024-02-07T14:50:31.555383+05:30",
         "Description": "Deposit: ₹ 123.00",
         "Amount": 123.0
+      },
+      {
+        "Date": "2024-02-27T15:06:19.0114209+05:30",
+        "Description": "Deposit: ₹ 450.00",
+        "Amount": 450.0
+      },
+      {
+        "Date": "2024-02-27T15:06:28.2705694+05:30",
+        "Description": "Deposit: ₹ 450.00",
+        "Amount": 450.0
+      },
+      {
+        "Date": "2024-02-27T15:06:34.0146573+05:30",
+        "Description": "Withdrawal: ₹ 450.00",
+        "Amount": -450.0
+      },
+      {
+        "Date": "2024-02-27T15:06:38.4147288+05:30",
+        "Description": "Withdrawal: ₹ 123.00",
+        "Amount": -123.0
+      },
+      {
+        "Date": "2024-02-27T15:49:46.290793+05:30",
+        "Description": "Deposit: ₹ 12.00",
+        "Amount": 12.0
+      },
+      {
+        "Date": "2024-02-27T15:49:49.9228554+05:30",
+        "Description": "Withdrawal: ₹ 12.00",
+        "Amount": -12.0
       }
     ]
   },
   {
     "UserName": "PRINCE",
     "CardNumber": "1234-383910",
-    "PIN": "1202",
+    "PIN": "1504",
     "MobileNumber": "7894561230",
     "Balance": 1301.0,
     "TransactionHistory": [
@@ -44,6 +74,25 @@
         "Date": "2024-02-07T15:10:04.2958905+05:30",
         "Description": "Withdrawal: ₹ 32.00",
         "Amount": -32.0
+      }
+    ]
+  },
+  {
+    "UserName": "prince",
+    "CardNumber": "1234-920187",
+    "PIN": "1234",
+    "MobileNumber": "1234567890",
+    "Balance": 148.0,
+    "TransactionHistory": [
+      {
+        "Date": "2024-02-27T15:50:46.7664951+05:30",
+        "Description": "Deposit: ₹ 150.00",
+        "Amount": 150.0
+      },
+      {
+        "Date": "2024-02-27T15:50:50.3401237+05:30",
+        "Description": "Withdrawal: ₹ 2.00",
+        "Amount": -2.0
       }
     ]
   }

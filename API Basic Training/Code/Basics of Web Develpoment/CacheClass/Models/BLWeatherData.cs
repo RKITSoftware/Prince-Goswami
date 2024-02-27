@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace CacheClass.Models
+{
+    public class BLWeatherData
+    {
+        public double Temperature { get; set; }
+        public string Description { get; set; }
+    }
+}

@@ -5,11 +5,13 @@ using System;
 /// </summary>
 public class TransactionManagement
 {
-    private DatabaseManagement database;
+    private DatabaseManagement _databaseManagement;
+    private UserManagement _userManagement;
 
-    public TransactionManagement(DatabaseManagement database)
+    public TransactionManagement(DatabaseManagement _databaseManagement)
     {
-        this.database = database;
+        this._databaseManagement = _databaseManagement;
+        _userManagement = new UserManagement();
     }
 
     #region Deposit Cash
@@ -19,11 +21,11 @@ public class TransactionManagement
     /// </summary>
     /// <param name="user">The user</param>
     /// <param name="amount">The amount to deposit</param>
-    public void DepositCash(User user, decimal amount)
+    public void DepositCash(UserModel user, decimal amount)
     {
         if (amount > 0)
         {
-            user.UpdateBalance(amount);
+            _userManagement.UpdateBalance(user,amount);
             AddTransaction(user, $"Deposit: {amount:C}", amount);
             Console.WriteLine($"Deposit successful. New balance: {user.Balance:C}");
         }
@@ -40,11 +42,11 @@ public class TransactionManagement
     /// </summary>
     /// <param name="user">The user</param>
     /// <param name="amount">The amount to withdraw</param>
-    public void WithdrawCash(User user, decimal amount)
+    public void WithdrawCash(UserModel user, decimal amount)
     {
         if (amount > 0 && user.Balance >= amount)
         {
-            user.UpdateBalance(-amount);
+            _userManagement.UpdateBalance(user, -amount);
             AddTransaction(user, $"Withdrawal: {amount:C}", -amount);
             Console.WriteLine($"Withdrawal successful. New balance: {user.Balance:C}");
         }
@@ -64,7 +66,7 @@ public class TransactionManagement
     /// View transaction history for a user
     /// </summary>
     /// <param name="user">The user</param>
-    public void ViewTransactionHistory(User user)
+    public void ViewTransactionHistory(UserModel user)
     {
         Console.WriteLine($"===== Transaction History for {user.CardNumber} =====");
         foreach (Transaction transaction in user.TransactionHistory)
@@ -81,11 +83,11 @@ public class TransactionManagement
     /// <param name="user">The user</param>
     /// <param name="description">The description of the transaction</param>
     /// <param name="amount">The amount of the transaction</param>
-    private void AddTransaction(User user, string description, decimal amount)
+    private void AddTransaction(UserModel user, string description, decimal amount)
     {
         Transaction transaction = new Transaction(description, amount);
-        user.AddTransaction(transaction);
-        database.UpdateUserData(user);
+        _userManagement.AddTransaction(user, transaction);
+        _databaseManagement.UpdateUserData(user);
     }
     #endregion
 }

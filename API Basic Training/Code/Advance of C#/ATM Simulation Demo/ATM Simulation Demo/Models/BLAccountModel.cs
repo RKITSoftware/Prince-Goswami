@@ -51,8 +51,8 @@ namespace ATM_Simulation_Demo.Models
         #region Constructor
         public ACC01(string UserName, string PIN, string MobileNumber)
         {
-            C01F02 = UserName;
-            C01F03 = Generator.GenerateCardNumber();
+            C01F02 = Generator.GenerateCardNumber();
+            C01F03 = UserName;
             C01F04 = PIN;
             C01F05 = MobileNumber;
             C01F06 = 0;

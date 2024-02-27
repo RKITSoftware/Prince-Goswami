@@ -3,6 +3,7 @@ using ATM_Simulation_Demo.Models;
 using System;
 using System.Collections.Generic;
 using ATM_Simulation_Demo.BAL.Interface;
+using ATM_Simulation_Demo.DAL;
 
 namespace ATM_Simulation_Demo.BAL.Services
 {
@@ -10,11 +11,13 @@ namespace ATM_Simulation_Demo.BAL.Services
     {
         private readonly IBLAccountRepository _AccountRepository;
         private readonly IBLPinModule _pinModule;
+        private readonly IBLLimitService _limitService;
 
         public AccountService(IBLAccountRepository AccountRepository, IBLPinModule pinModule)
         {
             _AccountRepository = AccountRepository;
             _pinModule = pinModule;
+            _limitService = new LimitService();
         }
 
         public void CreateAccount(string name, string mobileNumber, DateTime DOB)
@@ -24,6 +27,8 @@ namespace ATM_Simulation_Demo.BAL.Services
                 string PIN = DOBToPin(DOB);
                 ACC01 newAccount = new ACC01(name, PIN , mobileNumber);
                 _AccountRepository.AddAccount(newAccount);
+                newAccount = GetAccount(newAccount.C01F02, newAccount.C01F04);
+                _limitService.AddATMLimit(newAccount.C01F01);
             }
             catch (Exception ex)
             {
@@ -120,7 +125,7 @@ namespace ATM_Simulation_Demo.BAL.Services
         /// </summary>
         /// <param name="dateTime">Date of Birth in format of DateTime</param>
         /// <returns></returns>
-        static string DOBToPin(DateTime dateTime)
+        static string DOBToPin (DateTime dateTime)
         {
             // Get day and month as two-digit strings
             string day = dateTime.Day.ToString("D2");

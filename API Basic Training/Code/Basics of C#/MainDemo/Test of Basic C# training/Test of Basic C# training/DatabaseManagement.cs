@@ -11,8 +11,8 @@ namespace Test_of_Basic_C__training
     /// </summary>
     public class DatabaseManagement
     {
-        private List<User> usersDatabase;
-        private PinModule pinModule;
+        private List<UserModel> _usersDatabase;
+        private PinModule _pinModule;
 
         // File path to store user data
         private string filePath = "UserData.json";
@@ -22,19 +22,19 @@ namespace Test_of_Basic_C__training
         /// </summary>
         public DatabaseManagement()
         {
-            usersDatabase = LoadUserData(); // Load user data from file during initialization
-            pinModule = new PinModule();
+            _usersDatabase = LoadUserData(); // Load user data from file during initialization
+            _pinModule = new PinModule();
         }
 
         /// <summary>
         /// Adds a new user to the database.
         /// </summary>
         /// <param name="newUser">The new user to be added.</param>
-        public void AddUser(User newUser)
+        public void AddUser(UserModel newUser)
         {
             if (!IsCardNumberExists(newUser.CardNumber))
             {
-                usersDatabase.Add(newUser);
+                _usersDatabase.Add(newUser);
                 SaveUserData(); // Save user data to file after adding a new user
                 Console.WriteLine("Your account has been created.\n" +
             "Your card number is " + newUser.CardNumber +
@@ -54,9 +54,9 @@ namespace Test_of_Basic_C__training
         /// <param name="cardNumber">The card number of the user.</param>
         /// <param name="pin">The PIN of the user.</param>
         /// <returns>The user object if found, otherwise null.</returns>
-        public User GetUser(string cardNumber, string pin)
+        public UserModel GetUser(string cardNumber, string pin)
         {
-            return usersDatabase.Find(u => u.CardNumber == cardNumber && pinModule.VerifyPin(u, pin));
+            return _usersDatabase.Find(u => u.CardNumber == cardNumber && _pinModule.VerifyPin(u, pin));
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Test_of_Basic_C__training
         /// <returns>True if the card number exists, otherwise false.</returns>
         public bool IsCardNumberExists(string cardNumber)
         {
-            return usersDatabase.Exists(u => u.CardNumber == cardNumber);
+            return _usersDatabase.Exists(u => u.CardNumber == cardNumber);
         }
 
         /// <summary>
@@ -75,27 +75,21 @@ namespace Test_of_Basic_C__training
         /// <param name="user">The user whose PIN needs to be changed.</param>
         /// <param name="currentPin">The current PIN of the user.</param>
         /// <param name="newPin">The new PIN to set.</param
-        public void ChangePin(User user, string currentPin, string newPin)
+        public void ChangePin(UserModel user, string currentPin, string newPin)
         {
-            if (pinModule.ChangePin(user, currentPin, newPin))
-            {
-                SaveUserData(); // Save user data to file after changing PIN only if the operation is successful
-                Console.WriteLine("PIN changed successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Failed to change PIN. Please check your current PIN.");
-            }
+            user  = _pinModule.ChangePin(user, currentPin, newPin);
+            UpdateUserData(user); // Save user data to file after changing PIN only if the operation is successful
+            Console.WriteLine("Pin changed successfully");
         }
         /// <summary>
         /// Updates the mobile number of a user.
         /// </summary>
         /// <param name="user">The user whose mobile number needs to be updated.</param>
         /// <param name="newMobileNumber">The new mobile number to set.</param>
-        public void UpdateMobileNumber(User user, string newMobileNumber)
+        public void UpdateMobileNumber(UserModel user, string newMobileNumber)
         {
             user.MobileNumber = newMobileNumber;
-            SaveUserData(); // Save user data to file after updating mobile number
+            UpdateUserData(user); // Update user data to file after updating mobile number
             Console.WriteLine("Mobile number updated successfully.");
         }
         /// <summary>
@@ -104,7 +98,7 @@ namespace Test_of_Basic_C__training
         public void DisplayAllUsers()
         {
             Console.WriteLine("===== All Users =====");
-            foreach (User user in usersDatabase)
+            foreach (UserModel user in _usersDatabase)
             {
                 Console.WriteLine($"Card Number: {user.CardNumber}, PIN: {user.PIN}, Balance: {user.Balance}");
             }
@@ -113,23 +107,23 @@ namespace Test_of_Basic_C__training
         // Save user data to file using JSON serialization
         private void SaveUserData()
         {
-            string jsonData = JsonConvert.SerializeObject(usersDatabase, Formatting.Indented);
+            string jsonData = JsonConvert.SerializeObject(_usersDatabase, Formatting.Indented);
             File.WriteAllText(filePath, jsonData);
         }
 
         // Load user data from file using JSON deserialization
-        private List<User> LoadUserData()
+        private List<UserModel> LoadUserData()
         {
             if (File.Exists(filePath))
             {
                 string jsonData = File.ReadAllText(filePath);
-                List<User> loadedData = JsonConvert.DeserializeObject<List<User>>(jsonData) ?? new List<User>();
+                List<UserModel> loadedData = JsonConvert.DeserializeObject<List<UserModel>>(jsonData) ?? new List<UserModel>();
                 //Console.WriteLine("User data loaded successfully."); // You can comment out or remove this line
                 return loadedData;
             }
             else
             {
-                return new List<User>();
+                return new List<UserModel>();
             }
         }
 
@@ -137,13 +131,13 @@ namespace Test_of_Basic_C__training
         /// Updates user data in the database.
         /// </summary>
         /// <param name="updatedUser">The updated user data.</param>
-        public void UpdateUserData(User updatedUser)
+        public void UpdateUserData(UserModel updatedUser)
         {
-            int index = usersDatabase.FindIndex(u => u.CardNumber == updatedUser.CardNumber);
+            int index = _usersDatabase.FindIndex(u => u.CardNumber == updatedUser.CardNumber);
 
             if (index != -1)
             {
-                usersDatabase[index] = updatedUser;
+                _usersDatabase[index] = updatedUser;
                 SaveUserData(); // Save user data to file after updating user
                 Console.WriteLine("User data updated successfully.");
             }

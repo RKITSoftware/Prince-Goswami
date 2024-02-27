@@ -87,7 +87,7 @@ namespace ATM_Simulation_Demo.DAL
                 connection.Open();
 
                 using (MySqlCommand command = new MySqlCommand(
-                    "SELECT * FROM ACC01 WHERE C01F03 = @CardNumber AND C01F04 = @PIN;", connection))
+                    "SELECT * FROM ACC01 WHERE C01F02 = @CardNumber AND C01F04 = @PIN;", connection))
                 {
                     command.Parameters.AddWithValue("@CardNumber", cardNumber);
                     command.Parameters.AddWithValue("@PIN", BLCrypto.Encrypt(pin));
