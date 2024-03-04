@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 
 namespace Test_of_Basic_C__training
@@ -11,12 +10,17 @@ namespace Test_of_Basic_C__training
     /// </summary>
     public class DatabaseManagement
     {
+        #region Private Fields
         private List<UserModel> _usersDatabase;
         private PinModule _pinModule;
 
-        // File path to store user data
-        private string filePath = "UserData.json";
+        /// <summary>
+        /// File path to store user data
+        /// </summary>
+        private const string filePath = "UserData.json";
+        #endregion
 
+        #region Constructor
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseManagement"/> class.
         /// </summary>
@@ -25,7 +29,9 @@ namespace Test_of_Basic_C__training
             _usersDatabase = LoadUserData(); // Load user data from file during initialization
             _pinModule = new PinModule();
         }
+        #endregion
 
+        #region Public Methods
         /// <summary>
         /// Adds a new user to the database.
         /// </summary>
@@ -36,6 +42,7 @@ namespace Test_of_Basic_C__training
             {
                 _usersDatabase.Add(newUser);
                 SaveUserData(); // Save user data to file after adding a new user
+
                 Console.WriteLine("Your account has been created.\n" +
             "Your card number is " + newUser.CardNumber +
             "\nYour card PIN is " + newUser.PIN);
@@ -77,7 +84,7 @@ namespace Test_of_Basic_C__training
         /// <param name="newPin">The new PIN to set.</param
         public void ChangePin(UserModel user, string currentPin, string newPin)
         {
-            user  = _pinModule.ChangePin(user, currentPin, newPin);
+            user = _pinModule.ChangePin(user, currentPin, newPin);
             UpdateUserData(user); // Save user data to file after changing PIN only if the operation is successful
             Console.WriteLine("Pin changed successfully");
         }
@@ -104,29 +111,6 @@ namespace Test_of_Basic_C__training
             }
         }
 
-        // Save user data to file using JSON serialization
-        private void SaveUserData()
-        {
-            string jsonData = JsonConvert.SerializeObject(_usersDatabase, Formatting.Indented);
-            File.WriteAllText(filePath, jsonData);
-        }
-
-        // Load user data from file using JSON deserialization
-        private List<UserModel> LoadUserData()
-        {
-            if (File.Exists(filePath))
-            {
-                string jsonData = File.ReadAllText(filePath);
-                List<UserModel> loadedData = JsonConvert.DeserializeObject<List<UserModel>>(jsonData) ?? new List<UserModel>();
-                //Console.WriteLine("User data loaded successfully."); // You can comment out or remove this line
-                return loadedData;
-            }
-            else
-            {
-                return new List<UserModel>();
-            }
-        }
-
         /// <summary>
         /// Updates user data in the database.
         /// </summary>
@@ -146,5 +130,38 @@ namespace Test_of_Basic_C__training
                 Console.WriteLine("User not found. Unable to update user data.");
             }
         }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary> 
+        /// Save user data to file using JSON serialization
+        /// </summary>
+        private void SaveUserData()
+        {
+            string jsonData = JsonConvert.SerializeObject(_usersDatabase, Formatting.Indented);
+            File.WriteAllText(filePath, jsonData);
+        }
+
+        /// <summary>
+        /// Load user data from file using JSON deserialization
+        /// </summary>
+        /// <returns>List of Users data from file. </returns>
+        private List<UserModel> LoadUserData()
+        {
+            if (File.Exists(filePath))
+            {
+                string jsonData = File.ReadAllText(filePath);
+                List<UserModel> loadedData = JsonConvert.DeserializeObject<List<UserModel>>(jsonData) ?? new List<UserModel>();
+                //Console.WriteLine("User data loaded successfully."); // You can comment out or remove this line
+                return loadedData;
+            }
+            else
+            {
+                return new List<UserModel>();
+            }
+        }
+        #endregion
+
     }
 }

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Test_of_Basic_C__training
 {
+    /// <summary>
+    /// Represents a user account in the banking system.
+    /// </summary>
     public class UserModel
     {
         #region Private Fields

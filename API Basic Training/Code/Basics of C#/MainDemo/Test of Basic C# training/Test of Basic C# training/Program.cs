@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Test_of_Basic_C__training
 {
@@ -34,6 +33,7 @@ namespace Test_of_Basic_C__training
                     Console.Write("Enter your birth date (dd-MM-yyyy) : ");
                     string dob = Console.ReadLine();
                     string newPin = ConvertToPin(dob);
+                    if (newPin == null) continue;
                     UserModel newUser = new UserModel(name, newPin, mobileNumber);
                     databaseManagement.AddUser(newUser);
                 }
@@ -68,7 +68,7 @@ namespace Test_of_Basic_C__training
             }
 
             Console.WriteLine("Invalid date format. Please enter a date in the format dd-MM-yyyy.");
-            return "Error"; // Indicate an error
+            return null;
         }
 
         #endregion

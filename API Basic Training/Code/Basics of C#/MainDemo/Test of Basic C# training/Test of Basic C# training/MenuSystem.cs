@@ -13,6 +13,7 @@ namespace Test_of_Basic_C__training
         private TransactionManagement _transactionManagement;
         private DatabaseManagement _databaseManagement;
         private UserManagement _userManagement;
+
         #endregion
 
         #region Constructor
@@ -22,8 +23,6 @@ namespace Test_of_Basic_C__training
         /// </summary>
         public MenuSystem()
         {
-            _databaseManagement = new DatabaseManagement();
-            _transactionManagement = new TransactionManagement(_databaseManagement);
             _userManagement = new UserManagement();
         }
 
@@ -51,6 +50,8 @@ namespace Test_of_Basic_C__training
             {
                 Console.WriteLine("Login successful. Welcome "+ user.UserName);
                 _loggedInUser = user;
+                _databaseManagement = database;
+                _transactionManagement = new TransactionManagement(_databaseManagement);
                 ShowMainMenu();
             }
             else
