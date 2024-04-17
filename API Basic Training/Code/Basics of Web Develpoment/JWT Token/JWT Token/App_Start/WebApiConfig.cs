@@ -1,15 +1,15 @@
-﻿using System.Web.Http;
-using System.Web.Http.Cors;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Http;
 
-namespace Authentication
+namespace JWT_Token
 {
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)
         {
-            //// Enable CORS with policy allowing requests from http://example.com
-            //var cors = new EnableCorsAttribute("*", "*", "*");
-            //config.EnableCors(cors);
+            // Web API configuration and services
 
             // Web API routes
             config.MapHttpAttributeRoutes();
