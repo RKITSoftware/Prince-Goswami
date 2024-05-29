@@ -1,62 +1,64 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.BAL.Interface.V2;
 using ATM_Simulation_Demo.Models.V2;
+using System;
+using System.Collections.Generic;
 
 namespace ATM_Simulation_Demo.DAL.Account.v2
 {
-
-
     /// <summary>
     /// Class for managing the account repository.
     /// </summary>
     public class AccountRepository : IBLAccountRepository
     {
-        private static List<BLAccountModel> _accountsDatabase = new List<BLAccountModel>();
+        #region Fields
+
+        /// <summary>
+        /// Database to store accounts.
+        /// </summary>
+        private static List<AccountModel> _accountsDatabase = new List<AccountModel>();
+
+        /// <summary>
+        /// Module for PIN related operations.
+        /// </summary>
         public readonly IBLPinModule _pinModule;
-        //private readonly ILogger<AccountRepository> _logger;
-        //private IBLPinModule pinModule;
-        //private Action<string> writeLine;
 
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="AccountRepository"/> class.
-        ///// </summary>
-        ///// <param name="pinModule">The PIN module.</param>
-        ///// <param name="logger">The logger.</param>
-        //public AccountRepository(IBLPinModule pinModule, Logger<AccountRepository> logger)
-        //{
-        //    _accountsDatabase = new List<BLAccountModel>();
-        //    _pinModule = pinModule ?? throw new ArgumentNullException(nameof(pinModule));
-        //    _logger = new ILogger<>();
-        //}
+        #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Constructs an instance of the AccountRepository.
+        /// </summary>
+        /// <param name="pinModule">The PIN module to use for account operations.</param>
         public AccountRepository(IBLPinModule pinModule)
         {
             this._pinModule = pinModule;
-            //_logger = new Logger<AccountRepository>();
         }
 
-        /// <inheritdoc/>
-        public void AddAccount(BLAccountModel newAccount)
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Adds a new account to the repository.
+        /// </summary>
+        /// <param name="newAccount">The account to add.</param>
+        /// <exception cref="ArgumentNullException">Thrown when newAccount is null.</exception>
+        public void AddAccount(AccountModel newAccount)
         {
             if (newAccount == null)
             {
                 throw new ArgumentNullException(nameof(newAccount), "Account cannot be null.");
             }
 
-            //if (IsCardNumberExists(newAccount.CardNumber))
-            //{
-            //    throw new ArgumentException("Account with the same card number already exists.", nameof(newAccount));
-            //}
-
             _accountsDatabase.Add(newAccount);
-            //_logger.LogInformation("Account added successfully.");
         }
 
-        /// <inheritdoc/>
-        public void UpdateAccount(BLAccountModel account)
+        /// <summary>
+        /// Updates an existing account's transaction history.
+        /// </summary>
+        /// <param name="account">The account with updated transaction history.</param>        
+        public void UpdateAccount(AccountModel account)
         {
             if (account == null)
             {
@@ -69,22 +71,27 @@ namespace ATM_Simulation_Demo.DAL.Account.v2
             }
 
             _accountsDatabase.Find(u => u.CardNumber == account.CardNumber).TransactionHistory = account.TransactionHistory;
-            //_logger.LogInformation("Transaction added successfully.");
         }
 
-        /// <inheritdoc/>
-        public BLAccountModel GetAccount(string cardNumber, string pin)
+        /// <summary>
+        /// Retrieves an account by card number and PIN.
+        /// </summary>
+        /// <param name="cardNumber">The card number of the account to retrieve.</param>
+        /// <param name="pin">The PIN associated with the account.</param>
+        /// <returns>The account if found and PIN verification succeeds; otherwise, null.</returns>
+        public AccountModel GetAccount(string cardNumber, string pin)
         {
-            if (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(pin))
-            {
-                throw new ArgumentException("Card number and PIN cannot be null or empty.");
-            }
+
 
             return _accountsDatabase.Find(u => u.CardNumber == cardNumber && _pinModule.VerifyPin(u, pin));
         }
 
-        /// <inheritdoc/>
-        public BLAccountModel GetAccountByID(int Id)
+        /// <summary>
+        /// Retrieves an account by its unique identifier.
+        /// </summary>
+        /// <param name="Id">The unique identifier of the account to retrieve.</param>
+        /// <returns>The account if found; otherwise, null.</returns>
+        public AccountModel GetAccountByID(int Id)
         {
             if (Id <= 0)
             {
@@ -94,6 +101,11 @@ namespace ATM_Simulation_Demo.DAL.Account.v2
             return _accountsDatabase.Find(a => a.Id == Id);
         }
 
+        /// <summary>
+        /// Checks if a card number already exists in the repository.
+        /// </summary>
+        /// <param name="cardNumber">The card number to check for existence.</param>
+        /// <returns>True if the card number exists; otherwise, false.</returns>
         /// <inheritdoc/>
         public bool IsCardNumberExists(string cardNumber)
         {
@@ -105,8 +117,12 @@ namespace ATM_Simulation_Demo.DAL.Account.v2
             return _accountsDatabase.Exists(a => a.CardNumber == cardNumber);
         }
 
-        /// <inheritdoc/>
-        public void ChangePin(BLAccountModel account, string currentPin, string newPin)
+        /// <summary>
+        /// Updates the mobile number associated with an account.
+        /// </summary>
+        /// <param name="account">The account for which to update the mobile number.</param>
+        /// <param name="newMobileNumber">The new mobile number.</param>
+        public void ChangePin(AccountModel account, string currentPin, string newPin)
         {
             if (account == null)
             {
@@ -121,8 +137,13 @@ namespace ATM_Simulation_Demo.DAL.Account.v2
             _pinModule.ChangePin(account, currentPin, newPin);
         }
 
-        /// <inheritdoc/>
-        public void UpdateMobileNumber(BLAccountModel account, string newMobileNumber)
+
+        /// <summary>
+        /// Updates the mobile number associated with an account.
+        /// </summary>
+        /// <param name="account">The account for which to update the mobile number.</param>
+        /// <param name="newMobileNumber">The new mobile number.</param>
+        public void UpdateMobileNumber(AccountModel account, string newMobileNumber)
         {
             if (account == null)
             {
@@ -135,14 +156,18 @@ namespace ATM_Simulation_Demo.DAL.Account.v2
             }
 
             account.MobileNumber = newMobileNumber;
-            //_logger.LogInformation("Mobile number updated successfully.");
         }
 
-        /// <inheritdoc/>
-        public List<BLAccountModel> GetAllAccounts()
+
+        /// <summary>
+        /// Retrieves all accounts stored in the repository.
+        /// </summary>
+        /// <returns>A list of all accounts.</returns>
+        public List<AccountModel> GetAllAccounts()
         {
             return _accountsDatabase;
         }
+        #endregion
     }
 
 }

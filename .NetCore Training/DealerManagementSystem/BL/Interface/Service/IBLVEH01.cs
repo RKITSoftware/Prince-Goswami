@@ -1,4 +1,4 @@
-﻿using DealerManagementSystem.Models;
+﻿using DealerManagementSystem.Models.POCO;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

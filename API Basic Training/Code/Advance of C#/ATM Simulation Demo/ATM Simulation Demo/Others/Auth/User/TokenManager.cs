@@ -1,6 +1,8 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using ATM_Simulation_Demo.Models.POCO;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 
 namespace ATM_Simulation_Demo.Others.Auth.User
@@ -16,6 +18,10 @@ namespace ATM_Simulation_Demo.Others.Auth.User
 
         #endregion
 
+        #region Public Properties
+          public static int sessionId;
+        #endregion
+
         #region Token Generation
 
         /// <summary>
@@ -23,7 +29,7 @@ namespace ATM_Simulation_Demo.Others.Auth.User
         /// </summary>
         /// <param name="userName">The username to include in the JWT token.</param>
         /// <returns>The generated JWT token as a string.</returns>
-        public static string GenerateUserToken(string userName, UserRole role)
+        public static string GenerateUserToken(int id,string userName, UserRole role)
         {
             byte[] key = Convert.FromBase64String(SecretKey);
 
@@ -31,7 +37,10 @@ namespace ATM_Simulation_Demo.Others.Auth.User
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userName), new Claim(ClaimTypes.Role, role.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userName),
+                    new Claim(ClaimTypes.Role, role.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, id.ToString())
+                }),
                 Expires = DateTime.UtcNow.AddMinutes(3), // Consider making this configurable
                 SigningCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
@@ -85,6 +94,8 @@ namespace ATM_Simulation_Demo.Others.Auth.User
 
                 SecurityToken securityToken;
                 var principal = handler.ValidateToken(token, parameters, out securityToken);
+                //var sidClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value;
+                //sessionId = Convert.ToInt32(sidClaim);
 
                 return principal;
             }
@@ -102,6 +113,36 @@ namespace ATM_Simulation_Demo.Others.Auth.User
             }
         }
 
+        #endregion
+        #region ValidateUserId
+        public static void setSessionId(string token)
+        {
+            try
+            {
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+                JwtSecurityToken jwtToken = (JwtSecurityToken)handler.ReadToken(token);
+
+                // Retrieve user ID from the claims
+                var claims = jwtToken?.Claims;
+                var userIdClaim = claims?.FirstOrDefault(c => c.Type == "nameid");
+
+                // Compare the user ID from the token with the expected user ID
+                sessionId = int.Parse(userIdClaim.Value);
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                // Handle token expiration (returning false in this case)
+                Console.WriteLine("Token has expired.");
+                throw new Exception("Token has Expired");
+            }
+            catch (Exception ex)
+            {
+                // Handle other token validation exceptions
+                throw new Exception($"Token validation error: {ex.Message}");
+
+            }
+        }
         #endregion
     }
 

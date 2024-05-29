@@ -8,16 +8,16 @@ using TypesOfClass;
 namespace TypesOfClass
 {
     /// <summary>
-    /// This is a generic class representing a ZooContainer that can hold different types of animals.
+    /// This is a generic class representing a ZooContainer that can hold different types of _animals.
     /// </summary>
     /// <typeparam name="T">The type of animal that the container can hold.</typeparam>
     public class ZooContainer<T> where T : AbstractAnimal
     {
-        private List<T> animals;
+        private List<T> _animals;
 
         public ZooContainer()
         {
-            animals = new List<T>();
+            _animals = new List<T>();
         }
 
         /// <summary>
@@ -26,16 +26,16 @@ namespace TypesOfClass
         /// <param name="animal">The animal to add.</param>
         public void AddAnimal(T animal)
         {
-            animals.Add(animal);
+            _animals.Add(animal);
         }
 
         /// <summary>
-        /// Displays all animals in the container.
+        /// Displays all _animals in the container.
         /// </summary>
         public void DisplayAnimals()
         {
             Console.WriteLine($"Animals in the container:");
-            foreach (var animal in animals)
+            foreach (var animal in _animals)
             {
                 animal.Display();
             }

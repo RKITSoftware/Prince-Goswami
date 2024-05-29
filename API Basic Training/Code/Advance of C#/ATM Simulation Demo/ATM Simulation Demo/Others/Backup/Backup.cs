@@ -1,28 +1,30 @@
-﻿using System;
+﻿using ATM_Simulation_Demo.DAL;
+using ATM_Simulation_Demo.Models.POCO;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using ATM_Simulation_Demo.Models;
-using ATM_Simulation_Demo;
-using Newtonsoft.Json;
-using System.Security.Cryptography.X509Certificates;
+using System.Web.UI;
 
 public class BackupService
 {
 
-    private readonly string _backupPath = "F:\\367 - Prince.G\\git\\API Basic Training\\Code\\Advance of C#\\ATM Simulation Demo\\ATM Simulation Demo\\Backup\\backup.json"; // Adjust the path accordingly
+    private readonly string _backupPath = "F:\\367 - Prince.G\\git\\API Basic Training\\Code\\Advance of C#\\ATM Simulation Demo\\ATM Simulation Demo\\Backup\\backup.json";
+    private readonly BackupRepository _backupRepository;
 
-    public string BackupData(List<ACC01> accounts, List<TRN01> allTransactions, List<USR01> users)
+    #region Constructor
+    public BackupService()
+    {
+        _backupRepository = new BackupRepository();
+    }
+    #endregion
+
+    public string BackupData()
     {
         try
         {
 
-            BackupDataModel backupData = new BackupDataModel
-            {
-                Accounts = accounts,
-                AllTransactions = allTransactions,
-                Users = users
-            };
-
+            string backupData = _backupRepository.GetBackupData();
             // Check if the file exists
             if (!File.Exists(_backupPath))
             {
@@ -30,18 +32,15 @@ public class BackupService
                 File.Create(_backupPath).Close();
             }
 
-            // Serialize data to JSON
-            string jsonBackup = JsonConvert.SerializeObject(backupData, Formatting.Indented);
-
             // Write JSON to file
-            File.WriteAllText(_backupPath, jsonBackup);
+            File.WriteAllText(_backupPath, backupData);
             return _backupPath;
         }
         catch (Exception ex)
         {
             // Log or handle the exception
             throw ex;
-       }
+        }
     }
 
 }

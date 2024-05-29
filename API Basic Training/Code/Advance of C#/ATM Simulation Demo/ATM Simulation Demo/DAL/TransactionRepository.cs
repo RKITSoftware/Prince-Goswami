@@ -1,6 +1,8 @@
 ﻿using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.BAL.Services;
+using ATM_Simulation_Demo.Models.POCO;
 using MySql.Data.MySqlClient;
+using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
 
@@ -9,49 +11,65 @@ namespace ATM_Simulation_Demo.DAL
     public class TransactionRepository : IBLTransactionRepository
     {
         private readonly string _connectionString = DAL_Helper.connectionString;
+        private readonly IBLLimitService _limitService = new LimitService();
 
-        
         /// <inheritdoc />
-        public ACC01 AddTransaction(ACC01 account, TRN01 transaction)
+        public decimal AddTransaction(int id, TRN01 transaction)
         {
-            if (VerifyTransaction(account.C01F06, transaction.N01F03, transaction.N01F04))
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                using (MySqlConnection connection = new MySqlConnection(_connectionString))
+                decimal newBalance = 0;
+                connection.Open();
+                MySqlTransaction transactionScope = connection.BeginTransaction();
+                try
                 {
-                    connection.Open();
+                    // Insert transaction
+                    _ = connection.Insert(transaction);
 
-
-                    // Insert transaction into the database
-                    using (MySqlCommand insertTransactionCommand = new MySqlCommand(
-                        "INSERT INTO TRN01 (N01F02, N01F03, N01F04, N01F06) " +
-                        "VALUES (@AccountId, @TransactionType, @Amount, @Description);", connection))
+                    // Update account balance
+                    if (transaction.N01F03 == 0)
                     {
-                        insertTransactionCommand.Parameters.AddWithValue("@AccountId", account.C01F01);
-                        insertTransactionCommand.Parameters.AddWithValue("@TransactionType", Enum.GetName(typeof(TransactionType), transaction.N01F03));
-                        insertTransactionCommand.Parameters.AddWithValue("@Amount", transaction.N01F04);
-                        insertTransactionCommand.Parameters.AddWithValue("@Description", transaction.N01F06);
-
-                        insertTransactionCommand.ExecuteNonQuery();
+                        transaction.N01F04 *= -1;
                     }
 
-                    // Update balance in the database
-                    if (transaction.N01F03 == 0) transaction.N01F04 *= -1;
+                    // Retrieve current balance
+                    decimal currentBalance = connection.Single<ACC01>(q => q.C01F01 == id).C01F06;
+                    newBalance = currentBalance + transaction.N01F04;
 
-                    using (MySqlCommand updateBalanceCommand = new MySqlCommand(
-                        "UPDATE ACC01 SET C01F06 = C01F06 + @Amount WHERE C01F01 = @AccountId;", connection))
+                    // Update account balance
+                    _ = connection.Update<ACC01>(new { C01F06 = newBalance }, q => q.C01F01 == id);
+
+                    bool withdrawalVerified = true;
+                    // Update limit
+                    if (transaction.N01F03 == 0)
                     {
-                        updateBalanceCommand.Parameters.AddWithValue("@Amount", transaction.N01F04);
-                        updateBalanceCommand.Parameters.AddWithValue("@AccountId", account.C01F01);
+                        withdrawalVerified = _limitService.UpdateDailyATMLimit(connection,id, transaction.N01F04);
+                    }
+                    if (!withdrawalVerified)
+                    {
+                        // If withdrawal is not verified, rollback transaction
+                        transactionScope.Rollback();
+                        Console.WriteLine("Withdrawal limit exceeded or could not be verified.");
+                        return -1;
+                    }
 
-                        updateBalanceCommand.ExecuteNonQuery();
-                    }                
+                    // Commit transaction if all operations are successful
+                    transactionScope.Commit();
                 }
+                catch (Exception ex)
+                {
+                    // Rollback transaction if there's an exception
+                    transactionScope.Rollback();
+                    // Handle exception
+                    Console.WriteLine("Transaction failed: " + ex.Message);
+                }
+                return newBalance;
             }
-            return account;
+            return -1;
         }
 
         /// <inheritdoc />
-        public List<TRN01> ViewTransactionHistory(ACC01 account)
+        public List<TRN01> ViewTransactionHistory(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
@@ -59,11 +77,21 @@ namespace ATM_Simulation_Demo.DAL
 
                 // Retrieve transaction history from the database
                 List<TRN01> transactionHistory = new List<TRN01>();
-
+                string query = @"SELECT 
+                                    N01F01, 
+                                    N01F02, 
+                                    N01F03, 
+                                    N01F04, 
+                                    N01F05, 
+                                    N01F06 
+                                 FROM 
+                                    TRN01 
+                                 WHERE 
+                                    N01F02 = @AccountId";
                 using (MySqlCommand command = new MySqlCommand(
-                    "SELECT * FROM TRN01 WHERE N01F02 = @AccountId;", connection))
+                  query , connection))
                 {
-                    command.Parameters.AddWithValue("@AccountId", account.C01F01);
+                    command.Parameters.AddWithValue("@AccountId", id);
 
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
@@ -84,8 +112,8 @@ namespace ATM_Simulation_Demo.DAL
 
                 return transactionHistory;
             }
-        } 
-        
+        }
+
         /// <inheritdoc />
         public List<TRN01> GetAllTransactions()
         {
@@ -120,13 +148,15 @@ namespace ATM_Simulation_Demo.DAL
             }
         }
 
-        private bool VerifyTransaction(decimal balance, TransactionType transactionType, decimal amount)
+        public bool VerifyTransaction(int id, decimal amount)
         {
-            if (transactionType == TransactionType.Debit && balance - amount <= 10)
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
-                return false;
+                connection.Open();
+
+                decimal balance = connection.Single<ACC01>(q => q.C01F01 == id).C01F06;
+                return balance - amount > 10;
             }
-            return true;
         }
     }
 }

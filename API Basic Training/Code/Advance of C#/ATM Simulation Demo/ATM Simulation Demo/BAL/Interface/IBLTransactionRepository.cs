@@ -1,6 +1,7 @@
 ﻿using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.POCO;
 using System.Collections.Generic;
-
+using System.Windows.Media.Animation;
 
 namespace ATM_Simulation_Demo.BAL.Interface
 {
@@ -14,20 +15,23 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// </summary>
         /// <param name="user">The user to add the transaction for.</param>
         /// <param name="transaction">The transaction to add.</param>
-        ACC01 AddTransaction(ACC01 account, TRN01 transaction);
+        decimal AddTransaction(int id, TRN01 transaction);
 
         /// <summary>
         /// View transaction history for a user.
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns>List of transactions in the user's history.</returns>
-        List<TRN01> ViewTransactionHistory(ACC01 account);
-        
+        List<TRN01> ViewTransactionHistory(int id);
+
         /// <summary>
         /// Get all transaction history for backup.
         /// </summary>
         /// <returns>List of transactions.</returns>
-        List<TRN01> GetAllTransactions( );
+        List<TRN01> GetAllTransactions();
+
+        bool VerifyTransaction(int id,decimal amount);
+
     }
 
 }

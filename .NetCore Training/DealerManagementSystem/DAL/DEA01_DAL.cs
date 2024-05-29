@@ -1,4 +1,4 @@
-﻿using DealerManagementSystem.Models;
+﻿using DealerManagementSystem.Models.POCO;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using System.Configuration;
@@ -8,16 +8,16 @@ namespace DealerManagementSystem.DAL
     /// <summary>
     /// Repository for interacting with DEA01 data.
     /// </summary>
-    public class DEA01Repository : IDEA01_DAL
+    public class DEA01_DAL : IDEA01_DAL
     {
         private readonly IDbConnectionFactory _dbFactory;
         private readonly string _connectionString;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DEA01Repository"/> class.
+        /// Initializes a new instance of the <see cref="DEA01_DAL"/> class.
         /// </summary>
         /// <param name="dbFactory">The IDbConnectionFactory implementation.</param>
-        public DEA01Repository(IConfiguration configuration)
+        public DEA01_DAL(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("Default");
             _dbFactory = new OrmLiteConnectionFactory(_connectionString, MySqlDialect.Provider);

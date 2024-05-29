@@ -9,7 +9,7 @@ namespace ATM_Simulation_Demo.DAL.Transaction.V1
     {
         #region Fields
 
-        private readonly List<BLTransactionModel> _transactionDatabase;
+        private readonly List<TransactionModel> _transactionDatabase;
 
         #endregion
 
@@ -20,22 +20,22 @@ namespace ATM_Simulation_Demo.DAL.Transaction.V1
         /// </summary>
         public TransactionRepository()
         {
-            _transactionDatabase = new List<BLTransactionModel>();
+            _transactionDatabase = new List<TransactionModel>();
         }
 
         #endregion
 
         #region Public Methods
 
-        /// <inheritdoc />
+
         /// <summary>
         /// Adds a transaction to the user's transaction history.
         /// </summary>
         /// <param name="user">The user to add the transaction for.</param>
         /// <param name="transaction">The transaction to add.</param>
-        public void AddTransaction(BLAccountModel user, BLTransactionModel transaction)
+        public void AddTransaction(AccountModel user, TransactionModel transaction)
         {
-            user.TransactionHistory.Add(new BLTransactionModel
+            user.TransactionHistory.Add(new TransactionModel
             {
                 TransactionId = _transactionDatabase.Count + 1, // Generating a unique transaction ID
                 Date = DateTime.Now,
@@ -44,13 +44,13 @@ namespace ATM_Simulation_Demo.DAL.Transaction.V1
             });
         }
 
-        /// <inheritdoc />
+
         /// <summary>
         /// View transaction history for a user.
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns>List of transactions in the user's history.</returns>
-        public List<BLTransactionModel> ViewTransactionHistory(BLAccountModel user)
+        public List<TransactionModel> ViewTransactionHistory(AccountModel user)
         {
             return user.TransactionHistory;
         }

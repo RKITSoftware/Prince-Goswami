@@ -5,7 +5,9 @@ using System.Linq;
 
 namespace LINQ
 {
-
+    /// <summary>
+    /// Represents a program demonstrating LINQ queries with DataTable.
+    /// </summary>
     class Program
     {
         static void Main()
@@ -29,57 +31,48 @@ namespace LINQ
                                   Name = row.Field<string>("Name"),
                                   Department = row.Field<string>("Department")
                               };
+            printEmployee("IT", itEmployees);
 
-            // Display the result
-            Console.WriteLine("IT Employees:");
-            foreach (var employee in itEmployees)
-            {
-                Console.WriteLine($"{employee.ID} - {employee.Name} ({employee.Department})");
-            }
+            // LINQ query to select employees from the Finance department
+            var financeEmployees = dataTable.AsEnumerable()
+                                .Where(row => row.Field<string>("Department") == "Finance")
+                                .Select(row => new
+                                {
+                                    ID = row.Field<int>("ID"),
+                                    Name = row.Field<string>("Name"),
+                                    Department = row.Field<string>("Department")
+                                });
+            printEmployee("Finance", financeEmployees);
+
+            // LINQ query to sort employees by name
+            var sortedEmployees = dataTable.AsEnumerable()
+                                           .OrderBy(row => row.Field<string>("Name"))
+                                           .Select(row => new
+                                           {
+                                               ID = row.Field<int>("ID"),
+                                               Name = row.Field<string>("Name"),
+                                               Department = row.Field<string>("Department")
+                                           });
+            printEmployee("Sorted", sortedEmployees);
+
 
             Console.ReadLine();
         }
+
+        /// <summary>
+        /// Prints the list of employees based on the specified type and employee list.
+        /// </summary>
+        /// <param name="employeeType">The type of employees being printed.</param>
+        /// <param name="employeeList">The list of employees to print.</param>
+
+        static void printEmployee(string employeeType, dynamic employeeList)
+        {
+            // Display the result
+            Console.WriteLine(employeeType + " Employees:");
+            foreach (var employee in employeeList)
+            {
+                Console.WriteLine($"{employee.ID} - {employee.Name} ({employee.Department})");
+            }
+        }
     }
-
 }
-
-
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-
-//class Program
-//{
-//    static void Main()
-//    {
-//        // Create a List of employees
-//        List<Employee> employees = new List<Employee>
-//        {
-//            new Employee { ID = 1, Name = "Alice", Department = "HR" },
-//            new Employee { ID = 2, Name = "Bob", Department = "IT" },
-//            new Employee { ID = 3, Name = "Charlie", Department = "Finance" }
-//        };
-
-//        // LINQ query to select employees from the IT department
-//        var itEmployees = from employee in employees
-//                          where employee.Department == "IT"
-//                          select employee;
-
-//        // Display the result
-//        Console.WriteLine("IT Employees:");
-//        foreach (var employee in itEmployees)
-//        {
-//            Console.WriteLine($"{employee.ID} - {employee.Name} ({employee.Department})");
-//        }
-
-//        Console.ReadLine();
-//    }
-//}
-
-//// Employee class for demonstration
-//class Employee
-//{
-//    public int ID { get; set; }
-//    public string Name { get; set; }
-//    public string Department { get; set; }
-//}

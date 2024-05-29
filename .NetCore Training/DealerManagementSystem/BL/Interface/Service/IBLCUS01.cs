@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DealerManagementSystem.Models;
+using DealerManagementSystem.Models.POCO;
 
 namespace DealerManagementSystem.BL.Interface.Service
 {

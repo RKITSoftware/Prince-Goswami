@@ -13,27 +13,27 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// </summary>
         /// <param name="newUser">The user to be created.</param>
         /// <returns>The newly created user.</returns>
-        BLUserModel CreateUser(BLUserModel newUser);
+        UserModel CreateUser(UserModel newUser);
 
         /// <summary>
         /// Retrieves a user by their user ID.
         /// </summary>
         /// <param name="userId">The ID of the user to retrieve.</param>
         /// <returns>The user with the specified ID.</returns>
-        BLUserModel GetUser(int userId);
+        UserModel GetUser(int userId);
         
         /// <summary>
         /// Retrieves a user by their user ID.
         /// </summary>
         /// <param name="user">The user to update.</param>
         /// <returns>The updated user.</returns>
-        BLUserModel UpdateUser(BLUserModel user);
+        UserModel UpdateUser(UserModel user);
 
         /// <summary>
         /// Retrieves all users.
         /// </summary>
         /// <returns>A list of all users.</returns>
-        List<BLUserModel> GetAllUsers();
+        List<UserModel> GetAllUsers();
 
         /// <summary>
         /// Verifies the credentials of a user.
@@ -50,7 +50,7 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// <param name="userName">The username of the user to retrieve.</param>
         /// <param name="password">The password of the user to retrieve.</param>
         /// <returns>The user with the specified username.</returns>
-        BLUserModel GetUserByCredentials(string userName, string password);
+        UserModel GetUserByCredentials(string userName, string password);
 
         ///// <summary>
         ///// Changes the role of a user.
@@ -67,11 +67,12 @@ namespace ATM_Simulation_Demo.BAL.Interface
         ///// <param name="newPassword">The new password for the user.</param>
         ///// <returns>True if the password change was successful, otherwise false.</returns>
         //bool ChangePassword(BLUserModel user, string currentPassword, string newPassword);
+        UserModel SingleFieldUpdate(int userId, string field, dynamic value);
 
         /// <summary>
         /// Deletes a user.
         /// </summary>
         /// <param name="userId">The ID of the user to delete.</param>
-        void DeleteUser(int userId);
+        bool DeleteUser(int userId);
     }
 }

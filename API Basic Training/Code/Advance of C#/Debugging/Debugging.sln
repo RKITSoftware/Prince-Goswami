@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugging", "Debugging.csproj", "{E51D7496-B832-43D5-B6C8-5760AD8349B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Developer Mode|Any CPU = Developer Mode|Any CPU
+		Developer Mode|x86 = Developer Mode|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Debug|x86.ActiveCfg = Debug|x86
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Debug|x86.Build.0 = Debug|x86
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Developer Mode|Any CPU.ActiveCfg = Developer Mode|Any CPU
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Developer Mode|Any CPU.Build.0 = Developer Mode|Any CPU
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Developer Mode|x86.ActiveCfg = Developer Mode|x86
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Developer Mode|x86.Build.0 = Developer Mode|x86
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Release|x86.ActiveCfg = Release|x86
+		{E51D7496-B832-43D5-B6C8-5760AD8349B4}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {31784EB4-FA2E-4BDD-826F-A98CFA40BD21}
+	EndGlobalSection
+EndGlobal

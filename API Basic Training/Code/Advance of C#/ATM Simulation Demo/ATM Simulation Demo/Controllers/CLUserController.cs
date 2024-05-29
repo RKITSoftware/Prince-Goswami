@@ -1,12 +1,16 @@
 ﻿using System;
 using ATM_Simulation_Demo.Others.Auth.User;
-using System.Net.Http;
-using System.Net;
-using System.Web.Http;
 using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.DAL;
 using System.Web.Http.Cors;
 using ATM_Simulation_Demo.BAL.Services;
+using ATM_Simulation_Demo.Models.POCO;
+using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.DTO;
+using System.Web;
+using System.Net.Http;
+using System.Web.Http;
+using System.Net;
 
 namespace ATM_Simulation_Demo.Controllers
 {
@@ -14,17 +18,30 @@ namespace ATM_Simulation_Demo.Controllers
     /// API controller for managing user-related operations.
     /// </summary>
     [RoutePrefix("api/users")]
+    [CustomAuthenticationFilter]
     public class UserController : ApiController
     {
         #region fields
-        private readonly static IBLUserRepository _userRepo = new UserRepository();
-        private readonly IBLUserService _userService = new UserService(_userRepo);
+        private readonly static IBLUserRepository _userRepository = new UserRepository();
+        private readonly IBLUserService _userService = new UserService(_userRepository);
+        private Response _objResponse;
         #endregion
 
         #region Actions
+        /// <summary>
+        /// Authenticates a user based on provided credentials and generates a JWT token if the credentials are valid.
+        /// </summary>
+        /// <param name="userName">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>
+        /// HttpResponseMessage:
+        ///     - HttpStatusCode.OK with a JWT token if authentication is successful.
+        ///     - HttpStatusCode.Unauthorized with an error message if authentication fails.
+        ///     - HttpStatusCode.InternalServerError if an unexpected error occurs during authentication.
+        /// </returns>
         [HttpPost]
         [Route("Authenticate")]
-        //[AllowAnonymous]
+        [AllowAnonymous]
         public HttpResponseMessage Authenticate(string userName, string password)
         {
             try
@@ -34,14 +51,14 @@ namespace ATM_Simulation_Demo.Controllers
                 if (user != null)
                 {
                     // Generate a JWT token using the authentication service
-                    string token = UserTokenManager.GenerateUserToken(user.R01F02, user.R01F05);
+                    string token = UserTokenManager.GenerateUserToken(user.R01F01, user.R01F02, user.R01F05);
 
-                    // Return an OK response with the JWT token
+                    // Return an OK _objResponse with the JWT token
                     return Request.CreateErrorResponse(HttpStatusCode.OK, token);
                 }
                 else
                 {
-                    // Return an Unauthorized response with an error message
+                    // Return an Unauthorized _objResponse with an error message
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
                 }
             }
@@ -58,7 +75,7 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>User information if found, otherwise NotFound.</returns>
-        [CustomAuthenticationFilter]
+ 
         [CustomAuthorizationFilter(Roles = "Admin,User")]
         [HttpGet]
         [Route("{userId}")]
@@ -66,15 +83,8 @@ namespace ATM_Simulation_Demo.Controllers
         {
             try
             {
-                var user = _userService.GetUserByID(userId);
-                if (user != null)
-                {
-                    return Ok(user);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                _objResponse = _userService.GetUserByID(userId);
+                return Ok(_objResponse);
             }
             catch (Exception ex)
             {
@@ -90,16 +100,24 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="password">User's password.</param>
         /// <param name="role">User's role.</param>
         /// <returns>Newly created user information.</returns>
-        [CustomAuthenticationFilter]
+ 
         [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPost]
         [Route("create")]
-        public IHttpActionResult CreateUser(CreateUserRequest request)
+        public IHttpActionResult CreateUser(DTO_USR01 request)
         {
             try
             {
-                var newUser = _userService.CreateUser(request.UserName, request.MobileNumber, request.Password,request.DOB, request.Role);
-                return Ok(newUser);
+                _objResponse = _userService.PreValidation(request);
+
+                if (!_objResponse.IsError)
+                {
+                    _userService.PreSave(request);
+
+                    _userService.Validation();
+                    _objResponse = _userService.Save();
+                }
+                return Ok(_objResponse);
             }
             catch (Exception ex)
             {
@@ -111,20 +129,21 @@ namespace ATM_Simulation_Demo.Controllers
         /// <summary>
         /// Change the password for a user.
         /// </summary>
-        /// <param name="request">The request containing userId, currentPassword, and newPassword.</param>
+        /// <param name="currentPassword">currentPassword of user.</param>
+        /// <param name="newPassword">newPassword to set.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        [CustomAuthenticationFilter]
+ 
         [CustomAuthorizationFilter(Roles = "Admin,User")]
         [HttpPatch]
         [Route("changePassword")]
-        public IHttpActionResult ChangePassword(ChangePasswordRequest request)
+        public IHttpActionResult ChangePassword([FromBody] string currentPassword, [FromBody] string newPassword)
         {
             try
             {
                 // Assuming ChangePasswordRequest is a model containing userId, currentPassword, and newPassword properties
-                var user = _userService.GetUserByID(request.userId);
-                _userService.ChangePassword(user, request.currentPassword, request.newPassword);
-                return Ok("Password changed successfully.");
+                int id = UserTokenManager.sessionId;
+                Response _objResponse = _userService.ChangePassword(id, currentPassword, newPassword);
+                return Ok(_objResponse);
             }
             catch (Exception ex)
             {
@@ -138,18 +157,17 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing userId and newRole.</param>
         /// <returns>Action result indicating the result of the operation.</returns>  
-        [CustomAuthenticationFilter]
+ 
         [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPatch]
         [Route("updateRole")]
-        public IHttpActionResult UpdateRole(UpdateRoleRequest request)
+        public IHttpActionResult UpdateRole(int userId, UserRole userRole)
         {
             try
             {
                 // Assuming UpdateRoleRequest is a model containing userId and newRole properties
-                var user = _userService.GetUserByID(request.userId);
-                _userService.UpdateRole(user, request.newRole);
-                return Ok("Role updated successfully.");
+                _objResponse = _userService.UpdateRole(userId, userRole);
+                return Ok(_objResponse);
             }
             catch (Exception ex)
             {
@@ -162,7 +180,7 @@ namespace ATM_Simulation_Demo.Controllers
         /// Get all users.
         /// </summary>
         /// <returns>List of all users.</returns>
-        [CustomAuthenticationFilter]
+ 
         [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpGet]
         [Route("allUsers")]
@@ -170,8 +188,8 @@ namespace ATM_Simulation_Demo.Controllers
         {
             try
             {
-                var users = _userService.GetAllUsers();
-                return Ok(users);
+                _objResponse = _userService.GetAllUsers();
+                return Ok(_objResponse);
             }
             catch (Exception ex)
             {
@@ -180,40 +198,18 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
-        [CustomAuthenticationFilter]
+ 
         [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpDelete]
         [Route("DeleteUser/{userID}")]
-        public void DeleteUser(int userId)
+        public IHttpActionResult DeleteUser(int userId)
         {
-            _userService.DeleteUser(userId);
+            _objResponse = _userService.DeleteUser(userId);
+            return Ok(_objResponse);
         }
 
-        
+
         #endregion
     }
 
-    #region Request Models
-    public class ChangePasswordRequest
-    {
-        public int userId { get; set; }
-        public string currentPassword { get; set; }
-        public string newPassword { get; set; }
-    }
-
-    public class CreateUserRequest
-    {
-        public string UserName { get; set; }
-        public string MobileNumber { get; set; }
-        public string Password { get; set; }
-        public DateTime DOB{ get; set; }
-        public UserRole Role{ get; set; }
-    }
-
-    public class UpdateRoleRequest
-    {
-        public int userId { get; set; }
-        public UserRole newRole { get; set; }
-    }
-    #endregion
 }

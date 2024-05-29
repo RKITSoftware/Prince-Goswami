@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DealerManagementSystem.BL.Interface.Service;
 using DealerManagementSystem.DAL;
-using DealerManagementSystem.Models;
+using DealerManagementSystem.Models.POCO;
 
 namespace DealerManagementSystem.BL.Services
 {
@@ -9,7 +9,7 @@ namespace DealerManagementSystem.BL.Services
     {
         private readonly ISAL01_DAL _saleDealRepository;
 
-        public BLSAL01(SAL01Repository saleDealRepository)
+        public BLSAL01(ISAL01_DAL saleDealRepository)
         {
             _saleDealRepository = saleDealRepository;
         }

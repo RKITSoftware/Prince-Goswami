@@ -16,7 +16,7 @@ namespace ATM_Simulation_Demo.DAL.Pin
         /// </summary>
         /// <param name="user">The user to assign the PIN to.</param>
         /// <param name="newPin">The new PIN to assign.</param>
-        public void AssignPin(BLAccountModel user, string newPin)
+        public void AssignPin(AccountModel user, string newPin)
         {
             if (IsPinValid(newPin))
             {
@@ -35,7 +35,7 @@ namespace ATM_Simulation_Demo.DAL.Pin
         /// <param name="user">The user to change the PIN for.</param>
         /// <param name="currentPin">The current PIN for verification.</param>
         /// <param name="newPin">The new PIN to set.</param>
-        public void ChangePin(BLAccountModel user, string currentPin, string newPin)
+        public void ChangePin(AccountModel user, string currentPin, string newPin)
         {
             if (VerifyPin(user, currentPin))
             {
@@ -61,7 +61,7 @@ namespace ATM_Simulation_Demo.DAL.Pin
         /// <param name="user">The user to verify the PIN for.</param>
         /// <param name="enteredPin">The entered PIN to verify.</param>
         /// <returns>True if the entered PIN matches the user's PIN, otherwise false.</returns>
-        public bool VerifyPin(BLAccountModel user, string enteredPin)
+        public bool VerifyPin(AccountModel user, string enteredPin)
         {
             return user.PIN == enteredPin;
         }
@@ -70,7 +70,9 @@ namespace ATM_Simulation_Demo.DAL.Pin
 
         #region Helper Methods
 
-        // Helper method to validate the PIN format
+        /// <summary>
+        /// Helper method to validate the PIN format
+        /// </summary>
         private bool IsPinValid(string pin)
         {
             // PIN should be a 4-digit numeric value

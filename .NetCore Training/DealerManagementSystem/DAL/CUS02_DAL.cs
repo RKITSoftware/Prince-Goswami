@@ -1,4 +1,4 @@
-﻿using DealerManagementSystem.Models;
+﻿using DealerManagementSystem.Models.POCO;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using System.Configuration;
@@ -8,16 +8,16 @@ namespace DealerManagementSystem.DAL
     /// <summary>
     /// Repository for interacting with CUS02 data.
     /// </summary>
-    public class CUS02Repository : ICUS02_DAL
+    public class CUS02_DAL : ICUS02_DAL
     {
         private readonly IDbConnectionFactory _dbFactory;
         private readonly string _connectionString;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CUS02Repository"/> class.
+        /// Initializes a new instance of the <see cref="CUS02_DAL"/> class.
         /// </summary>
         /// <param name="dbFactory">The IDbConnectionFactory implementation.</param>
-        public CUS02Repository( IConfiguration configuration)
+        public CUS02_DAL( IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("Default");
             _dbFactory = new OrmLiteConnectionFactory(_connectionString, MySqlDialect.Provider);

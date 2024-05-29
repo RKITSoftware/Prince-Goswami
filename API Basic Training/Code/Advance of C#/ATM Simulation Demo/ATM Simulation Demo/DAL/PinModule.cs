@@ -1,6 +1,7 @@
 ﻿using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.DAL;
 using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.POCO;
 using MySql.Data.MySqlClient;
 using System;
 
@@ -14,7 +15,7 @@ namespace ATM_Simulation_Demo.DAL
         private readonly string _connectionString = DAL_Helper.connectionString;
 
         /// <inheritdoc />
-        public void AssignPin(ACC01 user, string newPin)
+        public void AssignPin(int id, string newPin)
         {
             if (IsPinValid(newPin))
             {
@@ -26,7 +27,7 @@ namespace ATM_Simulation_Demo.DAL
                         "UPDATE ACC01 SET C01F04 = @NewPin WHERE C01F01 = @UserId;", connection))
                     {
                         assignPinCommand.Parameters.AddWithValue("@NewPin", Convert.ToInt32(newPin));
-                        assignPinCommand.Parameters.AddWithValue("@UserId", user.C01F01);
+                        assignPinCommand.Parameters.AddWithValue("@UserId", id);
 
                         assignPinCommand.ExecuteNonQuery();
                     }
@@ -41,9 +42,9 @@ namespace ATM_Simulation_Demo.DAL
         }
 
         /// <inheritdoc />
-        public void ChangePin(ACC01 user, string currentPin, string newPin)
+        public string ChangePin(int id, string currentPin, string newPin)
         {
-            if (VerifyPin(user, currentPin))
+            if (VerifyPin(id, currentPin))
             {
                 if (IsPinValid(newPin))
                 {
@@ -55,35 +56,35 @@ namespace ATM_Simulation_Demo.DAL
                             "UPDATE ACC01 SET C01F04 = @NewPin WHERE C01F01 = @UserId AND C01F04 = @CurrentPin;", connection))
                         {
                             changePinCommand.Parameters.AddWithValue("@NewPin", Convert.ToInt32(newPin));
-                            changePinCommand.Parameters.AddWithValue("@UserId", user.C01F01);
+                            changePinCommand.Parameters.AddWithValue("@UserId", id);
                             changePinCommand.Parameters.AddWithValue("@CurrentPin", Convert.ToInt32(currentPin));
 
                             int rowsAffected = changePinCommand.ExecuteNonQuery();
 
                             if (rowsAffected > 0)
                             {
-                                Console.WriteLine("PIN changed successfully.");
+                                return "PIN changed successfully.";
                             }
                             else
                             {
-                                Console.WriteLine("Current PIN verification failed. PIN not changed.");
+                                return "Current PIN verification failed. PIN not changed.";
                             }
                         }
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid new PIN. Please use a 4-digit numeric PIN.");
+                    return "Invalid new PIN. Please use a 4-digit numeric PIN.";
                 }
             }
             else
             {
-                Console.WriteLine("Current PIN verification failed. PIN not changed.");
+                return  "Current PIN verification failed. PIN not changed.";
             }
         }
 
         /// <inheritdoc />
-        public bool VerifyPin(ACC01 user, string enteredPin)
+        public bool VerifyPin(int Id, string enteredPin)
         {
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
@@ -92,7 +93,7 @@ namespace ATM_Simulation_Demo.DAL
                 using (MySqlCommand verifyPinCommand = new MySqlCommand(
                     "SELECT COUNT(*) FROM ACC01 WHERE C01F01 = @UserId AND C01F04 = @EnteredPin;", connection))
                 {
-                    verifyPinCommand.Parameters.AddWithValue("@UserId", user.C01F01);
+                    verifyPinCommand.Parameters.AddWithValue("@UserId", Id);
                     verifyPinCommand.Parameters.AddWithValue("@EnteredPin", enteredPin);
 
                     int count = Convert.ToInt32(verifyPinCommand.ExecuteScalar());

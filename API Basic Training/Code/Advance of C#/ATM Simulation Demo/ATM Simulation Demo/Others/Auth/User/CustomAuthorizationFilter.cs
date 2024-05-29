@@ -5,6 +5,7 @@ using System.Web.Http.Filters;
 using System.Web.Http;
 using System.Net.Http;
 using System.Linq;
+using ATM_Simulation_Demo.Others.Auth.User;
 
 namespace ATM_Simulation_Demo.Others.Auth.User
 {
@@ -17,7 +18,7 @@ namespace ATM_Simulation_Demo.Others.Auth.User
         /// Called when authorization is required for an HTTP request.
         /// </summary>
         /// <param name="actionContext">The context for the action.</param>
-        public void OnAuthorization(HttpActionContext actionContext)
+        public override void OnAuthorization(HttpActionContext actionContext)
         {
             // Retrieve the user principal from the request context
             var principal = actionContext.RequestContext.Principal as ClaimsPrincipal;
@@ -38,7 +39,10 @@ namespace ATM_Simulation_Demo.Others.Auth.User
             {
                 // Return Forbidden response if the user lacks required roles
                 actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Insufficient permissions");
+                return;
             }
+            string token = actionContext.Request.Headers.Authorization.Parameter;
+            UserTokenManager.setSessionId(token);
         }
     }
 }

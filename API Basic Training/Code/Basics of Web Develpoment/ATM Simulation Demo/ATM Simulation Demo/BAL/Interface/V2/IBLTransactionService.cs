@@ -14,14 +14,14 @@ namespace ATM_Simulation_Demo.BAL.Interface.V2
             /// </summary>
             /// <param name="account">The account to add the transaction for.</param>
             /// <param name="transaction">The transaction to add.</param>
-            decimal AddTransaction(int  accountId, BLTransactionModel transaction);
+            decimal AddTransaction(int  accountId, TransactionModel transaction);
 
             /// <summary>
             /// View transaction history for a account.
             /// </summary>
             /// <param name="account">The account.</param>
             /// <returns>List of transactions in the account's history.</returns>
-            List<BLTransactionModel> ViewTransactionHistory(int accountId);
+            List<TransactionModel> ViewTransactionHistory(int accountId);
         }
     }
 

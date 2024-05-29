@@ -1,4 +1,5 @@
 ﻿using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.POCO;
 using System.Collections.Generic;
 
 namespace ATM_Simulation_Demo.BAL.Interface
@@ -55,7 +56,7 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// </summary>
         /// <param name="account">The account to update the mobile number for.</param>
         /// <param name="newMobileNumber">The new mobile number to set.</param>
-        void UpdateMobileNumber(ACC01 account, string newMobileNumber);
+        bool UpdateMobileNumber(int accountId, string newMobileNumber);
 
         /// <summary>
         /// Retrieves a list of all accounts in the repository.
@@ -68,7 +69,15 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// </summary>
         /// <param name="Id">The Id of the account.</param>
         /// <returns>The account object if found, null otherwise.</returns>
-        void Delete(int Id);
+        bool Delete(int Id);
+
+        /// <summary>
+        /// Checks if a account with the given id exists in the repository.
+        /// </summary>
+        /// <param name="id">The id to check.</param>
+        /// <returns>True if the account exists, false otherwise.</returns>
+        bool IsUserExists(int id);
+
     }
 
 }

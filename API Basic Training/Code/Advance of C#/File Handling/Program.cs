@@ -25,6 +25,9 @@ class Program
 
         // Get information about a specific file
         GetFileInfo(rootPath, "sample.txt");
+        
+        // Get information about a specific directory
+        GetDirectoryInfo(rootPath);
 
 
         // Read content from the new file
@@ -89,6 +92,55 @@ class Program
         // Copy the file
         File.Copy(sourceFilePath, destinationFilePath, true);
         Console.WriteLine($"File copied to: {destinationFilePath}");
+    }
+
+    #endregion
+
+    #region Get Directory Info
+
+    /// <summary>
+    /// Retrieves information about a specific directory.
+    /// </summary>
+    static void GetDirectoryInfo(string rootPath)
+    {
+        string directoryPath = rootPath;
+
+        // Create a DirectoryInfo object for the directory
+        DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
+
+        // Check if the directory exists
+        if (directoryInfo.Exists)
+        {
+            Console.WriteLine("Directory exists.");
+
+            // Get directory name
+            string directoryName = directoryInfo.Name;
+            Console.WriteLine("Directory Name: " + directoryName);
+
+            // Get full directory path
+            string fullPath = directoryInfo.FullName;
+            Console.WriteLine("Full Path: " + fullPath);
+
+            // Get creation time
+            DateTime creationTime = directoryInfo.CreationTime;
+            Console.WriteLine("Creation Time: " + creationTime);
+
+            // Get last access time
+            DateTime lastAccessTime = directoryInfo.LastAccessTime;
+            Console.WriteLine("Last Access Time: " + lastAccessTime);
+
+            // Get last write time
+            DateTime lastWriteTime = directoryInfo.LastWriteTime;
+            Console.WriteLine("Last Write Time: " + lastWriteTime);
+
+            //// Get directory size
+            //long directorySize = GetDirectorySize(directoryInfo);
+            //Console.WriteLine("Directory Size: " + directorySize + " bytes");
+        }
+        else
+        {
+            Console.WriteLine("Directory does not exist.");
+        }
     }
 
     #endregion

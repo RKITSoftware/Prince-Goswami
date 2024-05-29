@@ -1,4 +1,5 @@
 ﻿using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.POCO;
 using System.Collections.Generic;
 
 namespace ATM_Simulation_Demo.BAL.Interface
@@ -8,12 +9,12 @@ namespace ATM_Simulation_Demo.BAL.Interface
     /// </summary>
     public interface IBLLimitRepository
     {
-        ///// <summary>
-        ///// Gets the ATMLimit by its ID.
-        ///// </summary>
-        ///// <param name="limitID">The ID of the ATMLimit to retrieve.</param>
-        ///// <returns>The ATMLimit with the specified ID.</returns>
-        //LMT01 GetATMLimitById(int limitID);
+        /// <summary>
+        /// Gets the ATMLimit by its ID.
+        /// </summary>
+        /// <param name="limitID">The ID of the ATMLimit to retrieve.</param>
+        /// <returns>The ATMLimit with the specified ID.</returns>
+        List<LMT01> GetAllATMLimit();
 
         /// <summary>
         /// Gets the ATMLimit for a specific account.
@@ -47,7 +48,7 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// </summary>
         /// <param name="accountID">The ID of the account.</param>
         /// <param name="newLimit">The new ATMLimit values.</param>
-        void UpdateDailyATMLimit(int accountID, LMT01 limit);
+        bool UpdateDailyATMLimit(int accountID,decimal balance);
 
         ///// <summary>
         ///// Deletes the ATMLimit for a specific account.

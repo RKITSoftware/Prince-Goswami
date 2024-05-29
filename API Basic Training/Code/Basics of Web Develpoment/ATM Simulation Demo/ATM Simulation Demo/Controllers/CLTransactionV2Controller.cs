@@ -75,9 +75,5 @@ namespace ATM_Simulation_Demo.Controllers
         #endregion
     }
 
-    public class AddTransactionRequestV2
-    {
-        public int AccountId { get; set; }
-        public BLTransactionModel Transaction { get; set; }
-    }
+  
 }

@@ -1,4 +1,5 @@
 ﻿using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.POCO;
 using MySql.Data.MySqlClient;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.Dapper;

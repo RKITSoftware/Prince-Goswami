@@ -32,6 +32,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\ATM Simulation Demo.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -227,25 +228,26 @@
     <Compile Include="Controllers\CLAccountController.cs" />
     <Compile Include="Controllers\CLUserController.cs" />
     <Compile Include="DAL\Account\V2\AccountRepository.cs" />
-    <Compile Include="DAL\Account\V2\AccountServices.cs" />
+    <Compile Include="BAL\Services\V2\BLAccountServices.cs" />
     <Compile Include="DAL\Pin\PinModuleV2.cs" />
     <Compile Include="DAL\Transaction\V2\TransactionRepository.cs" />
-    <Compile Include="DAL\Transaction\V2\TransactionServices.cs" />
+    <Compile Include="BAL\Services\V2\BLTransactionServices.cs" />
     <Compile Include="DAL\User\UserRepository.cs" />
-    <Compile Include="DAL\User\UserServices.cs" />
+    <Compile Include="BAL\Services\BLUserServices.cs" />
     <Compile Include="DAL\Pin\PinModule.cs" />
     <Compile Include="DAL\Transaction\V1\TransactionRepository.cs" />
-    <Compile Include="DAL\Transaction\V1\TransactionServices.cs" />
+    <Compile Include="BAL\Services\V1\BLTransactionServices.cs" />
     <Compile Include="DAL\Account\V1\AccountRepository.cs" />
-    <Compile Include="DAL\Account\V1\AccountServices.cs" />
+    <Compile Include="BAL\Services\V1\BLAccountServices.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\V2\BLAccountModel.cs" />
-    <Compile Include="Models\V2\BLTransactionModel.cs" />
-    <Compile Include="Models\V1\BLTransactionModel.cs" />
-    <Compile Include="Models\BLUserModel.cs" />
-    <Compile Include="Models\V1\BLAccountModel.cs" />
+    <Compile Include="Models\V2\AccountModel.cs" />
+    <Compile Include="Models\V2\TransactionModel.cs" />
+    <Compile Include="Models\V1\TransactionModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\V1\AccountModel.cs" />
+    <Compile Include="Others\Response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TokenManager.cs" />
   </ItemGroup>

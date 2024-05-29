@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.POCO;
 using MySql.Data.MySqlClient;
 using ServiceStack.OrmLite;
 
@@ -15,7 +17,7 @@ namespace ATM_Simulation_Demo.DAL
             _connectionString = DAL_Helper.connectionString;
         }
 
-        public void AddATMLimit( LMT01 limit)
+        public void AddATMLimit(LMT01 limit)
         {
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
@@ -36,6 +38,18 @@ namespace ATM_Simulation_Demo.DAL
             }
         }
 
+        public List<LMT01> GetAllATMLimit()
+        {
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                List<LMT01> list = connection.Select<LMT01>();
+
+                return list;
+            }
+        }
+
         public void ResetAllATMLimits()
         {
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
@@ -48,7 +62,7 @@ namespace ATM_Simulation_Demo.DAL
                 {
                     foreach (var limit in limits)
                     {
-                        limit.T01F03 = 0; // Reset DailyTransactionLimit to 0
+                        limit.T01F03 = 10; // Reset DailyTransactionLimit to 0
                         limit.T01F04 = 0; // Reset MaxWithdrawalAmount to 0
 
                         connection.Update(limit);
@@ -74,21 +88,30 @@ namespace ATM_Simulation_Demo.DAL
             }
         }
 
-        public void UpdateDailyATMLimit(int accountID, LMT01 limit)
+        public bool UpdateDailyATMLimit(int accountID, decimal balance)
         {
-            using (MySqlConnection connection = new MySqlConnection(_connectionString))
+            try
             {
-                connection.Open();
 
-                var existingLimit = connection.Single<LMT01>(x => x.T01F02 == accountID);
-
-                if (existingLimit != null)
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-                    existingLimit.T01F03 = limit.T01F03;
-                    existingLimit.T01F05 = limit.T01F05;
+                    connection.Open();
 
-                    connection.Update(existingLimit);
+                    var existingLimit = connection.Single<LMT01>(x => x.T01F02 == accountID);
+
+                    if (existingLimit != null)
+                    {
+                        existingLimit.T01F03 = existingLimit.T01F03--;
+                        existingLimit.T01F05 = existingLimit.T01F05 + balance;
+
+                        connection.Update(existingLimit);
+                    }
                 }
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

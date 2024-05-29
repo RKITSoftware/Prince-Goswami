@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using ATM_Simulation_Demo.DAL;
 using ATM_Simulation_Demo.Others.Security;
 using System.Security.Principal;
+using ATM_Simulation_Demo.Models.POCO;
+using System.Net.Http.Headers;
 
 namespace ATM_Simulation_Demo.DAL
 {
@@ -13,6 +15,8 @@ namespace ATM_Simulation_Demo.DAL
     {
         private readonly string _connectionString = DAL_Helper.connectionString;
         private readonly IBLPinModule _PinModule;
+        ACC01 objACC01 = new ACC01();
+
         public AccountRepository(IBLPinModule _pinModule)
         {
             this._PinModule = _pinModule;
@@ -36,7 +40,7 @@ namespace ATM_Simulation_Demo.DAL
                 {
                     insertAccountCommand.Parameters.AddWithValue("@CardNumber", newAccount.C01F02);
                     insertAccountCommand.Parameters.AddWithValue("@Name", newAccount.C01F03);
-                    insertAccountCommand.Parameters.AddWithValue("@PIN", BLCrypto.Encrypt(newAccount.C01F04));
+                    insertAccountCommand.Parameters.AddWithValue("@PIN", newAccount.C01F04);
                     insertAccountCommand.Parameters.AddWithValue("@MobileNumber", newAccount.C01F05);
                     insertAccountCommand.Parameters.AddWithValue("@Balance", newAccount.C01F06);
 
@@ -64,7 +68,7 @@ namespace ATM_Simulation_Demo.DAL
                 {
                     updateAccountCommand.Parameters.AddWithValue("@CardNumber", account.C01F02);
                     updateAccountCommand.Parameters.AddWithValue("@Name", account.C01F03);
-                    updateAccountCommand.Parameters.AddWithValue("@PIN",BLCrypto.Encrypt(account.C01F04));
+                    updateAccountCommand.Parameters.AddWithValue("@PIN", BLCrypto.Encrypt(account.C01F04));
                     updateAccountCommand.Parameters.AddWithValue("@MobileNumber", account.C01F05);
                     updateAccountCommand.Parameters.AddWithValue("@Balance", account.C01F06);
                     updateAccountCommand.Parameters.AddWithValue("@AccountId", account.C01F01);
@@ -77,11 +81,7 @@ namespace ATM_Simulation_Demo.DAL
         /// <inheritdoc />
         public ACC01 GetAccount(string cardNumber, string pin)
         {
-            if (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(pin))
-            {
-                throw new ArgumentException("Card number and PIN cannot be null or empty.");
-            }
-
+            
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -96,20 +96,17 @@ namespace ATM_Simulation_Demo.DAL
                     {
                         if (reader.Read())
                         {
-                            return new ACC01
-                            {
-                                C01F01 = reader.GetInt32("C01F01"),
-                                C01F02 = reader.GetString("C01F02"),
-                                C01F03 = reader.GetString("C01F03"),
-                                C01F04 = BLCrypto.Decrypt(reader.GetString("C01F04")),
-                                C01F05 = reader.GetString("C01F05"),
-                                C01F06 = reader.GetDecimal("C01F06")
-                            };
+                            objACC01.C01F01 = reader.GetInt32("C01F01");
+                            objACC01.C01F02 = reader.GetString("C01F02");
+                            objACC01.C01F03 = reader.GetString("C01F03");
+                            objACC01.C01F04 = BLCrypto.Decrypt(reader.GetString("C01F04"));
+                            objACC01.C01F05 = reader.GetString("C01F05");
+                            objACC01.C01F06 = reader.GetDecimal("C01F06");
                         }
                     }
                 }
 
-                return null;
+                return objACC01;
             }
         }
 
@@ -120,7 +117,6 @@ namespace ATM_Simulation_Demo.DAL
             {
                 throw new ArgumentException("Invalid account ID");
             }
-
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -134,20 +130,17 @@ namespace ATM_Simulation_Demo.DAL
                     {
                         if (reader.Read())
                         {
-                            return new ACC01
-                            {
-                                C01F01 = reader.GetInt32("C01F01"),
-                                C01F02 = reader.GetString("C01F02"),
-                                C01F03 = reader.GetString("C01F03"),
-                                C01F04 = BLCrypto.Decrypt(reader.GetString("C01F04")),
-                                C01F05 = reader.GetString("C01F05"),
-                                C01F06 = reader.GetDecimal("C01F06")
-                            };
+                            objACC01.C01F01 = reader.GetInt32("C01F01");
+                            objACC01.C01F02 = reader.GetString("C01F02");
+                            objACC01.C01F03 = reader.GetString("C01F03");
+                            objACC01.C01F04 = BLCrypto.Decrypt(reader.GetString("C01F04"));
+                            objACC01.C01F05 = reader.GetString("C01F05");
+                            objACC01.C01F06 = reader.GetDecimal("C01F06");
                         }
                     }
                 }
 
-                return null;
+                return objACC01;
             }
         }
 
@@ -205,26 +198,28 @@ namespace ATM_Simulation_Demo.DAL
         }
 
         /// <inheritdoc />
-        public void UpdateMobileNumber(ACC01 account, string newMobileNumber)
+        public bool UpdateMobileNumber(int accountId, string newMobileNumber)
         {
-            if (account == null)
+            if (accountId >= 0)
             {
-                throw new ArgumentNullException(nameof(account), "Account cannot be null.");
-            }
 
-            using (MySqlConnection connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                using (MySqlCommand updateMobileNumberCommand = new MySqlCommand(
-                    "UPDATE ACC01 SET C01F05 = @NewMobileNumber WHERE C01F01 = @AccountId;", connection))
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-                    updateMobileNumberCommand.Parameters.AddWithValue("@NewMobileNumber", newMobileNumber);
-                    updateMobileNumberCommand.Parameters.AddWithValue("@AccountId", account.C01F01);
+                    connection.Open();
 
-                    updateMobileNumberCommand.ExecuteNonQuery();
+                    using (MySqlCommand updateMobileNumberCommand = new MySqlCommand(
+                        "UPDATE ACC01 SET C01F05 = @NewMobileNumber WHERE C01F01 = @AccountId;", connection))
+                    {
+                        updateMobileNumberCommand.Parameters.AddWithValue("@NewMobileNumber", newMobileNumber);
+                        updateMobileNumberCommand.Parameters.AddWithValue("@AccountId", accountId);
+
+                        updateMobileNumberCommand.ExecuteNonQuery();
+                    }
                 }
+                return true;
             }
+            else
+                return false;
         }
 
         /// <inheritdoc />
@@ -261,13 +256,8 @@ namespace ATM_Simulation_Demo.DAL
         }
 
         /// <inheritdoc />
-        public void Delete(int id)
+        public bool Delete(int id)
         {
-            if (id <= 0)
-            {
-                throw new ArgumentException("Invalid account ID");
-            }
-
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -276,11 +266,38 @@ namespace ATM_Simulation_Demo.DAL
                     "DELETE FROM ACC01 WHERE C01F01 = @AccountId;", connection))
                 {
                     command.Parameters.AddWithValue("@AccountId", id);
-                    command.ExecuteNonQuery();
+                    int rowsEffected = command.ExecuteNonQuery();
+
+                    return rowsEffected > 0;
                 }
 
             }
         }
+
+        /// <inheritdoc />
+        public bool IsUserExists(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("invalid ID.", nameof(id));
+            }
+
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (MySqlCommand command = new MySqlCommand(
+                    "SELECT COUNT(*) FROM ACC01 WHERE C01F01 = @id;", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+
+                    return count > 0;
+                }
+            }
+        }
+
 
     }
 }

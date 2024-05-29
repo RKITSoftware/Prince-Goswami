@@ -32,6 +32,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\ATM Simulation Demo.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -256,12 +257,22 @@
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="BAL\BLHelper.cs" />
     <Compile Include="BAL\Interface\IBLLimitRepository.cs" />
     <Compile Include="BAL\Interface\IBLLimitService.cs" />
     <Compile Include="BAL\Services\LimitServices.cs" />
+    <Compile Include="Controllers\CLLimitController.cs" />
+    <Compile Include="DAL\BackupRepository.cs" />
     <Compile Include="DAL\LimitRepository.cs" />
-    <Compile Include="Models\BLDateModel.cs" />
-    <Compile Include="Models\BLLimitModel.cs" />
+    <Compile Include="Extensions\ConvertExtension.cs" />
+    <Compile Include="Models\DTO\DTOACC01.cs" />
+    <Compile Include="Models\DTO\BLLimitModel.cs" />
+    <Compile Include="Models\DTO\DTOTRN01.cs" />
+    <Compile Include="Models\DTO\DTOUSR01.cs" />
+    <Compile Include="Models\Enum.cs" />
+    <Compile Include="Models\POCO\BLDateModel.cs" />
+    <Compile Include="Models\POCO\BLLimitModel.cs" />
+    <Compile Include="Models\Response.cs" />
     <Compile Include="Others\Auth\Account\CustomAuthenticationFilter.cs" />
     <Compile Include="Others\Auth\Account\CustomAuthorizationFilter.cs" />
     <Compile Include="Others\Auth\Account\TokenManager.cs" />
@@ -293,10 +304,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\BLAccountModel.cs" />
-    <Compile Include="Models\BLBackupDataModel.cs" />
-    <Compile Include="Models\BLTransactionModel.cs" />
-    <Compile Include="Models\BLUserModel.cs" />
+    <Compile Include="Models\POCO\BLAccountModel.cs" />
+    <Compile Include="Models\POCO\BLBackupDataModel.cs" />
+    <Compile Include="Models\POCO\BLTransactionModel.cs" />
+    <Compile Include="Models\POCO\BLUserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Others\Auth\User\TokenManager.cs" />
   </ItemGroup>

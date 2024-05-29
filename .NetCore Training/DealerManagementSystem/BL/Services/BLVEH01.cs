@@ -1,6 +1,6 @@
 ﻿using DealerManagementSystem.BL.Interface.Service;
 using DealerManagementSystem.DAL;
-using DealerManagementSystem.Models;
+using DealerManagementSystem.Models.POCO;
 
 namespace DealerManagementSystem.BL.Services
 {
@@ -9,7 +9,7 @@ namespace DealerManagementSystem.BL.Services
     {
         private readonly IVEH01_DAL _vehicleRepository;
 
-        public BLVEH01(VEH01Repository vehicleRepository)
+        public BLVEH01(IVEH01_DAL vehicleRepository)
         {
             _vehicleRepository = vehicleRepository;
         }

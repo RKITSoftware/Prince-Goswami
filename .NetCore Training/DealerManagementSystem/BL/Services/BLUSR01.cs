@@ -1,11 +1,7 @@
-﻿    using DealerManagementSystem.BL.Interface.Service;
+﻿using DealerManagementSystem.BL.Interface.Service;
 using DealerManagementSystem.DAL;
 using DealerManagementSystem.Filters;
-using DealerManagementSystem.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+using DealerManagementSystem.Models.POCO;
 
 namespace DealerManagementSystem.BL.Services
 {
@@ -13,7 +9,7 @@ namespace DealerManagementSystem.BL.Services
     {
         private readonly IUSR01_DAL _userRepository;
 
-        public BLUSR01(USR01Repository userRepository)
+        public BLUSR01(IUSR01_DAL userRepository)
         {
             _userRepository = userRepository;
         }
@@ -21,6 +17,7 @@ namespace DealerManagementSystem.BL.Services
         ///<inheritdoc/>
         public void AddUser(USR01 user)
         {
+            user.R01F03 = BLCrypto.Encrypt(user.R01F03);
             _userRepository.Add(user);
         }
 
@@ -31,13 +28,13 @@ namespace DealerManagementSystem.BL.Services
         }
 
         ///<inheritdoc/>>
-        public  void RemoveUser(int userId)
+        public void RemoveUser(int userId)
         {
             _userRepository.Delete(userId);
         }
 
         ///<inheritdoc/>
-        public  USR01 GetUserById(int userId)
+        public USR01 GetUserById(int userId)
         {
             return _userRepository.GetByID(userId);
         }
@@ -45,7 +42,9 @@ namespace DealerManagementSystem.BL.Services
         ///<inheritdoc/>
         public List<USR01> GetAllUsers()
         {
-             return _userRepository.GetAll();
+            var user = _userRepository.GetAll();
+            user.ForEach(user => user.R01F03 = BLCrypto.Decrypt(user.R01F03));
+            return user;
         }
 
         /////<inheritdoc/>
@@ -55,24 +54,19 @@ namespace DealerManagementSystem.BL.Services
         //}
 
         ///<inheritdoc/>
-        public  bool UserExists(int userId)
+        public bool UserExists(int userId)
         {
-            if(userId < 0) return false;
-            if(_userRepository.GetByID(userId) != null) return true;
+            if (userId < 0) return false;
+            if (_userRepository.GetByID(userId) != null) return true;
             return true;
         }
 
         public USR01 AuthorizeUser(string userName, string password)
         {
             List<USR01> users = _userRepository.GetAll();
-            USR01 verifiedUser = null;
-            users.ForEach(user =>
-            {
-                if(user.R01F02 == userName && BLCrypto.Decrypt(user.R01F05 ) == password)
-                {
-                    verifiedUser = user;
-                }
-            });
+            string passwordHash = BLCrypto.Encrypt(password);
+            USR01 verifiedUser = users.FirstOrDefault(usr => usr.R01F02 == userName && usr.R01F03 == passwordHash);
+            
             return verifiedUser;
         }
     }

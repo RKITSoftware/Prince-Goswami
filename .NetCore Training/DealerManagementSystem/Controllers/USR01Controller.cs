@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DealerManagementSystem.BL.Interface.Service;
-using DealerManagementSystem.Models;
+using DealerManagementSystem.Models.POCO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DealerManagementSystem.Controllers
@@ -18,7 +18,7 @@ namespace DealerManagementSystem.Controllers
 
         [Route("All")]
         [HttpGet]
-        public IEnumerable<USR01> AllUsers()
+        public List<USR01> AllUsers()
         {
             return _userService.GetAllUsers();
         }

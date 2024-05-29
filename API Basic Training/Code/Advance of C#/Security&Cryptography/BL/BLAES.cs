@@ -8,14 +8,25 @@ using System.Threading.Tasks;
 
 namespace Security_Cryptography.BL
 {
+    /// <summary>
+    /// Provides methods for encrypting and decrypting using AES encryption algorithm.
+    /// </summary>
     public class BLAES
     {
-         byte[] key =
+        // Encryption key (16 bytes)
+        byte[] key =
             {
                 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
                 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16
             };
-        // Encryption method
+
+        #region Encryption
+
+        /// <summary>
+        /// Encrypts the given plaintext using AES encryption.
+        /// </summary>
+        /// <param name="plainText">The plaintext to encrypt.</param>
+        /// <returns>The encrypted ciphertext.</returns>
         public string Encrypt(string plainText)
         {
             using (Aes aesAlg = Aes.Create())
@@ -40,7 +51,15 @@ namespace Security_Cryptography.BL
             }
         }
 
-        // Decryption method
+        #endregion
+
+        #region Decryption
+
+        /// <summary>
+        /// Decrypts the given ciphertext using AES decryption.
+        /// </summary>
+        /// <param name="cipherText">The ciphertext to decrypt.</param>
+        /// <returns>The decrypted plaintext.</returns>
         public string Decrypt(string cipherText)
         {
             using (Aes aesAlg = Aes.Create())
@@ -62,5 +81,7 @@ namespace Security_Cryptography.BL
                 }
             }
         }
+
+        #endregion
     }
 }

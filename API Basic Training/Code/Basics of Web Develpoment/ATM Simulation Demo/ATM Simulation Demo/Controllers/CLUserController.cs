@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net;
-using System.Web.Http;
-using ATM_Simulation_Demo.BAL;
+﻿using ATM_Simulation_Demo.BAL;
 using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.DAL.User;
-using System.Web.Http.Cors;
+using ATM_Simulation_Demo.Others;
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 
 namespace ATM_Simulation_Demo.Controllers
 {
@@ -19,11 +18,35 @@ namespace ATM_Simulation_Demo.Controllers
     public class UserController : ApiController
     {
         #region fields
-        private readonly static IBLUserRepository _userRepo = new UserRepository();
+        /// <summary>
+        /// Represents the user repository used for interacting with user data.
+        /// </summary>
+        private static readonly IBLUserRepository _userRepo = new UserRepository();
+
+        /// <summary>
+        /// Represents the user service used for handling user-related operations.
+        /// </summary>
         private readonly IBLUserService _userService = new UserService(_userRepo);
+
+        /// <summary>
+        /// Represents the response object for managing responses.
+        /// </summary>
+        public Response objResponse;
         #endregion
 
-        #region Actions
+        #region public methods
+
+        /// <summary>
+        /// Authenticates a user using the provided username and password.
+        /// </summary>
+        /// <param name="userName">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>
+        /// An HTTP response message indicating the result of the authentication:
+        ///   - If the provided credentials are valid, returns an OK response with a JWT token.
+        ///   - If the provided credentials are invalid, returns an Unauthorized response with an error message.
+        ///   - If an error occurs during authentication, returns an InternalServerError response.
+        /// </returns>
         [HttpPost]
         [Route("Authenticate")]
         [AllowAnonymous]
@@ -31,7 +54,7 @@ namespace ATM_Simulation_Demo.Controllers
         {
             try
             {
-                var user = _userService.GetUserByCredentials(userName, password);
+                UserModel user = _userService.GetUserByCredentials(userName, password);
                 // Check if the provided credentials are valid
                 if (user != null)
                 {
@@ -47,7 +70,7 @@ namespace ATM_Simulation_Demo.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log or handle any exceptions that might occur during token generation or validation
                 // Log.Error($"An error occurred during authentication: {ex}");
@@ -68,19 +91,11 @@ namespace ATM_Simulation_Demo.Controllers
         {
             try
             {
-                var user = _userService.GetUserByID(userId);
-                if (user != null)
-                {
-                    return Ok(user);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                objResponse = _userService.GetUserByID(userId);
+                return Ok(objResponse);
             }
             catch (Exception ex)
             {
-                // Log or handle the exception
                 return InternalServerError(ex);
             }
         }
@@ -88,9 +103,7 @@ namespace ATM_Simulation_Demo.Controllers
         /// <summary>
         /// Create a new user.
         /// </summary>
-        /// <param name="userName">User's username.</param>
-        /// <param name="password">User's password.</param>
-        /// <param name="role">User's role.</param>
+        /// <param name="request"></param>
         /// <returns>Newly created user information.</returns>
         [CustomAuthenticationFilter]
         [CustomAuthorizationFilter(Roles = "Admin,DEO")]
@@ -100,8 +113,8 @@ namespace ATM_Simulation_Demo.Controllers
         {
             try
             {
-                var newUser = _userService.CreateUser(request.UserName, request.MobileNumber, request.Password,request.DOB, request.Role);
-                return Ok(newUser);
+                objResponse = _userService.CreateUser(request.UserName, request.MobileNumber, request.Password, request.DOB, request.Role);
+                return Ok(objResponse);
             }
             catch (Exception ex)
             {
@@ -121,18 +134,8 @@ namespace ATM_Simulation_Demo.Controllers
         [Route("changePassword")]
         public IHttpActionResult ChangePassword(ChangePasswordRequest request)
         {
-            try
-            {
-                // Assuming ChangePasswordRequest is a model containing userId, currentPassword, and newPassword properties
-                var user = _userService.GetUserByID(request.userId);
-                _userService.ChangePassword(user, request.currentPassword, request.newPassword);
-                return Ok("Password changed successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as needed
-                return BadRequest("Internal Server Error");
-            }
+            objResponse = _userService.ChangePassword(request.userId, request.currentPassword, request.newPassword);
+            return Ok(objResponse);
         }
 
         /// <summary>
@@ -149,11 +152,10 @@ namespace ATM_Simulation_Demo.Controllers
             try
             {
                 // Assuming UpdateRoleRequest is a model containing userId and newRole properties
-                var user = _userService.GetUserByID(request.userId);
-                _userService.UpdateRole(user, request.newRole);
-                return Ok("Role updated successfully.");
+                objResponse = _userService.UpdateRole(request.userId, request.newRole);
+                return Ok(objResponse);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log or handle the exception as needed
                 return BadRequest("Internal Server Error");
@@ -172,8 +174,8 @@ namespace ATM_Simulation_Demo.Controllers
         {
             try
             {
-                var users = _userService.GetAllUsers();
-                return Ok(users);
+                objResponse = _userService.GetAllUsers();
+                return Ok(objResponse);
             }
             catch (Exception ex)
             {
@@ -182,40 +184,23 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a user with the specified user ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user to delete.</param>
+        /// <returns>An IHttpActionResult representing the result of the delete operation.</returns>
         [CustomAuthenticationFilter]
-        [CustomAuthorizationFilter(Roles = "Admin,DEO")]
+        [CustomAuthorizationFilter(Roles = "user")]
         [HttpDelete]
-        [Route("DeleteUser/{userID}")]
-        public void DeleteUser(int userId)
+        [Route("{userID}")]
+        public IHttpActionResult DeleteUser(int userId)
         {
-            _userService.DeleteUser(userId);
+            // Call the DeleteUser method of the user service and return the result
+            return Ok(_userService.DeleteUser(userId));
         }
 
-        
         #endregion
     }
 
-    #region Request Models
-    public class ChangePasswordRequest
-    {
-        public int userId { get; set; }
-        public string currentPassword { get; set; }
-        public string newPassword { get; set; }
-    }
 
-    public class CreateUserRequest
-    {
-        public string UserName { get; set; }
-        public string MobileNumber { get; set; }
-        public string Password { get; set; }
-        public DateTime DOB{ get; set; }
-        public UserRole Role{ get; set; }
-    }
-
-    public class UpdateRoleRequest
-    {
-        public int userId { get; set; }
-        public UserRole newRole { get; set; }
-    }
-    #endregion
 }

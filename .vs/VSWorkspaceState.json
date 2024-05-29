@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\.NetCore Training",
+    "\\.NetCore Training\\DealerManagementSystem",
+    "\\API Basic Training\\Code\\Advance of C#\\ORM Tools",
+    "\\API Basic Training\\Code\\Advance of C#\\ORM Tools\\BL",
+    "\\API Basic Training\\Code\\Advance of C#\\ORM Tools\\Controllers"
   ],
-  "SelectedNode": "\\Advance C# Final Demo.sln",
+  "SelectedNode": "\\.NetCore Training\\DealerManagementSystem\\DealerManagementSystem.sln",
   "PreviewInSolutionExplorer": false
 }

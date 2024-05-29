@@ -17,57 +17,56 @@ namespace Security_Cryptography
             #region AES
             Console.WriteLine("\nAES:");
 
+            // Create an instance of BLAES
             BLAES blAES = new BLAES();
 
-
             // Encrypt the text
-            string encryptedText = blAES.Encrypt(originalText);
-            Console.WriteLine($"Encrypted Text: {encryptedText}");
+            string encryptedTextAES = blAES.Encrypt(originalText);
+            Console.WriteLine($"Encrypted Text: {encryptedTextAES}");
 
             // Decrypt the text
-            string decryptedText = blAES.Decrypt(encryptedText);
-            Console.WriteLine($"Decrypted Text: {decryptedText}");
+            string decryptedTextAES = blAES.Decrypt(encryptedTextAES);
+            Console.WriteLine($"Decrypted Text: {decryptedTextAES}");
             #endregion
 
             #region Rijndael
-            Console.WriteLine("\nRijndael :");
+            Console.WriteLine("\nRijndael:");
+
+            // Create an instance of BLRijndael
             BLRijndael blRijndael = new BLRijndael();
 
-
             // Encrypt the text
-            encryptedText = blRijndael.Encrypt(originalText);
-            Console.WriteLine($"Encrypted Text: {encryptedText}");
+            string encryptedTextRijndael = blRijndael.Encrypt(originalText);
+            Console.WriteLine($"Encrypted Text: {encryptedTextRijndael}");
 
             // Decrypt the text
-            encryptedText = blRijndael.Decrypt(encryptedText);
-            Console.WriteLine($"Decrypted Text: {decryptedText}");
+            string decryptedTextRijndael = blRijndael.Decrypt(encryptedTextRijndael);
+            Console.WriteLine($"Decrypted Text: {decryptedTextRijndael}");
             #endregion
 
             #region RSA
             Console.WriteLine("\nRSA:");
+
+            // Create an instance of BLRSA
+            BLRSA blRSA = new BLRSA();
+
             // Generate RSA key pair (public and private keys)
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
-                BLRSA blRSA = new BLRSA();
                 string publicKey = rsa.ToXmlString(false); // Export public key
                 string privateKey = rsa.ToXmlString(true); // Export private key
 
-                //Console.WriteLine($"Public Key: {publicKey}");
-
                 // Encrypt the text using the public key
-                encryptedText = blRSA.Encrypt(originalText, publicKey);
-                Console.WriteLine($"Encrypted Text: {encryptedText}");
+                string encryptedTextRSA = blRSA.Encrypt(originalText, publicKey);
+                Console.WriteLine($"Encrypted Text: {encryptedTextRSA}");
 
                 // Decrypt the text using the private key
-                decryptedText = blRSA.Decrypt(encryptedText, privateKey);
-                Console.WriteLine($"Decrypted Text: {decryptedText}");
+                string decryptedTextRSA = blRSA.Decrypt(encryptedTextRSA, privateKey);
+                Console.WriteLine($"Decrypted Text: {decryptedTextRSA}");
             }
-
             #endregion
-
 
             Console.ReadLine();
         }
-
     }
 }

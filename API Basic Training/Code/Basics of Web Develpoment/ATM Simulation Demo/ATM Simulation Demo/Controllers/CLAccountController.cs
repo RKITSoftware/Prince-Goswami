@@ -93,13 +93,13 @@ namespace ATM_Simulation_Demo.Controllers
         [CustomAuthorizationFilter(Roles = "User")]
         [HttpPatch]
         [Route("changePin")]
-        public IHttpActionResult ChangePin(ChangePinRequest request)
+        public IHttpActionResult ChangePin(int accountId, string currentPin, string newPin)
         {
             try
             {
                 // Assuming ChangePinRequest is a model containing currentPin, newPin, and accountId properties
-                var account = _accountService.GetAccountByID(request.accountId);
-                _accountService.ChangePin(account, request.currentPin, request.newPin);
+                var account = _accountService.GetAccountByID(accountId);
+                _accountService.ChangePin(account, currentPin, newPin);
                 return Ok("PIN changed successfully.");
             }
             catch (Exception ex)
@@ -118,13 +118,13 @@ namespace ATM_Simulation_Demo.Controllers
         [CustomAuthorizationFilter(Roles = "DEO,User")]
         [HttpPatch]
         [Route("UpdateMobileNumber")]
-        public IHttpActionResult UpdateMobileNumber(UpdateMobileNumberRequest request)
+        public IHttpActionResult UpdateMobileNumber(int accountId, string newMobileNumber)
         {
             try
             {
                 // Assuming UpdateMobileNumberRequest is a model containing newMobileNumber and accountId properties
-                var account = _accountService.GetAccountByID(request.accountId);
-                _accountService.UpdateMobileNumber(account, request.newMobileNumber);
+                var account = _accountService.GetAccountByID(accountId);
+                _accountService.UpdateMobileNumber(account, newMobileNumber);
                 return Ok("Mobile number updated successfully.");
             }
             catch (Exception ex)
@@ -134,7 +134,7 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
-        private List<BLAccountModel> fetch()
+        private List<AccountModel> fetch()
         {
             return _accountService.GetAllAccounts();
         }
@@ -145,28 +145,11 @@ namespace ATM_Simulation_Demo.Controllers
         [Route("GetAllAccounts")]
         public IHttpActionResult GetAllAccounts()
         {
-            return Ok(cacheManager.GetCachedResponse(Request, fetch));
+            return Ok(cacheManager.GetCachedResponse("GetAllAccounts",fetch));
         }
         
 
         #endregion
     }
-
-    #region Request Model
-    public class ChangePinRequest
-    {
-        public int accountId { get; set; }
-        public string currentPin { get; set; }
-        public string newPin { get; set; }
-
-    };
-
-    public class UpdateMobileNumberRequest
-    {
-        public int accountId { get; set; }
-
-        public string newMobileNumber { get; set; }
-    }
-    #endregion
 }
 

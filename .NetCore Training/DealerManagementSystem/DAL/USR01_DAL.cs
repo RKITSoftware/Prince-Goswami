@@ -1,5 +1,4 @@
-﻿
-using DealerManagementSystem.Models;
+﻿using DealerManagementSystem.Models.POCO;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using System.Configuration;
@@ -9,17 +8,17 @@ namespace DealerManagementSystem.DAL
     /// <summary>
     /// Repository for interacting with USR01 data.
     /// </summary>
-    public class USR01Repository : IUSR01_DAL
+    public class USR01_DAL : IUSR01_DAL
     {
         private readonly IDbConnectionFactory _dbFactory;
         private readonly string _connectionString;
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="USR01Repository"/> class.
+        /// Initializes a new instance of the <see cref="USR01_DAL"/> class.
         /// </summary>
         /// <param name="dbFactory">The IDbConnectionFactory implementation.</param>
-        public USR01Repository(IConfiguration configuration)
+        public USR01_DAL(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("Default");
             _dbFactory = new OrmLiteConnectionFactory(_connectionString, MySqlDialect.Provider);
@@ -49,27 +48,28 @@ namespace DealerManagementSystem.DAL
         /// <summary>
         /// Adds a new User to the repository.
         /// </summary>
-        /// <param name="veh01">The User to add.</param>
-        public void Add(USR01 veh01)
+        /// <param name="usr01">The User to add.</param>
+        public void Add(USR01 usr01)
         {
             using var db = _dbFactory.OpenDbConnection();
-            db.Insert(veh01);
+
+            db.Insert(usr01);
         }
 
         /// <summary>
         /// Updates an existing User in the repository.
         /// </summary>
-        /// <param name="veh01">The User to update.</param>
-        public void Update(USR01 veh01)
+        /// <param name="usr01">The User to update.</param>
+        public void Update(USR01 usr01)
         {
             using var db = _dbFactory.OpenDbConnection();
-            db.Update(veh01);
+            db.Update(usr01);
         }
 
         /// <summary>
         /// Deletes a User from the repository.
         /// </summary>
-        /// <param name="veh01">The User to delete.</param>
+        /// <param name="usr01">The User to delete.</param>
         public void Delete(int userId)
         {
             using var db = _dbFactory.OpenDbConnection();

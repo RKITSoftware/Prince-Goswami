@@ -4,12 +4,12 @@ using System;
 using System.Web.Http;
 using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.BAL.Services;
-using ATM_Simulation_Demo.Others.Auth.User;
+using ATM_Simulation_Demo.Extension;
 using System.Net.Http;
 using System.Net;
-using System.Web.ModelBinding;
 using ATM_Simulation_Demo.Others.Auth.Account;
-using System.Collections.Generic;
+using ATM_Simulation_Demo.Models.DTO;
+using ATM_Simulation_Demo.Models.POCO;
 using ATM_Simulation_Demo.Models;
 
 namespace ATM_Simulation_Demo.Controllers
@@ -17,17 +17,43 @@ namespace ATM_Simulation_Demo.Controllers
     /// <summary>
     /// API controller for managing account-related operations.
     /// </summary>
-    //[ApiVersion("1.0")]
     [RoutePrefix("api/accounts")]
     public class AccountController : ApiController
     {
         #region fields
-        private readonly static IBLPinModule _pinModule = new PinModule();
-        private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
-        private readonly IBLAccountService _accountService = new AccountService(_accountRepo, _pinModule);
+        /// <summary>
+        /// The pin module interface.
+        /// </summary>
+        private static IBLPinModule _pinModule;
+
+        /// <summary>
+        /// The account repository interface.
+        /// </summary>
+        private static IBLAccountRepository _accountRepo;
+
+        /// <summary>
+        /// The account service interface.
+        /// </summary>
+        private IBLAccountService _accountService;
+
+        /// <summary>
+        /// The response object.
+        /// </summary>
+        private Response _objResponse;
+        #endregion
 
 
-
+        #region constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// </summary>
+        public AccountController()
+        {
+            _pinModule = new PinModule();
+            _accountRepo = new AccountRepository(_pinModule);
+            _accountService = new AccountService(_accountRepo, _pinModule);
+            _objResponse = new Response();
+        }
         #endregion
 
         #region Actions
@@ -45,18 +71,19 @@ namespace ATM_Simulation_Demo.Controllers
         {
             try
             {
-                var account = _accountService.GetAccount(cardNumber, pin);
+                _objResponse = _accountService.GetAccount(cardNumber, pin);
+                ACC01 account = _objResponse.Data;
                 if (account != null)
                 {
                     // Generate a JWT token using the authentication service
                     string token = TokenManager.GenerateToken(account.C01F01);
 
-                    // Return an OK response with the JWT token
+                    // Return an OK _objResponse with the JWT token
                     return Request.CreateErrorResponse(HttpStatusCode.OK, token);
                 }
                 else
                 {
-                    // Return an Unauthorized response with an error message
+                    // Return an Unauthorized _objResponse with an error message
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
                 }
             }
@@ -71,87 +98,140 @@ namespace ATM_Simulation_Demo.Controllers
         /// <summary>
         /// Create a new account.
         /// </summary>
-        /// <param name="name">Account's name.</param>
-        /// <param name="mobileNumber">Account's mobile number.</param>
-        /// <param name="DOB">Account's date of birth.</param>
+        /// <param name="objDTO_ACC01">Account DTO model</param>
         /// <returns>Newly created account information.</returns>
-        /// 
         [Others.Auth.User.CustomAuthenticationFilter]
         [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPost]
         [Route("create")]
-        public IHttpActionResult CreateAccount(CreateAccountRequest request)
+        public IHttpActionResult CreateAccount(DTO_ACC01 objDTO_ACC01)
         {
             try
             {
-                _accountService.CreateAccount(request.name, request.mobileNumber, request.DOB);
-                return Ok();
+                _accountService.Operation = EnmOperation.A;
+                _objResponse = _accountService.PreValidation(objDTO_ACC01);
+                if (!_objResponse.IsError)
+                {
+                    _accountService.PreSave(objDTO_ACC01);
+                    _objResponse = _accountService.Validation();
+                    if (!_objResponse.IsError)
+                    {
+                        _objResponse = _accountService.Save();
+                    }
+                }
+                return Ok(_objResponse);
+
             }
             catch (Exception ex)
             {
                 // Log or handle the exception
-                return InternalServerError(ex);
+                return Ok(ex);
             }
         }
 
 
         /// <summary>
+        /// Create a new account.
+        /// </summary>
+        /// <param name="name">Account's name.</param>
+        /// <param name="mobileNumber">Account's mobile number.</param>
+        /// <param name="DOB">Account's date of birth.</param>
+        /// <returns>Newly created account information.</returns>
+        [Others.Auth.User.CustomAuthenticationFilter]
+        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
+        [HttpPost]
+        [Route("update")]
+        public IHttpActionResult UpdateAccount(DTO_ACC01 objDTOACC01)
+        {
+            try
+            {
+                _accountService.Operation = EnmOperation.E;
+                _objResponse = _accountService.PreValidation(objDTOACC01);
+
+                if (!_objResponse.IsError)
+                {
+                    _accountService.PreSave(objDTOACC01);
+                    _accountService.Validation();
+                    _objResponse = _accountService.Save();
+                }
+                return Ok(_objResponse);
+
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                return Ok(ex);
+            }
+        }
+
+        /// <summary>
         /// Changes the PIN for a account.
         /// </summary>
-        /// <param name="request">The request containing currentPin, newPin, and accountId.</param>
+        /// <param name="objDTOACC01">The objDTOACC01 containing currentPin, newPin, and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
         [Others.Auth.Account.CustomAuthenticationFilter]
         [Others.Auth.Account.CustomAuthorizationFilter]
         [HttpPatch]
         [Route("changePin")]
-        public IHttpActionResult ChangePin(ChangePinRequest request)
+        public IHttpActionResult ChangePin(DTO_ACC01 objDTOACC01)
         {
             try
             {
                 // Assuming ChangePinRequest is a model containing currentPin, newPin, and accountId properties
-                var account = _accountService.GetAccountByID(TokenManager.sessionId);
-                _accountService.ChangePin(account, request.currentPin, request.newPin);
-                return Ok("PIN changed successfully.");
+                _objResponse = _accountService.ChangePin(objDTOACC01.C01F01, objDTOACC01.C01F04, objDTOACC01.C01F07);
+                return Ok(_objResponse);
             }
             catch (Exception ex)
             {
                 // Log or handle the exception as needed
-                return BadRequest("Internal Server Error");
+                return Ok(ex);
             }
         }
 
         /// <summary>
         /// Updates the mobile number for a account.
         /// </summary>
-        /// <param name="request">The request containing newMobileNumber and accountId.</param>
+        /// <param name="objDTOACC01">The objDTOACC01 containing newMobileNumber and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
         [Others.Auth.Account.CustomAuthenticationFilter]
         [Others.Auth.Account.CustomAuthorizationFilter]
         [HttpPatch]
         [Route("UpdateMobileNumber")]
-        public IHttpActionResult UpdateMobileNumber( string newMobileNumber)
+        public IHttpActionResult UpdateMobileNumber(string newMobileNumber)
         {
             try
             {
                 // Assuming UpdateMobileNumberRequest is a model containing newMobileNumber and accountId properties
                 var account = _accountService.GetAccountByID(TokenManager.sessionId);
-                _accountService.UpdateMobileNumber(account, newMobileNumber);
-                return Ok("Mobile number updated successfully.");
+                _objResponse = _accountService.UpdateMobileNumber(newMobileNumber);
+                return Ok(_objResponse);
             }
             catch (Exception ex)
             {
                 // Log or handle the exception as needed
-                return BadRequest("Internal Server Error");
+                return Ok(ex);
             }
         }
 
+        /// <summary>
+        /// Retrieves all user accounts.
+        /// </summary>
+        /// <remarks>
+        /// Requires authentication and authorization with the role "Admin" to access.
+        /// </remarks>
+        /// <returns>
+        /// IHttpActionResult:
+        ///     - IHttpActionResult with HTTP 200 OK status code and the list of all user accounts if successful.
+        ///     - IHttpActionResult with appropriate HTTP status code and error message if authorization fails or an error occurs.
+        /// </returns>
         [Others.Auth.User.CustomAuthenticationFilter]
         [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
         [HttpGet]
         [Route("GetAllAccounts")]
-        public IHttpActionResult fetch()
+        public IHttpActionResult GetAllAccounts()
         {
-            return Ok(_accountService.GetAllAccounts());
+            _objResponse = _accountService.GetAllAccounts();
+            return Ok(_objResponse);
         }
 
         /// <summary>
@@ -179,14 +259,19 @@ namespace ATM_Simulation_Demo.Controllers
         }
 
         /// <summary>
-        /// Get account information based on card number and PIN.
+        /// Deletes a user account with the specified ID.
         /// </summary>
-        /// <param name="cardNumber">Account's card number.</param>
-        /// <param name="pin">Account's PIN.</param>
-        /// <returns>Account information if found, otherwise NotFound.</returns>
-
-        [Others.Auth.User.CustomAuthenticationFilter]
-        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
+        /// <remarks>
+        /// Requires authentication and authorization with the role "Admin" to access.
+        /// </remarks>
+        /// <param name="id">The ID of the user account to delete.</param>
+        /// <returns>
+        /// IHttpActionResult:
+        ///     - IHttpActionResult with HTTP 200 OK status code if the account is successfully deleted.
+        ///     - IHttpActionResult with appropriate HTTP status code and error message if authorization fails or an error occurs.
+        /// </returns>
+        [Others.Auth.User.CustomAuthenticationFilter] // Custom authentication filter
+        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")] // Custom authorization filter with role-based access control
         [HttpDelete]
         [Route("{id}")]
         public IHttpActionResult Delete(int id)
@@ -203,26 +288,9 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
-
         #endregion
 
-        #region Request Model
-        public class ChangePinRequest
-        {
-            public string currentPin { get; set; }
-            public string newPin { get; set; }
 
-        };
-
-     
-
-        public class CreateAccountRequest
-        {
-            public string name { get; set;}
-            public string mobileNumber { get; set;}
-            public DateTime DOB { get; set; }
-        }
-        #endregion
     }
 }
 

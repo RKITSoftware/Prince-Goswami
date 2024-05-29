@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using DealerManagementSystem.BL.Interface.Service;
 using DealerManagementSystem.DAL;
-using DealerManagementSystem.Models;
+using DealerManagementSystem.Models.POCO;
 using ServiceStack.Logging;
 
 namespace DealerManagementSystem.BL.Services
@@ -9,7 +10,7 @@ namespace DealerManagementSystem.BL.Services
     {
         private readonly ICUS01_DAL _customerRepository;
 
-        public BLCUS01(CUS01Repository customerRepository)
+        public BLCUS01(ICUS01_DAL customerRepository)
         {
             _customerRepository = customerRepository;
         }

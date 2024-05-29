@@ -1,52 +1,45 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Web.Caching;
 
-namespace ATM_Simulation_Demo
+/// <summary>
+/// Service for caching and retrieving data.
+/// </summary>
+public class CacheManager
 {
+    private Cache _cache;
+
     /// <summary>
-    /// Manages HTTP caching for a specified data type.
+    /// Constructor for initializing the CacheManager.
     /// </summary>
-    public class CacheManager
+    public CacheManager()
     {
-        private static string etag = Guid.NewGuid().ToString();
-        private static object cachedData;
-
-        /// <summary>
-        /// Gets a cached HTTP response or fetches new data if the cache is stale.
-        /// </summary>
-        /// <param name="request">The HTTP request message.</param>
-        /// <param name="fetchData">A function to fetch new data if the cache is stale.</param>
-        /// <returns>An HTTP response message with appropriate caching headers.</returns>
-        public HttpResponseMessage GetCachedResponse(HttpRequestMessage request, Func<object> fetchData)
-        {
-            var requestETag = request.Headers.IfNoneMatch.FirstOrDefault();
-
-            if (IsCachedDataValid(requestETag))
-            {
-                return request.CreateResponse(HttpStatusCode.NotModified);
-            }
-
-            object data = fetchData();
-
-            HttpResponseMessage response = request.CreateResponse(HttpStatusCode.OK, data);
-            response.Headers.ETag = new System.Net.Http.Headers.EntityTagHeaderValue("\"" + etag + "\"");
-            response.Headers.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue()
-            {
-                MaxAge = TimeSpan.FromMinutes(5), // Cache for 5 minutes
-                Public = true
-            };
-
-            cachedData = data;
-
-            return response;
-        }
-
-        private bool IsCachedDataValid(System.Net.Http.Headers.EntityTagHeaderValue requestETag)
-        {
-            return requestETag != null && requestETag.Tag == "\"" + etag + "\"";
-        }
+        _cache = new Cache();
     }
 
+    /// <summary>
+    /// Retrieves cached data or fetches new data if not cached.
+    /// </summary>
+    /// <typeparam name="T">The type of data to cache.</typeparam>
+    /// <param name="functionName">The name of the function used as the cache key.</param>
+    /// <param name="function">The function to fetch new data if not cached.</param>
+    /// <returns>The cached data or newly fetched data.</returns>
+    public object GetCachedResponse<T>(string functionName, Func<T> function)
+    {
+        string cacheKey = functionName;
+
+        // Try to get data from cache
+        object cachedData = _cache.Get(cacheKey) as object;
+        if (cachedData != null)
+        {
+            return cachedData;
+        }
+
+        // If not in cache, fetch the data
+        object newData = function();
+
+        // Cache the data for a short duration (e.g., 15 seconds)
+        _cache.Insert(cacheKey, newData, null, DateTime.Now.AddSeconds(15), Cache.NoSlidingExpiration);
+
+        return newData;
+    }
 }

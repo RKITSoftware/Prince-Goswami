@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DealerManagementSystem.BL.Interface.Service;
 using DealerManagementSystem.DAL;
-using DealerManagementSystem.Models;
+using DealerManagementSystem.Models.POCO;
 using ServiceStack.DataAnnotations;
 
 namespace DealerManagementSystem.BL.Services
@@ -10,7 +10,7 @@ namespace DealerManagementSystem.BL.Services
     {
         private readonly IDEA01_DAL _dealerRepository;
 
-        public BLDEA01(DEA01Repository dealerRepository)
+        public BLDEA01(IDEA01_DAL dealerRepository)
         {
             _dealerRepository = dealerRepository;
         }

@@ -1,4 +1,6 @@
 ﻿using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.DTO;
+using ATM_Simulation_Demo.Models.POCO;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Collections.Generic;
 using System.Windows.Media.Animation;
@@ -10,25 +12,25 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// </summary>
         public interface IBLTransactionService
         {
-        /// <summary>
-        /// Adds a transaction to the account's transaction history.
-        /// </summary>
-        /// <param name="account">The account to add the transaction for.</param>
-        /// <param name="transaction">The transaction to add.</param>
-            decimal AddTransaction(int  accountId, decimal amount, TransactionType TransactionType, string Description);
+           Response PreValidation(DTO_TRN01 objDTOTRN01);
 
+        EnmOperation Operation { get; set; }
+
+        Response Validation();
+        void PreSave(DTO_TRN01 objTRN01DTO);
+        Response Save();
         /// <summary>
         /// View transaction history for a account.
         /// </summary>
         /// <param name="account">The account.</param>
         /// <returns>List of transactions in the account's history.</returns>
-            List<TRN01> ViewTransactionHistory(int accountId);
+       Response ViewTransactionHistory(int accountId);
         
         /// <summary>
         /// View transactions.
         /// </summary>
         /// <returns>List of transactions.</returns>
-            List<TRN01> GetAllTransactions();
+         Response GetAllTransactions();
     }
 }
 

@@ -1,22 +1,25 @@
-﻿
+﻿using Data_serialization.Models;
 using System.IO;
 using System.Web.Http;
 using System.Xml.Serialization;
-using Data_serialization.Models;
 
 namespace Data_serialization.Controllers
 {
-
     [RoutePrefix("api/[controller]")]
     public class XMLController : ApiController
     {
+        /// <summary>
+        /// Converts a Person object to XML string.
+        /// </summary>
+        /// <returns>OK with the XML string representation of the Person object.</returns>
         [HttpGet]
+        [Route("XmlToString")]
         public IHttpActionResult XmlToString()
         {
             // XML to String
-            var person = new Person { Name = "Charlie", Age = 22 };
-            var serializer = new XmlSerializer(typeof(Person));
-            using (var stringWriter = new StringWriter())
+            Person person = new Person { Name = "Charlie", Age = 22 };
+            XmlSerializer serializer = new XmlSerializer(typeof(Person));
+            using (StringWriter stringWriter = new StringWriter())
             {
                 serializer.Serialize(stringWriter, person);
                 string xmlString = stringWriter.ToString();
@@ -24,17 +27,23 @@ namespace Data_serialization.Controllers
             }
         }
 
+        /// <summary>
+        /// Converts XML string to a Person object.
+        /// </summary>
+        /// <param name="xmlInput">XML string representation of the Person object.</param>
+        /// <returns>OK with the deserialized Person object.</returns>
         [HttpPost]
+        [Route("StringToXml")]
         public IHttpActionResult StringToXml([FromBody] string xmlInput)
         {
             // String to XML
-            var serializer = new XmlSerializer(typeof(Person));
-            using (var stringReader = new StringReader(xmlInput))
+            XmlSerializer serializer = new XmlSerializer(typeof(Person));
+            using (StringReader stringReader = new StringReader(xmlInput))
             {
-                var deserializedPerson = (Person)serializer.Deserialize(stringReader);
+                Person deserializedPerson = (Person)serializer.Deserialize(stringReader);
                 return Ok(deserializedPerson);
             }
         }
     }
-
 }
+

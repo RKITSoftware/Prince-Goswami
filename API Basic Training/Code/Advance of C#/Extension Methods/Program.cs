@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Linq;
 
 // Define an extension method class
 public static class StringExtensions
 {
-    // Extension method using a lambda expression
-    public static string ToUpper(this string input, Func<char, char> processor)
+    /// <summary>
+    /// Extension method for replacing spaces with underscores
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public static string Transform(this string input)
     {
-        // Use LINQ to apply the lambda expression to each character in the string
-        char[] processedChars = input.Select(processor).ToArray();
-        return new string(processedChars);
+        return input.Replace(' ', '_');
     }
 }
 
@@ -17,14 +18,12 @@ class Program
 {
     static void Main()
     {
-        string original = "Hello, Extension Methods!";
+        string original = "The quick brown fox jumps over the lazy dog.";
 
-        // Using the extension method with a lambda expression
-        string result = original.ToUpper(c => char.IsLetter(c) ? char.ToUpper(c) : c);
+        // Using the extension method to replace spaces with underscores
+        string result = original.Transform();
 
         Console.WriteLine($"Original: {original}");
-        Console.WriteLine($"Processed: {result}");
-
-        Console.ReadLine();
+        Console.WriteLine($"Modified: {result}");
     }
 }

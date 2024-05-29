@@ -1,66 +1,98 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Security_Cryptography.BL
 {
-    public class BLRijndael
+    /// <summary>
+    /// Implementation of Rijndael encryption and decryption using the DESCryptoServiceProvider.
+    /// </summary>
+    public class Rijndael
     {
-         byte[] key =
-            {
-                0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-                0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16
-            };
-        // Encryption method
+        #region Private Member
+        /// <summary>
+        /// private key
+        /// </summary>
+        private string _privateKey = "edjsdedj";
+        #endregion
+
+        #region Public Member
+
+        /// <summary>
+        /// public key
+        /// </summary>
+        public string publicKey = "mdjxedjw";
+
+        /// <summary>
+        /// private key bytes array
+        /// </summary>
+        public byte[] privateKeyByte = { };
+
+        /// <summary>
+        /// public key bytes array
+        /// </summary>
+        public byte[] publicKeyByte = { };
+        #endregion
+
+        #region Constructor
+        /// <summary>
+        /// Constructor for the Rijndael class. Initializes the private and public key bytes.
+        /// </summary>
+        public Rijndael()
+        {
+            privateKeyByte = Encoding.UTF8.GetBytes(_privateKey);
+            publicKeyByte = Encoding.UTF8.GetBytes(publicKey);
+        }
+        #endregion
+
+
+        #region Public Method
+        /// <summary>
+        /// Encrypts the input plain text using Rijndael algorithm.
+        /// </summary>
+        /// <param name="plainText">The plain text to be encrypted.</param>
+        /// <returns>Base64-encoded encrypted text.</returns>
         public string Encrypt(string plainText)
         {
-            using (RijndaelManaged rijndaelAlg = new RijndaelManaged())
+            byte[] plainTextByte = Encoding.UTF8.GetBytes(plainText);
+
+            using (DESCryptoServiceProvider objDESCryptoServiceProvider = new DESCryptoServiceProvider())
             {
-                rijndaelAlg.Key = key;
-                rijndaelAlg.IV = new byte[rijndaelAlg.BlockSize / 8];
+                var objMemoryStream = new MemoryStream();
+                var objCryptoStream = new CryptoStream(objMemoryStream, objDESCryptoServiceProvider.CreateEncryptor(publicKeyByte, privateKeyByte), CryptoStreamMode.Write);
 
-                ICryptoTransform encryptor = rijndaelAlg.CreateEncryptor(rijndaelAlg.Key, rijndaelAlg.IV);
+                objCryptoStream.Write(plainTextByte, 0, plainTextByte.Length);
+                objCryptoStream.FlushFinalBlock();
 
-                using (MemoryStream msEncrypt = new MemoryStream())
-                {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            swEncrypt.Write(plainText);
-                        }
-                    }
-
-                    return Convert.ToBase64String(msEncrypt.ToArray());
-                }
+                return Convert.ToBase64String(objMemoryStream.ToArray());
             }
         }
 
-        // Decryption method
-        public string Decrypt(string cipherText)
+        /// <summary>
+        /// Decrypts the input encrypted text using Rijndael algorithm.
+        /// </summary>
+        /// <param name="encryptedText">The Base64-encoded encrypted text to be decrypted.</param>
+        /// <returns>The decrypted plain text.</returns>
+        public string Decrypt(string encryptedText)
         {
-            using (Aes rijndaelAlg = Aes.Create())
+            byte[] encryptedTextByte = Convert.FromBase64String(encryptedText);
+
+            using (DESCryptoServiceProvider objDESCryptoServiceProvider = new DESCryptoServiceProvider())
             {
-                rijndaelAlg.Key = key;
-                rijndaelAlg.IV = new byte[rijndaelAlg.BlockSize / 8];
-
-                ICryptoTransform decryptor = rijndaelAlg.CreateDecryptor(rijndaelAlg.Key, rijndaelAlg.IV);
-
-                using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(cipherText)))
+                using (var objMemoryStream = new MemoryStream())
                 {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    using (var objCryptoStream = new CryptoStream(objMemoryStream, objDESCryptoServiceProvider.CreateDecryptor(publicKeyByte, privateKeyByte), CryptoStreamMode.Write))
                     {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                        {
-                            return srDecrypt.ReadToEnd();
-                        }
+                        objCryptoStream.Write(encryptedTextByte, 0, encryptedTextByte.Length);
+                        objCryptoStream.FlushFinalBlock();
                     }
+
+                    string decryptedText = Encoding.UTF8.GetString(objMemoryStream.ToArray());
+                    return decryptedText;
                 }
             }
         }
+        #endregion
     }
 }

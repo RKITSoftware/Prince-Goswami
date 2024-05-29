@@ -35,13 +35,13 @@ namespace ATM_Simulation_Demo.Controllers
         [CustomAuthorizationFilter(Roles = "DEO,User")]
         [HttpPost]
         [Route("addTransaction")]
-        public IHttpActionResult AddTransaction(AddTransactionRequest request)
+        public IHttpActionResult AddTransaction(int AccountId, decimal Amount, string Description )
         {
             try
             {
                 // Assuming AddTransactionRequest is a model containing accountId and transaction details
-                var account = _accountRepo.GetAccountByID(request.AccountId);
-                _transactionService.AddTransaction(account, request.Transaction);
+                var account = _accountRepo.GetAccountByID(AccountId);
+                _transactionService.AddTransaction(account,Amount,Description);
                 return Ok("Transaction added successfully.");
             }
             catch (Exception ex)
@@ -78,9 +78,5 @@ namespace ATM_Simulation_Demo.Controllers
         #endregion
     }
 
-    public class AddTransactionRequest
-    {
-        public int AccountId { get; set; }
-        public BLTransactionModel Transaction { get; set; }
-    }
+   
 }

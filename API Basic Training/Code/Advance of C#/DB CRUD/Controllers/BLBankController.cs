@@ -6,59 +6,118 @@ using System.Web.Http;
 namespace DB_CRUD.Controllers
 {
     /// <summary>
-    /// Controller for managing Bank data through CRUD operations
+    /// Controller for managing CLBank data through CRUD operations.
     /// </summary>
-    [RoutePrefix("api/Bank")]
+    [RoutePrefix("api/CLBank")]
     public class CLBankController : ApiController
     {
-        private BLBank _objOfBLBank;
+        #region private fields
+        /// <summary>
+        /// Instance of BLBank to handle bank-related business logic.
+        /// </summary>
+        private BLBank _blBank;
 
         /// <summary>
-        /// Retrieves all banks
+        /// Response object to store the result of operations.
+        /// </summary>
+        private Response _objResponse;
+        #endregion
+
+        /// <summary>
+        /// Constructor for CLBankController class.
+        /// </summary>
+        public CLBankController()
+        {
+            // Initialize BLBank instance for handling bank-related business logic.
+            _blBank = new BLBank();
+
+            // Initialize Response object to store operation results.
+            _objResponse = new Response();
+        }
+
+        /// <summary>
+        /// Retrieves all banks.
         /// </summary>
         [HttpGet]
-        [Route("GetAllBank")]
+        [Route("")]
         public IHttpActionResult GetAllBank()
         {
-            _objOfBLBank = new BLBank();
-            return Ok(_objOfBLBank.GetAll());
+            _objResponse = _blBank.GetAll();
+            return Ok(_objResponse);
         }
 
-        /// <summary>
-        /// Adds a new bank
+/*        /// <summary>
+        /// Retrieves bank information by ID.
         /// </summary>
-        /// <param name="bank">Bank data to be added</param>
-        [HttpPost]
-        [Route("AddNewBank")]
-        public HttpResponseMessage AddNewBank(BNK01 bank)
+        ///  /// <param name="id">id of the bank.</param>
+        /// <returns>IHttpActionResult indicating the result of the select operation.</returns>
+        [HttpGet]
+        [Route("{id}")]
+        public IHttpActionResult GetBankById(int id)
         {
-            _objOfBLBank = new BLBank();
-            return (_objOfBLBank.Add(bank));
+            _objResponse = _blBank.Get(id);
+            return Ok(_objResponse);
+        }
+*/
+        /// <summary>
+        /// Adds a new bank.
+        /// </summary>
+        /// <param name="objDTOBNK01">DTO object containing bank data to be add.</param>
+        /// <returns>IHttpActionResult indicating the result of the add operation.</returns>        [HttpPost]
+        [Route("Add")]
+        public IHttpActionResult AddBank(DTOBNK01 objDTOBNK01)
+        {
+            _blBank.presave(objDTOBNK01);
+            _blBank.Operation = EnmOperation.A;
+            _objResponse = _blBank.Validation();
+
+            if (!_objResponse.IsError)
+            {
+                _objResponse = _blBank.Save();
+            }
+
+            return Ok(_objResponse);
         }
 
         /// <summary>
-        /// Updates an existing bank
+        /// Updates bank data using HTTP PUT method.
+        /// </summary>
+        /// <param name="objDTOBNK01">DTO object containing bank data to be updated.</param>
+        /// <returns>IHttpActionResult indicating the result of the update operation.</returns>
+        [HttpPut]
+        [Route("Update")]
+        public IHttpActionResult UpdateBankData(DTOBNK01 objDTOBNK01)
+        {
+            _blBank.presave(objDTOBNK01);
+            _blBank.Operation = EnmOperation.E;
+            _objResponse = _blBank.Validation();
+
+            if (!_objResponse.IsError)
+            {
+                _objResponse = _blBank.Save();
+            }
+
+            return Ok(_objResponse);
+        }
+
+        /// <summary>
+        /// Deletes an bank by ID.
         /// </summary>
         /// <param name="id">Bank ID</param>
-        /// <param name="bank">Updated bank data</param>
-        [HttpPut]
-        [Route("UpdateBank/{id}")]
-        public HttpResponseMessage UpdateBank(int id, BNK01 bank)
-        {
-            _objOfBLBank = new BLBank();
-            return (_objOfBLBank.Update(id, bank));
-        }
-
-        /// <summary>
-        /// Deletes a bank by ID
-        /// </summary>
-        /// <param name="bankId">Bank ID to be deleted</param>
+        /// <returns>IHttpActionResult indicating the result of the delete operation.</returns>
         [HttpDelete]
-        [Route("DeleteBank")]
-        public HttpResponseMessage DeleteBank(int bankId)
+        [Route("{id}")]
+        public IHttpActionResult DeleteBank(int id)
         {
-            _objOfBLBank = new BLBank();
-            return (_objOfBLBank.Delete(bankId));
+            _blBank.Operation = EnmOperation.D;
+            _objResponse = _blBank.ValidationOnDelete(id);
+
+            if (!_objResponse.IsError)
+            {
+                _objResponse = _blBank.Save();
+            }
+
+            return Ok(_objResponse);
         }
     }
 }

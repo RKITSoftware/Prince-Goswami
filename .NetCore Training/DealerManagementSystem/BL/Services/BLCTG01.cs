@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DealerManagementSystem.BL.Interface.Service;
 using DealerManagementSystem.DAL;
-using DealerManagementSystem.Models;
+using DealerManagementSystem.Models.POCO;
 
 namespace DealerManagementSystem.BL.Services
 {
@@ -9,7 +9,7 @@ namespace DealerManagementSystem.BL.Services
     {
         private readonly ICTG01_DAL _categoryRepository;
 
-         public BLCTG01(CTG01Repository categoryRepository)
+         public BLCTG01(ICTG01_DAL categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }

@@ -35,7 +35,7 @@ namespace ATM_Simulation_Demo.Others.Auth.Account
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, accountId.ToString()) }),
-                Expires = DateTime.UtcNow.AddMinutes(3), // Consider making this configurable
+                Expires = DateTime.UtcNow.AddMinutes(30), // Consider making this configurable
                 SigningCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -136,6 +136,17 @@ namespace ATM_Simulation_Demo.Others.Auth.Account
                 
             }
         }
+
+        //public static int getUserID()
+        //{
+        //    ClaimsPrincipal currentUser = User as ClaimsPrincipal;
+        //    if(currentUser != null )
+        //    {
+        //        return Convert.ToInt32(currentUser.FindFirst(c => c.Type == "nameid"));
+        //    }
+
+        //    return 0;
+        //}
         #endregion
     }
 

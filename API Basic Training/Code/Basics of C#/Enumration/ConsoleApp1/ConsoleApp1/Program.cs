@@ -14,6 +14,12 @@ public enum enumDayOfWeek
     Saturday
 }
 
+public enum enumMulti
+{
+    Saturday,
+    0123,
+    {1,2,3,4}
+}
 class Enumeration
 {
     /// <summary>
@@ -22,6 +28,8 @@ class Enumeration
     static void Main()
     {
         Console.WriteLine("Enumerations Program:");
+        enumMulti multi = 2;
+        Console.WriteLine("Enumerations :" + multi);
 
         // Using the DayOfWeek enumeration
         DayOfWeek today = DayOfWeek.Friday;

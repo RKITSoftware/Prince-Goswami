@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ATM_Simulation_Demo.Models;
+using ATM_Simulation_Demo.Models.POCO;
 
 namespace ATM_Simulation_Demo.BAL.Interface
 {
@@ -21,7 +22,15 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// <param name="userId">The ID of the user to retrieve.</param>
         /// <returns>The user with the specified ID.</returns>
         USR01 GetUser(int userId);
-        
+
+        /// <summary>
+        /// checks if user exists by their user ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user to check.</param>
+        /// <returns>true if user exists.</returns>
+        bool IsUserExists(int userId);
+
+
         /// <summary>
         /// Retrieves a user by their user ID.
         /// </summary>

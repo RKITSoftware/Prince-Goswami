@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace ATM_Simulation_Demo.Controllers
 {
-  
+
     public class BackupController : ApiController
     {
         #region fields
@@ -24,17 +24,20 @@ namespace ATM_Simulation_Demo.Controllers
         private readonly static IBLTransactionRepository _transactionRepo = new TransactionRepository();
         private readonly IBLTransactionService _transactionService = new TransactionService(_accountRepo, _transactionRepo);
 
+        private readonly IBLLimitService _limitService = new LimitService();
+
         private readonly static IBLUserRepository _userRepo = new UserRepository();
         private readonly IBLUserService _userService = new UserService(_userRepo);
 
         #endregion
+
         [HttpGet]
         [Route("api/backup")]
         public HttpResponseMessage BackupData()
         {
             try
             {
-                string backupFilePath = _backupService.BackupData(_accountService.GetAllAccounts(),_transactionService.GetAllTransactions(),_userService.GetAllUsers());
+                string backupFilePath = _backupService.BackupData();
 
                 if (backupFilePath != null)
                 {

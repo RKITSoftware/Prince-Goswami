@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DealerManagementSystem.BL.Interface.Service;
-using DealerManagementSystem.Models;
+using DealerManagementSystem.Models.POCO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DealerManagementSystem.Controllers

@@ -7,10 +7,20 @@ using System.Threading.Tasks;
 
 namespace Security_Cryptography.BL
 {
+    /// <summary>
+    /// Provides methods for encrypting and decrypting using RSA encryption algorithm.
+    /// </summary>
     internal class BLRSA
     {
-        // Encryption method
-        public  string Encrypt(string plainText, string publicKey)
+        #region Encryption
+
+        /// <summary>
+        /// Encrypts the given plaintext using RSA encryption.
+        /// </summary>
+        /// <param name="plainText">The plaintext to encrypt.</param>
+        /// <param name="publicKey">The public key used for encryption.</param>
+        /// <returns>The encrypted ciphertext.</returns>
+        public string Encrypt(string plainText, string publicKey)
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
@@ -23,7 +33,16 @@ namespace Security_Cryptography.BL
             }
         }
 
-        // Decryption method
+        #endregion
+
+        #region Decryption
+
+        /// <summary>
+        /// Decrypts the given ciphertext using RSA decryption.
+        /// </summary>
+        /// <param name="encryptedText">The ciphertext to decrypt.</param>
+        /// <param name="privateKey">The private key used for decryption.</param>
+        /// <returns>The decrypted plaintext.</returns>
         public string Decrypt(string encryptedText, string privateKey)
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
@@ -36,5 +55,7 @@ namespace Security_Cryptography.BL
                 return Encoding.UTF8.GetString(decryptedBytes);
             }
         }
+
+        #endregion
     }
 }
