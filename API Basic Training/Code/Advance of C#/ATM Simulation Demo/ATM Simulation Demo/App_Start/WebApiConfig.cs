@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
+using ATM_Simulation_Demo.Others;
 
 namespace ATM_Simulation_Demo
 {
@@ -7,6 +8,8 @@ namespace ATM_Simulation_Demo
     {
         public static void Register(HttpConfiguration config)
         {
+            config.Filters.Add(new ValidateModelAttribute());
+
             // Web API configuration and services
             EnableCorsAttribute enableCorsAttribute = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(enableCorsAttribute);

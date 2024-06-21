@@ -5,7 +5,7 @@ using ATM_Simulation_Demo.DAL;
 using ATM_Simulation_Demo.Models;
 using ATM_Simulation_Demo.Models.DTO;
 using ATM_Simulation_Demo.Models.POCO;
-using ATM_Simulation_Demo.Others.Auth.User;
+using ATM_Simulation_Demo.Others.Auth;
 using System;
 using System.Web.Http;
 using ZstdSharp.Unsafe;
@@ -16,14 +16,28 @@ namespace ATM_Simulation_Demo.Controllers
     /// API controller for managing transaction-related operations.
     /// </summary>
     [RoutePrefix("api/transactions")]
+    [CustomAuthenticationFilter]
     public class TransactionController : ApiController
     {
         #region fields
         private readonly static IBLPinModule _pinModule = new PinModule();
+        /// <summary>
+        /// Represents the account repository used for handling account-related operations.
+        /// </summary>
         private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
+
+        /// <summary>
+        /// Represents the transaction repository used for handling transaction-related operations.
+        /// </summary>
         private readonly static IBLTransactionRepository _transactionRepo = new TransactionRepository();
-        private readonly IBLTransactionService _transactionService = new TransactionService(_accountRepo,_transactionRepo);
+
+        private readonly IBLTransactionService _transactionService = new TransactionService(_accountRepo, _transactionRepo);
+
+        /// <summary>
+        /// Represents the response object used for handling responses.
+        /// </summary>
         private Response _objResponse = new Response();
+
         #endregion
 
         #region Actions
@@ -33,14 +47,11 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing accountId and transaction details.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        //[CustomAuthenticationFilter]
-        //[CustomAuthorizationFilter(Roles = "DEO,User")]
         [HttpPost]
-        [Others.Auth.Account.CustomAuthenticationFilter]
-        [Others.Auth.Account.CustomAuthorizationFilter]
+        [CustomAuthorizationFilter(Roles = "AccountHolder")]
         [Route("addTransaction")]
-      
-        public IHttpActionResult AddTransaction(DTO_TRN01 request)
+
+        public IHttpActionResult AddTransaction(DTOTRN01 request)
         {
             try
             {
@@ -61,7 +72,7 @@ namespace ATM_Simulation_Demo.Controllers
                 return Ok(ex);
             }
         }
-
+        //// roles 
         /// <summary>
         /// View transaction history for a account.
         /// </summary>
@@ -69,11 +80,10 @@ namespace ATM_Simulation_Demo.Controllers
         /// <returns>List of transactions in the account's history.</returns>
         //[CustomAuthenticationFilter]
         //[CustomAuthorizationFilter(Roles = "Admin,DEO,User")]
-        [Others.Auth.Account.CustomAuthenticationFilter]
-        [Others.Auth.Account.CustomAuthorizationFilter]            
+        [CustomAuthorizationFilter(Roles = "AccountHolder")]
         [HttpGet]
         [Route("viewTransactionHistory/{accountId}")]
-        public IHttpActionResult ViewTransactionHistory(int accountId)
+        public IHttpActionResult ViewTransactionHistoryByID(int accountId)
         {
             try
             {
@@ -92,7 +102,31 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="accountId">The account's ID.</param>
         /// <returns>List of transactions in the account's history.</returns>
-        [CustomAuthorizationFilter(Roles = "Admin,DEO,User")]
+        //[CustomAuthenticationFilter]
+        //[CustomAuthorizationFilter(Roles = "Admin,DEO,User")]
+        [CustomAuthorizationFilter(Roles = "AccountHolder")]
+        [HttpGet]
+        [Route("viewTransactionHistory")]
+        public IHttpActionResult ViewTransactionHistory()
+        {
+            try
+            {
+                _objResponse = _transactionService.ViewTransactionHistory(TokenManager.AccountSId);
+                return Ok(_objResponse);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return BadRequest("Internal Server Error");
+            }
+        }
+
+        /// <summary>
+        /// View transaction history for a account.
+        /// </summary>
+        /// <param name="accountId">The account's ID.</param>
+        /// <returns>List of transactions in the account's history.</returns>
+        [CustomAuthorizationFilter(Roles = "Admin,User")]
         [HttpGet]
         [Route("viewTransactionHistory/{accountId}")]
         public IHttpActionResult GetAllTransactions()

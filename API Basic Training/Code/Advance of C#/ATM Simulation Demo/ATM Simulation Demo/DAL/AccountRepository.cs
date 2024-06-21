@@ -8,22 +8,41 @@ using ATM_Simulation_Demo.Others.Security;
 using System.Security.Principal;
 using ATM_Simulation_Demo.Models.POCO;
 using System.Net.Http.Headers;
+using ServiceStack.OrmLite;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace ATM_Simulation_Demo.DAL
 {
     public class AccountRepository : IBLAccountRepository
     {
-        private readonly string _connectionString = DAL_Helper.connectionString;
+        #region Private Fields
+        /// <summary>
+        /// Connection string to the database
+        /// </summary>
+        private readonly string _connectionString = DateRepository.connectionString;
+
+        /// <summary>
+        /// Interface instance for the PinModule business logic
+        /// </summary>
         private readonly IBLPinModule _PinModule;
-        ACC01 objACC01 = new ACC01();
+
+        /// <summary>
+        /// Instance of the ACC01 class for user account operations
+        /// </summary>
+        private ACC01 _objACC01 = new ACC01();
+        #endregion
+
+        #region Constructor
 
         public AccountRepository(IBLPinModule _pinModule)
         {
             this._PinModule = _pinModule;
         }
+        #endregion
 
+        #region Public Methods
         /// <inheritdoc />
-        public void AddAccount(ACC01 newAccount)
+        public int AddAccount(ACC01 newAccount)
         {
             if (newAccount == null)
             {
@@ -33,24 +52,39 @@ namespace ATM_Simulation_Demo.DAL
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-
-                using (MySqlCommand insertAccountCommand = new MySqlCommand(
-                    "INSERT INTO ACC01 (C01F02, C01F03, C01F04, C01F05, C01F06) " +
-                    "VALUES (@CardNumber, @Name, @PIN, @MobileNumber, @Balance);", connection))
+                var TransactionScope = connection.BeginTransaction();
+                try
                 {
-                    insertAccountCommand.Parameters.AddWithValue("@CardNumber", newAccount.C01F02);
-                    insertAccountCommand.Parameters.AddWithValue("@Name", newAccount.C01F03);
-                    insertAccountCommand.Parameters.AddWithValue("@PIN", newAccount.C01F04);
-                    insertAccountCommand.Parameters.AddWithValue("@MobileNumber", newAccount.C01F05);
-                    insertAccountCommand.Parameters.AddWithValue("@Balance", newAccount.C01F06);
+                    //Add Account
+                    int accountId = (int)connection.Insert<ACC01>(newAccount);
 
-                    insertAccountCommand.ExecuteNonQuery();
+                    if (accountId > 0)
+                    {
+
+                        // Add Limit
+                        LMT01 limit = new LMT01(accountId);
+                        connection.Insert<LMT01>(limit);
+                        TransactionScope.Commit();
+
+                        return accountId;
+                    }
+                    else
+                    {
+                        TransactionScope.Rollback();
+                        return 0;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    TransactionScope.Rollback();
+                    return 0;
                 }
             }
         }
 
         /// <inheritdoc />
-        public void UpdateAccount(ACC01 account)
+        public int UpdateAccount(ACC01 account)
         {
             if (account == null)
             {
@@ -61,33 +95,32 @@ namespace ATM_Simulation_Demo.DAL
             {
                 connection.Open();
 
-                using (MySqlCommand updateAccountCommand = new MySqlCommand(
-                    "UPDATE ACC01 SET C01F02 = @CardNumber, C01F03 = @Name, " +
-                    "C01F04 = @PIN, C01F05 = @MobileNumber, C01F06 = @Balance " +
-                    "WHERE C01F01 = @AccountId;", connection))
-                {
-                    updateAccountCommand.Parameters.AddWithValue("@CardNumber", account.C01F02);
-                    updateAccountCommand.Parameters.AddWithValue("@Name", account.C01F03);
-                    updateAccountCommand.Parameters.AddWithValue("@PIN", BLCrypto.Encrypt(account.C01F04));
-                    updateAccountCommand.Parameters.AddWithValue("@MobileNumber", account.C01F05);
-                    updateAccountCommand.Parameters.AddWithValue("@Balance", account.C01F06);
-                    updateAccountCommand.Parameters.AddWithValue("@AccountId", account.C01F01);
-
-                    updateAccountCommand.ExecuteNonQuery();
-                }
+                int rowsAffected = connection.Update<ACC01>(account);
+                return rowsAffected;
             }
         }
 
         /// <inheritdoc />
         public ACC01 GetAccount(string cardNumber, string pin)
         {
-            
+
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-
+                string query = string.Format(@"SELECT 
+                                    C01F01,
+                                    C01F02,
+                                    C01F03,
+                                    C01F04,
+                                    C01F05,
+                                    C01F06,
+                                 FROM 
+                                    ACC01 
+                                WHERE 
+                                    C01F02 = @0 AND 
+                                    C01F04 = @1;", cardNumber, pin);
                 using (MySqlCommand command = new MySqlCommand(
-                    "SELECT * FROM ACC01 WHERE C01F02 = @CardNumber AND C01F04 = @PIN;", connection))
+                    query, connection))
                 {
                     command.Parameters.AddWithValue("@CardNumber", cardNumber);
                     command.Parameters.AddWithValue("@PIN", BLCrypto.Encrypt(pin));
@@ -96,51 +129,55 @@ namespace ATM_Simulation_Demo.DAL
                     {
                         if (reader.Read())
                         {
-                            objACC01.C01F01 = reader.GetInt32("C01F01");
-                            objACC01.C01F02 = reader.GetString("C01F02");
-                            objACC01.C01F03 = reader.GetString("C01F03");
-                            objACC01.C01F04 = BLCrypto.Decrypt(reader.GetString("C01F04"));
-                            objACC01.C01F05 = reader.GetString("C01F05");
-                            objACC01.C01F06 = reader.GetDecimal("C01F06");
+                            _objACC01.C01F01 = reader.GetInt32("C01F01");
+                            _objACC01.C01F02 = reader.GetString("C01F02");
+                            _objACC01.C01F03 = reader.GetString("C01F03");
+                            _objACC01.C01F04 = BLCrypto.Decrypt(reader.GetString("C01F04"));
+                            _objACC01.C01F05 = reader.GetString("C01F05");
+                            _objACC01.C01F06 = reader.GetDecimal("C01F06");
                         }
                     }
                 }
 
-                return objACC01;
+                return _objACC01;
             }
         }
 
         /// <inheritdoc />
         public ACC01 GetAccountByID(int id)
         {
-            if (id <= 0)
-            {
-                throw new ArgumentException("Invalid account ID");
-            }
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-
-                using (MySqlCommand command = new MySqlCommand(
-                    "SELECT * FROM ACC01 WHERE C01F01 = @AccountId;", connection))
+                string query = string.Format(@"SELECT 
+                                    C01F01,
+                                    C01F02,
+                                    C01F03,
+                                    C01F04,
+                                    C01F05,
+                                    C01F06,
+                                 FROM 
+                                    ACC01 
+                                WHERE 
+                                    C01F01 = @0 ", id);
+                using (MySqlCommand command = new MySqlCommand(query
+                    , connection))
                 {
-                    command.Parameters.AddWithValue("@AccountId", id);
-
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            objACC01.C01F01 = reader.GetInt32("C01F01");
-                            objACC01.C01F02 = reader.GetString("C01F02");
-                            objACC01.C01F03 = reader.GetString("C01F03");
-                            objACC01.C01F04 = BLCrypto.Decrypt(reader.GetString("C01F04"));
-                            objACC01.C01F05 = reader.GetString("C01F05");
-                            objACC01.C01F06 = reader.GetDecimal("C01F06");
+                            _objACC01.C01F01 = reader.GetInt32("C01F01");
+                            _objACC01.C01F02 = reader.GetString("C01F02");
+                            _objACC01.C01F03 = reader.GetString("C01F03");
+                            _objACC01.C01F04 = BLCrypto.Decrypt(reader.GetString("C01F04"));
+                            _objACC01.C01F05 = reader.GetString("C01F05");
+                            _objACC01.C01F06 = reader.GetDecimal("C01F06");
                         }
                     }
                 }
 
-                return objACC01;
+                return _objACC01;
             }
         }
 
@@ -155,44 +192,17 @@ namespace ATM_Simulation_Demo.DAL
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-
-                using (MySqlCommand command = new MySqlCommand(
-                    "SELECT COUNT(*) FROM ACC01 WHERE C01F02 = @CardNumber;", connection))
+                string query = string.Format(@"SELECT 
+                                                     COUNT(C01F02) 
+                                               FROM 
+                                                     ACC01 
+                                               WHERE C01F02 = @0;", cardNumber);
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@CardNumber", cardNumber);
 
                     int count = Convert.ToInt32(command.ExecuteScalar());
 
                     return count > 0;
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        public void ChangePin(ACC01 account, string currentPin, string newPin)
-        {
-            if (account == null)
-            {
-                throw new ArgumentNullException(nameof(account), "Account cannot be null.");
-            }
-
-            using (MySqlConnection connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                using (MySqlCommand changePinCommand = new MySqlCommand(
-                    "UPDATE ACC01 SET C01F04 = @NewPin WHERE C01F01 = @AccountId AND C01F04 = @CurrentPin;", connection))
-                {
-                    changePinCommand.Parameters.AddWithValue("@NewPin", BLCrypto.Encrypt(newPin));
-                    changePinCommand.Parameters.AddWithValue("@AccountId", account.C01F01);
-                    changePinCommand.Parameters.AddWithValue("@CurrentPin", BLCrypto.Encrypt(currentPin));
-
-                    int rowsAffected = changePinCommand.ExecuteNonQuery();
-
-                    if (rowsAffected == 0)
-                    {
-                        throw new InvalidOperationException("Invalid current PIN. Unable to change PIN.");
-                    }
                 }
             }
         }
@@ -263,9 +273,8 @@ namespace ATM_Simulation_Demo.DAL
                 connection.Open();
 
                 using (MySqlCommand command = new MySqlCommand(
-                    "DELETE FROM ACC01 WHERE C01F01 = @AccountId;", connection))
+                    $"DELETE FROM ACC01 WHERE C01F01 = {id});", connection))
                 {
-                    command.Parameters.AddWithValue("@AccountId", id);
                     int rowsEffected = command.ExecuteNonQuery();
 
                     return rowsEffected > 0;
@@ -281,15 +290,14 @@ namespace ATM_Simulation_Demo.DAL
             {
                 throw new ArgumentException("invalid ID.", nameof(id));
             }
-
+            //// string . format
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
 
                 using (MySqlCommand command = new MySqlCommand(
-                    "SELECT COUNT(*) FROM ACC01 WHERE C01F01 = @id;", connection))
+                    $"SELECT COUNT(*) FROM ACC01 WHERE C01F01 ={id};", connection))
                 {
-                    command.Parameters.AddWithValue("@id", id);
 
                     int count = Convert.ToInt32(command.ExecuteScalar());
 
@@ -298,6 +306,7 @@ namespace ATM_Simulation_Demo.DAL
             }
         }
 
+        #endregion
 
     }
 }

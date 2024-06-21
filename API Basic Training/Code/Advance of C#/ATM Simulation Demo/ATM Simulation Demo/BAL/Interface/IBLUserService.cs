@@ -4,25 +4,14 @@ using ATM_Simulation_Demo.Models.POCO;
 using System;
 using System.Collections.Generic;
 
-namespace ATM_Simulation_Demo.BAL.Interface
+namespace ATM_Simulation_Demo.BAL.Interface 
 {
     /// <summary>
     /// Interface for managing user-related operations in the business logic layer.
     /// </summary>
-    public interface IBLUserService
+    public interface IBLUserService : IDataHandlerService<DTOUSR01>
     {
-        /// <summary>
-        /// Checking the id exists or not for category.
-        /// </summary>
-        /// <param name="objDTOUSR01">DTO for USR01 Model.</param>
-        /// <returns>Success response if no error occurs else response with specific statuscode with message.</returns>
-        Response PreValidation(DTO_USR01 objDTOUSR01);
-
-        EnmOperation Operation { get; set; }
-
-        Response Validation();
-        void PreSave(DTO_USR01 objUSR01DTO);
-        Response Save();
+        Response PreValidation(DTOUSR01 objDTOACC01);
 
         /// <summary>
         /// Retrieves a user by their user ID.
@@ -53,7 +42,7 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// </summary>
         /// <param name="user">The user whose role will be updated.</param>
         /// <param name="newRole">The new role for the user.</param>
-        Response UpdateRole(int userId, UserRole newRole);
+        Response UpdateRole(int userId, enmUserRole newRole);
 
         /// <summary>
         /// Deletes a user by their user ID.

@@ -1,16 +1,11 @@
-﻿using System;
-using ATM_Simulation_Demo.Others.Auth.User;
-using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.DAL;
-using System.Web.Http.Cors;
+﻿using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.BAL.Services;
-using ATM_Simulation_Demo.Models.POCO;
+using ATM_Simulation_Demo.DAL;
 using ATM_Simulation_Demo.Models;
 using ATM_Simulation_Demo.Models.DTO;
-using System.Web;
-using System.Net.Http;
+using ATM_Simulation_Demo.Others.Auth;
+using System;
 using System.Web.Http;
-using System.Net;
 
 namespace ATM_Simulation_Demo.Controllers
 {
@@ -22,60 +17,31 @@ namespace ATM_Simulation_Demo.Controllers
     public class UserController : ApiController
     {
         #region fields
+        /// <summary>
+        /// Represents a static instance of an implementation of the IBLUserRepository interface.
+        /// </summary>
         private readonly static IBLUserRepository _userRepository = new UserRepository();
+
+        /// <summary>
+        /// Represents an instance of a service for user-related operations.
+        /// </summary>
         private readonly IBLUserService _userService = new UserService(_userRepository);
+
+        /// <summary>
+        /// Represents a response object for handling service responses.
+        /// </summary>
         private Response _objResponse;
+
         #endregion
 
         #region Actions
-        /// <summary>
-        /// Authenticates a user based on provided credentials and generates a JWT token if the credentials are valid.
-        /// </summary>
-        /// <param name="userName">The username of the user.</param>
-        /// <param name="password">The password of the user.</param>
-        /// <returns>
-        /// HttpResponseMessage:
-        ///     - HttpStatusCode.OK with a JWT token if authentication is successful.
-        ///     - HttpStatusCode.Unauthorized with an error message if authentication fails.
-        ///     - HttpStatusCode.InternalServerError if an unexpected error occurs during authentication.
-        /// </returns>
-        [HttpPost]
-        [Route("Authenticate")]
-        [AllowAnonymous]
-        public HttpResponseMessage Authenticate(string userName, string password)
-        {
-            try
-            {
-                var user = _userService.GetUserByCredentials(userName, password);
-                // Check if the provided credentials are valid
-                if (user != null)
-                {
-                    // Generate a JWT token using the authentication service
-                    string token = UserTokenManager.GenerateUserToken(user.R01F01, user.R01F02, user.R01F05);
-
-                    // Return an OK _objResponse with the JWT token
-                    return Request.CreateErrorResponse(HttpStatusCode.OK, token);
-                }
-                else
-                {
-                    // Return an Unauthorized _objResponse with an error message
-                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log or handle any exceptions that might occur during token generation or validation
-                // Log.Error($"An error occurred during authentication: {ex}");
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "An error occurred");
-            }
-        }
 
         /// <summary>
         /// Get user information based on user ID.
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>User information if found, otherwise NotFound.</returns>
- 
+
         [CustomAuthorizationFilter(Roles = "Admin,User")]
         [HttpGet]
         [Route("{userId}")]
@@ -100,20 +66,21 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="password">User's password.</param>
         /// <param name="role">User's role.</param>
         /// <returns>Newly created user information.</returns>
- 
+
         [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPost]
         [Route("create")]
-        public IHttpActionResult CreateUser(DTO_USR01 request)
+        public IHttpActionResult CreateUser(DTOUSR01 request)
         {
             try
             {
+                //// pre validation not rwuired
                 _objResponse = _userService.PreValidation(request);
 
                 if (!_objResponse.IsError)
                 {
                     _userService.PreSave(request);
-
+                    /// validation
                     _userService.Validation();
                     _objResponse = _userService.Save();
                 }
@@ -132,7 +99,7 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="currentPassword">currentPassword of user.</param>
         /// <param name="newPassword">newPassword to set.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
- 
+
         [CustomAuthorizationFilter(Roles = "Admin,User")]
         [HttpPatch]
         [Route("changePassword")]
@@ -141,7 +108,7 @@ namespace ATM_Simulation_Demo.Controllers
             try
             {
                 // Assuming ChangePasswordRequest is a model containing userId, currentPassword, and newPassword properties
-                int id = UserTokenManager.sessionId;
+                int id = TokenManager.UserSId;
                 Response _objResponse = _userService.ChangePassword(id, currentPassword, newPassword);
                 return Ok(_objResponse);
             }
@@ -157,11 +124,11 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="request">The request containing userId and newRole.</param>
         /// <returns>Action result indicating the result of the operation.</returns>  
- 
+
         [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpPatch]
         [Route("updateRole")]
-        public IHttpActionResult UpdateRole(int userId, UserRole userRole)
+        public IHttpActionResult UpdateRole(int userId, enmUserRole userRole)
         {
             try
             {
@@ -180,8 +147,9 @@ namespace ATM_Simulation_Demo.Controllers
         /// Get all users.
         /// </summary>
         /// <returns>List of all users.</returns>
- 
+
         [CustomAuthorizationFilter(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpGet]
         [Route("allUsers")]
         public IHttpActionResult GetAllUsers()
@@ -198,7 +166,12 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
- 
+        /// <summary>
+        /// Delete user by id.
+        /// </summary>
+        /// <param name="userId">user Id</param>
+        /// <returns>List of all users.</returns>
+
         [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpDelete]
         [Route("DeleteUser/{userID}")]

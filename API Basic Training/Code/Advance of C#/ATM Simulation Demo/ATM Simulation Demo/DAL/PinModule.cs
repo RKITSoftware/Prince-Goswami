@@ -4,6 +4,7 @@ using ATM_Simulation_Demo.Models;
 using ATM_Simulation_Demo.Models.POCO;
 using MySql.Data.MySqlClient;
 using System;
+using System.Data;
 
 namespace ATM_Simulation_Demo.DAL
 {
@@ -12,7 +13,14 @@ namespace ATM_Simulation_Demo.DAL
     /// </summary>
     public class PinModule : IBLPinModule
     {
-        private readonly string _connectionString = DAL_Helper.connectionString;
+        #region Private Fields
+        /// <summary>
+        /// Represents the connection string used to connect to the database.
+        /// </summary>
+        private readonly string _connectionString = DateRepository.connectionString;
+        #endregion
+
+        #region Methods
 
         /// <inheritdoc />
         public void AssignPin(int id, string newPin)
@@ -22,9 +30,12 @@ namespace ATM_Simulation_Demo.DAL
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
                     connection.Open();
+                    string query = string.Format(@"UPDATE ACC01 
+                                                   SET C01F04 = @0
+                                                   WHERE C01F01 = @1;", newPin, id);
 
                     using (MySqlCommand assignPinCommand = new MySqlCommand(
-                        "UPDATE ACC01 SET C01F04 = @NewPin WHERE C01F01 = @UserId;", connection))
+                        query, connection))
                     {
                         assignPinCommand.Parameters.AddWithValue("@NewPin", Convert.ToInt32(newPin));
                         assignPinCommand.Parameters.AddWithValue("@UserId", id);
@@ -51,24 +62,23 @@ namespace ATM_Simulation_Demo.DAL
                     using (MySqlConnection connection = new MySqlConnection(_connectionString))
                     {
                         connection.Open();
+                        string query = string.Format(@"UPDATE 
+                                                    ACC01 
+                                               SET  
+                                                    C01F04 = @0 
+                                               WHERE 
+                                                    C01F01 = @1 
+                                               AND 
+                                                    C01F04 = @2;", newPin, id, currentPin);
+                        int rowEffected = DALHelper.ExecuteNonQuery(query, connection);
 
-                        using (MySqlCommand changePinCommand = new MySqlCommand(
-                            "UPDATE ACC01 SET C01F04 = @NewPin WHERE C01F01 = @UserId AND C01F04 = @CurrentPin;", connection))
+                        if (rowEffected > 0)
                         {
-                            changePinCommand.Parameters.AddWithValue("@NewPin", Convert.ToInt32(newPin));
-                            changePinCommand.Parameters.AddWithValue("@UserId", id);
-                            changePinCommand.Parameters.AddWithValue("@CurrentPin", Convert.ToInt32(currentPin));
-
-                            int rowsAffected = changePinCommand.ExecuteNonQuery();
-
-                            if (rowsAffected > 0)
-                            {
-                                return "PIN changed successfully.";
-                            }
-                            else
-                            {
-                                return "Current PIN verification failed. PIN not changed.";
-                            }
+                            return "PIN changed successfully.";
+                        }
+                        else
+                        {
+                            return "Current PIN verification failed. PIN not changed.";
                         }
                     }
                 }
@@ -79,7 +89,7 @@ namespace ATM_Simulation_Demo.DAL
             }
             else
             {
-                return  "Current PIN verification failed. PIN not changed.";
+                return "Current PIN verification failed. PIN not changed.";
             }
         }
 
@@ -89,19 +99,20 @@ namespace ATM_Simulation_Demo.DAL
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
+                string query = string.Format(@"SELECT COUNT(*) 
+                 FROM ACC01 
+                 WHERE C01F01 = @0
+                 AND C01F04 = @1;", Id, enteredPin);
 
-                using (MySqlCommand verifyPinCommand = new MySqlCommand(
-                    "SELECT COUNT(*) FROM ACC01 WHERE C01F01 = @UserId AND C01F04 = @EnteredPin;", connection))
-                {
-                    verifyPinCommand.Parameters.AddWithValue("@UserId", Id);
-                    verifyPinCommand.Parameters.AddWithValue("@EnteredPin", enteredPin);
+                DataTable dt = DALHelper.ExecuteSelectQuery(query, connection);
 
-                    int count = Convert.ToInt32(verifyPinCommand.ExecuteScalar());
-
-                    return count > 0;
-                }
+                return dt.Rows.Count > 0;
             }
         }
+
+        #endregion
+
+        #region Helper Methods
 
         // Helper method to validate the PIN format
         private bool IsPinValid(string pin)
@@ -109,5 +120,7 @@ namespace ATM_Simulation_Demo.DAL
             // PIN should be a 4-digit numeric value
             return !string.IsNullOrEmpty(pin) && pin.Length == 4 && int.TryParse(pin, out _);
         }
+
+        #endregion
     }
-}
+    }

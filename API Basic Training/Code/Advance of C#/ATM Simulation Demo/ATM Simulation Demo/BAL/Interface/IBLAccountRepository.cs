@@ -14,13 +14,13 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// Adds a new account to the repository.
         /// </summary>
         /// <param name="newAccount">The new account to add.</param>
-        void AddAccount(ACC01 newAccount);
+        int AddAccount(ACC01 newAccount);
 
         /// <summary>
         /// Update current account with new account to the repository.
         /// </summary>
         /// <param name="newAccount">The new account to add.</param>
-        void UpdateAccount(ACC01 newAccount);
+        int UpdateAccount(ACC01 newAccount);
 
         /// <summary>
         /// Retrieves a account based on card number and PIN.
@@ -43,15 +43,7 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// <returns>True if the account exists, false otherwise.</returns>
         bool IsCardNumberExists(string cardNumber);
 
-        /// <summary>
-        /// Changes the PIN for a account.
-        /// </summary>
-        /// <param name="account">The account to change the PIN for.</param>
-        /// <param name="currentPin">The current PIN of the account.</param>
-        /// <param name="newPin">The new PIN to set.</param>
-        void ChangePin(ACC01 account, string currentPin, string newPin);
-
-        /// <summary>
+          /// <summary>
         /// Updates the mobile number for a account.
         /// </summary>
         /// <param name="account">The account to update the mobile number for.</param>

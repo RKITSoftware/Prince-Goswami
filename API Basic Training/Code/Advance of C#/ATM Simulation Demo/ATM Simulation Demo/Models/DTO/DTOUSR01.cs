@@ -8,11 +8,13 @@ namespace ATM_Simulation_Demo.Models.DTO
     /// <summary>
     /// DTO Model for requesting user details.
     /// </summary>
-    public class DTO_USR01
+    public class DTOUSR01
     {
         /// <summary>
         /// User ID (Primary Key, Auto Incremented)
         /// </summary>
+        [Required(ErrorMessage = "User id is required.")]
+        [Range(0, int.MaxValue)]
         [JsonProperty("R01101")]
         public int R01F01 { get; set; }
 
@@ -43,7 +45,7 @@ namespace ATM_Simulation_Demo.Models.DTO
         /// </summary>
         [Required(ErrorMessage = "Role is required.")]
         [JsonProperty("R01105")]
-        public UserRole R01F05 { get; set; }
+        public enmUserRole R01F05 { get; set; }
 
         /// <summary>
         /// Password (Not Null)

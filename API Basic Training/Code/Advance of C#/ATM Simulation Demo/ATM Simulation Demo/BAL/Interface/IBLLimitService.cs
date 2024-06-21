@@ -52,10 +52,6 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// <param name="accountID">The ID of the account.</param>
         void AddATMLimit(int accountID);
 
-        /// <summary>
-        /// Deletes the ATM limit for a specific account.
-        /// </summary>
-        /// <param name="accountID">The ID of the account.</param>
-        void DeleteATMLimit(int accountID);
+      
     }
 }

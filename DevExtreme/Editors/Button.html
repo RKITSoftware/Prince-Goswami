@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Button</title>
+    <!-- ... -->
+    <script
+        type="text/javascript"
+        src="https://code.jquery.com/jquery-3.5.1.min.js"
+    ></script>
+    
+    <!-- DevExtreme theme -->
+    <link
+        rel="stylesheet"
+        href="https://cdn3.devexpress.com/jslib/21.1.11/css/dx.light.css"
+    />
+
+    <!-- DevExtreme library -->
+    <script
+        type="text/javascript"
+        src="https://cdn3.devexpress.com/jslib/21.1.11/js/dx.all.js"
+    ></script>
+    <script type="module" src="JS/button.js"></script>
+
+    <style>
+        .dx-field {
+            display: inline-block;
+            width: 30%; /* Adjust the width as needed */
+            margin-right: 3%; /* Space between columns */
+            margin-bottom: 20px; /* Space between rows */
+            vertical-align: top; /* Align checkboxes to top of the row */
+        }
+
+        @media (max-width: 768px) {
+            .dx-field {
+                width: 100%; /* Change to full width on smaller screens */
+                margin-right: 0; /* Remove margin on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="basicButton"></div>
+    <div id="disposeButton"></div>
+</body>
+</html>

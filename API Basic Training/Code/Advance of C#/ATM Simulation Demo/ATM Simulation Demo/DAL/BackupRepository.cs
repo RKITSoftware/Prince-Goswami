@@ -1,28 +1,33 @@
 ﻿using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
-using ServiceStack;
-using ServiceStack.OrmLite;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text.Json;
-using System.Web;
 
 namespace ATM_Simulation_Demo.DAL
 {
+    /// <summary>
+    /// Represents a repository for retrieving backup data from the database.
+    /// </summary>
     public class BackupRepository
     {
-        #region privateFields
-        private readonly string _connectionString = DAL_Helper.connectionString;
+        #region Private Fields
+
+        /// <summary>
+        /// The connection string used to connect to the database.
+        /// </summary>
+        private readonly string _connectionString = DateRepository.connectionString;
+
         #endregion
 
         #region Methods
 
-        public string GetBackupData()
+        /// <summary>
+        /// Retrieves backup data from the database and returns it as a DataSet.
+        /// </summary>
+        /// <returns>A DataSet containing backup data.</returns>
+        public DataSet GetBackupData()
         {
             DataTable accounts = new DataTable("Accounts");
             DataTable transactions = new DataTable("Transactions");
+
             string fetchAccounts = $@"SELECT 
                                    C01F02 as CardNumber,
                                    C01F03 as Name,
@@ -36,7 +41,7 @@ namespace ATM_Simulation_Demo.DAL
                                 JOIN
                                     LMT01 T01
                                 ON T01.T01F02 = C01.C01F01";
-            
+
             string fetchTransactions = $@"SELECT 
                                    C01F02 AS CardNumber,
                                    C01F03 AS Name, 
@@ -76,14 +81,12 @@ namespace ATM_Simulation_Demo.DAL
                     }
                 }
             }
+
             DataSet ds = new DataSet();
             ds.Tables.Add(accounts);
             ds.Tables.Add(transactions);
 
-            string JSONobject = null;
-            JSONobject = JsonConvert.SerializeObject(ds);
-
-            return JSONobject;
+            return ds;
         }
 
         #endregion

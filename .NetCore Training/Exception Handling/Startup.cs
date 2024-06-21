@@ -45,18 +45,17 @@ namespace Exception_Handling
                 app.UseSwaggerUI();
                 app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
                 app.UseDeveloperExceptionPage(
-                    new DeveloperExceptionPageOptions() 
-                    { 
+                    new DeveloperExceptionPageOptions()
+                    {
                         SourceCodeLineCount = 1
                     });
 
-                app.UseMiddleware<ExceptionHandlingMiddleware>(); 
             }
             else
             {
+                app.UseMiddleware<ExceptionHandlingMiddleware>();
+                app.UseExceptionHandler("/Error");
             }
-
-            app.UseExceptionHandler("/Error");
             app.UseHsts();
 
             app.UseHttpsRedirection();

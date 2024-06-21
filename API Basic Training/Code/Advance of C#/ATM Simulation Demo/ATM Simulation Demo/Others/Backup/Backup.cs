@@ -1,15 +1,16 @@
 ﻿using ATM_Simulation_Demo.DAL;
 using ATM_Simulation_Demo.Models.POCO;
 using Newtonsoft.Json;
+using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Web.UI;
 
 public class BackupService
 {
-
-    private readonly string _backupPath = "F:\\367 - Prince.G\\git\\API Basic Training\\Code\\Advance of C#\\ATM Simulation Demo\\ATM Simulation Demo\\Backup\\backup.json";
+    private readonly string _backupPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Backup/backup.json");
     private readonly BackupRepository _backupRepository;
 
     #region Constructor
@@ -23,8 +24,11 @@ public class BackupService
     {
         try
         {
+            //// get data set
+            DataSet backupData = _backupRepository.GetBackupData();
 
-            string backupData = _backupRepository.GetBackupData();
+            string JSONobject = JsonConvert.SerializeObject(backupData);
+
             // Check if the file exists
             if (!File.Exists(_backupPath))
             {
@@ -33,7 +37,7 @@ public class BackupService
             }
 
             // Write JSON to file
-            File.WriteAllText(_backupPath, backupData);
+            File.WriteAllText(_backupPath, JSONobject);
             return _backupPath;
         }
         catch (Exception ex)

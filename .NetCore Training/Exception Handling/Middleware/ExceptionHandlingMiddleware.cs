@@ -1,60 +1,88 @@
-﻿using System.Net;
+﻿using Exception_Handling.Models;
+using System.Net;
 using System.Text.Json;
-using Exception_Handling.Models;
 
-namespace Exception_Handling.Middlewares;
-
-public class ExceptionHandlingMiddleware
+namespace Exception_Handling.Middlewares
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-
-    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    /// <summary>
+    /// Middleware for handling exceptions and returning appropriate responses.
+    /// </summary>
+    public class ExceptionHandlingMiddleware
     {
-        _next = next;
-        _logger = logger;
-    }
 
-    public async Task InvokeAsync(HttpContext httpContext)
-    {
-        try
+        #region PrivateFields
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExceptionHandlingMiddleware"/> class.
+        /// </summary>
+        /// <param name="next">The next request delegate.</param>
+        /// <param name="logger">The logger instance.</param>
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
-            await _next(httpContext);
+            _next = next;
+            _logger = logger;
         }
-        catch (Exception ex)
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Invokes the middleware asynchronously.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context.</param>
+        public async Task InvokeAsync(HttpContext httpContext)
         {
-            await HandleExceptionAsync(httpContext, ex);
+            try
+            {
+                await _next(httpContext);
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionAsync(httpContext, ex);
+            }
         }
-    }
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
-        context.Response.ContentType = "application/json";
-        var response = context.Response;
+        #endregion
+        
+        #region Private Methods
 
-        var errorResponse = new ErrorResponse
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            Success = false
-        };
-        switch (exception)
-        {
-            case ApplicationException ex:
-                if (ex.Message.Contains("Invalid Token"))
-                {
-                    response.StatusCode = (int)HttpStatusCode.Forbidden;
+            context.Response.ContentType = "application/json";
+            var response = context.Response;
+
+            var errorResponse = new ErrorResponse
+            {
+                Success = false
+            };
+            switch (exception)
+            {
+                case ApplicationException ex:
+                    if (ex.Message.Contains("Invalid Token"))
+                    {
+                        response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        errorResponse.Message = ex.Message;
+                        break;
+                    }
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorResponse.Message = ex.Message;
                     break;
-                }
-                response.StatusCode = (int)HttpStatusCode.BadRequest;
-                errorResponse.Message = ex.Message;
-                break;
-            default:
-                response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                errorResponse.Message = "Internal server error!";
-                break;
+                default:
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    errorResponse.Message = "Internal server error!";
+                    break;
+            }
+            _logger.LogError(exception.Message);
+            var result = JsonSerializer.Serialize(errorResponse);
+            await context.Response.WriteAsync(result);
         }
-        _logger.LogError(exception.Message);
-        var result = JsonSerializer.Serialize(errorResponse);
-        await context.Response.WriteAsync(result);
+
+        #endregion
     }
 }

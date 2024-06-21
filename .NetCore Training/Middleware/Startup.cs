@@ -1,4 +1,5 @@
-﻿using Middleware.Middlewares;
+﻿using Middleware.Extensions;
+using Middleware.Middlewares;
 using WebApiDemo.Middlewares;
 
 namespace Middleware
@@ -15,7 +16,9 @@ namespace Middleware
         // This method is called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(
+                o => o.BasicAuthConfiguration()
+                );
             services.AddEndpointsApiExplorer();
             services.AddControllers();
         }

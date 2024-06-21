@@ -14,16 +14,19 @@ namespace ATM_Simulation_Demo.Models.DTO
     /// <summary>
     /// Represents the model for a user in the system.
     /// </summary>
-    public class DTO_ACC01
+    public class DTOACC01
     {
         #region Properties
-
+        //// validation
         /// <summary>
         /// Account ID (Primary Key, Auto Incremented)
         /// </summary>
+        [Required(ErrorMessage = "Account id is required.")]
+        [Range(0,int.MaxValue)]
         [JsonProperty("C01101")]
         public int C01F01 { get; set; }
 
+        //// validation 
         /// <summary>
         /// Card Number (Unique, Not Null)
         /// </summary>
@@ -59,17 +62,10 @@ namespace ATM_Simulation_Demo.Models.DTO
         public decimal? C01F06 { get; set; }
 
         /// <summary>
-        /// New Pin
-        /// </summary>
-        [JsonProperty("C01107")]
-        public string C01F07 { get; set; } = string.Empty;
-
-        /// <summary>
         /// Date Of Birth
         /// </summary>
-        [JsonProperty("C01108")]
-        public DateTime C01F08 { get; set; } = DateTime.MinValue;
-
+        [JsonProperty("C01107")]
+        public DateTime C01F07 { get; set; } = DateTime.MinValue;
         #endregion
     }
 }

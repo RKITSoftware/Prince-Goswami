@@ -10,15 +10,11 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// <summary>
         /// Interface for transaction-related operations.
         /// </summary>
-        public interface IBLTransactionService
+        public interface IBLTransactionService : IDataHandlerService<DTOTRN01>
         {
-           Response PreValidation(DTO_TRN01 objDTOTRN01);
 
-        EnmOperation Operation { get; set; }
+        Response PreValidation(DTOTRN01 objDTOTRN01);
 
-        Response Validation();
-        void PreSave(DTO_TRN01 objTRN01DTO);
-        Response Save();
         /// <summary>
         /// View transaction history for a account.
         /// </summary>

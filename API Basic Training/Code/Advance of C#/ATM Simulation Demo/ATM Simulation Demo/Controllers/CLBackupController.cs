@@ -1,46 +1,45 @@
-﻿using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.BAL.Services;
-using ATM_Simulation_Demo.DAL;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using ATM_Simulation_Demo.Others.Auth;
 
 namespace ATM_Simulation_Demo.Controllers
 {
-
+    /// <summary>
+    /// Controller for managing backup operations.
+    /// </summary>
+    [CustomAuthenticationFilter]
     public class BackupController : ApiController
     {
-        #region fields
+        #region Fields
 
+        // Service instance for backup operations
         private readonly BackupService _backupService = new BackupService();
-
-        private readonly static IBLPinModule _pinModule = new PinModule();
-
-        private readonly static IBLAccountRepository _accountRepo = new AccountRepository(_pinModule);
-        private readonly IBLAccountService _accountService = new AccountService(_accountRepo, _pinModule);
-
-        private readonly static IBLTransactionRepository _transactionRepo = new TransactionRepository();
-        private readonly IBLTransactionService _transactionService = new TransactionService(_accountRepo, _transactionRepo);
-
-        private readonly IBLLimitService _limitService = new LimitService();
-
-        private readonly static IBLUserRepository _userRepo = new UserRepository();
-        private readonly IBLUserService _userService = new UserService(_userRepo);
 
         #endregion
 
+        /// <summary>
+        /// Retrieves a backup of data.
+        /// </summary>
+        /// <remarks>
+        /// Requires authentication with role "A".
+        /// </remarks>
+        /// <returns>HTTP response containing the backup data.</returns>
         [HttpGet]
         [Route("api/backup")]
+        [CustomAuthorizationFilter(Roles = "Admin")]
         public HttpResponseMessage BackupData()
         {
             try
             {
+                // Perform data backup
                 string backupFilePath = _backupService.BackupData();
 
                 if (backupFilePath != null)
                 {
+                    // If backup successful, return backup file
                     HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                     response.Content = new StreamContent(File.OpenRead(backupFilePath));
                     response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
@@ -51,15 +50,15 @@ namespace ATM_Simulation_Demo.Controllers
                 }
                 else
                 {
+                    // If backup failed, return internal server error
                     return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Backup failed");
                 }
             }
             catch (Exception ex)
             {
-                // Log or handle the exception
+                // Log or handle the exception and return internal server error
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Backup failed");
             }
         }
     }
-
 }

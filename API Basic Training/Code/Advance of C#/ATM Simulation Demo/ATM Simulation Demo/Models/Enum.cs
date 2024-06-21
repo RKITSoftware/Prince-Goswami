@@ -3,7 +3,7 @@
     /// <summary>
     /// Enumeration representing different types of operations.
     /// </summary>
-    public enum EnmOperation
+    public enum enmOperation
     {
         /// <summary>
         /// Represents a add operation.
@@ -17,18 +17,65 @@
     }
 
     /// <summary>
-    /// Enumeration representing the status of a product.
+    /// Represents the roles that a user can have in the system.
     /// </summary>
-    public enum EnmProductStatus
+    public enum enmUserRole
     {
         /// <summary>
-        /// Product is out of stock.
+        /// User Role
         /// </summary>
-        OutOfStock = 0,
+        U,
 
         /// <summary>
-        /// Product is in stock.
+        /// Administrator role.
         /// </summary>
-        InStock = 1
+        A
+
     }
+
+    /// <summary>
+    /// Enum representing transaction types.
+    /// </summary>
+    public enum enmTransactionType
+    {
+        /// <summary>
+        /// Debit
+        /// </summary>
+        D,
+        /// <summary>
+        /// Creditt
+        /// </summary>
+        C
+    }
+
+
+    public static class EnumExtensions
+    {
+        public static string Value(this enmUserRole enumValue)
+        {
+            switch (enumValue)
+            {
+                case enmUserRole.U:
+                    return "User";
+                case enmUserRole.A:
+                    return "Administrator";
+               default:
+                    return string.Empty;
+            }
+        }
+        public static string Value(this enmTransactionType enumTransactionType)
+        {
+            switch (enumTransactionType)
+            {
+                case enmTransactionType.C:
+                    return "Credit";
+                case enmTransactionType.D:
+                    return "Debit";
+                default:
+                    return string.Empty;
+            }
+
+        }
+    }
+
 }

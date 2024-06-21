@@ -7,7 +7,7 @@ using ATM_Simulation_Demo.BAL.Services;
 using ATM_Simulation_Demo.Extension;
 using System.Net.Http;
 using System.Net;
-using ATM_Simulation_Demo.Others.Auth.Account;
+using ATM_Simulation_Demo.Others.Auth;
 using ATM_Simulation_Demo.Models.DTO;
 using ATM_Simulation_Demo.Models.POCO;
 using ATM_Simulation_Demo.Models;
@@ -18,6 +18,7 @@ namespace ATM_Simulation_Demo.Controllers
     /// API controller for managing account-related operations.
     /// </summary>
     [RoutePrefix("api/accounts")]
+    [CustomAuthenticationFilter]
     public class AccountController : ApiController
     {
         #region fields
@@ -51,7 +52,7 @@ namespace ATM_Simulation_Demo.Controllers
         {
             _pinModule = new PinModule();
             _accountRepo = new AccountRepository(_pinModule);
-            _accountService = new AccountService(_accountRepo, _pinModule);
+            _accountService = new BLAccountService(_accountRepo, _pinModule);
             _objResponse = new Response();
         }
         #endregion
@@ -59,56 +60,19 @@ namespace ATM_Simulation_Demo.Controllers
         #region Actions
 
         /// <summary>
-        /// Get account information based on card number and PIN.
-        /// </summary>
-        /// <param name="cardNumber">Account's card number.</param>
-        /// <param name="pin">Account's PIN.</param>
-        /// <returns>Account information if found, otherwise NotFound.</returns>
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("{cardNumber}/{pin}")]
-        public HttpResponseMessage Login(string cardNumber, string pin)
-        {
-            try
-            {
-                _objResponse = _accountService.GetAccount(cardNumber, pin);
-                ACC01 account = _objResponse.Data;
-                if (account != null)
-                {
-                    // Generate a JWT token using the authentication service
-                    string token = TokenManager.GenerateToken(account.C01F01);
-
-                    // Return an OK _objResponse with the JWT token
-                    return Request.CreateErrorResponse(HttpStatusCode.OK, token);
-                }
-                else
-                {
-                    // Return an Unauthorized _objResponse with an error message
-                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid credentials");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log or handle any exceptions that might occur during token generation or validation
-                // Log.Error($"An error occurred during authentication: {ex}");
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "An error occurred");
-            }
-        }
-
-        /// <summary>
         /// Create a new account.
         /// </summary>
         /// <param name="objDTO_ACC01">Account DTO model</param>
         /// <returns>Newly created account information.</returns>
-        [Others.Auth.User.CustomAuthenticationFilter]
-        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
+
+        [CustomAuthorizationFilter(Roles = "Admin,User")]
         [HttpPost]
         [Route("create")]
-        public IHttpActionResult CreateAccount(DTO_ACC01 objDTO_ACC01)
+        public IHttpActionResult CreateAccount(DTOACC01 objDTO_ACC01)
         {
             try
             {
-                _accountService.Operation = EnmOperation.A;
+                _accountService.Type = enmOperation.A;
                 _objResponse = _accountService.PreValidation(objDTO_ACC01);
                 if (!_objResponse.IsError)
                 {
@@ -129,7 +93,6 @@ namespace ATM_Simulation_Demo.Controllers
             }
         }
 
-
         /// <summary>
         /// Create a new account.
         /// </summary>
@@ -137,15 +100,14 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="mobileNumber">Account's mobile number.</param>
         /// <param name="DOB">Account's date of birth.</param>
         /// <returns>Newly created account information.</returns>
-        [Others.Auth.User.CustomAuthenticationFilter]
-        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
+        [CustomAuthorizationFilter(Roles = "Admin,AccountHolder")]
         [HttpPost]
         [Route("update")]
-        public IHttpActionResult UpdateAccount(DTO_ACC01 objDTOACC01)
+        public IHttpActionResult UpdateAccount(DTOACC01 objDTOACC01)
         {
             try
             {
-                _accountService.Operation = EnmOperation.E;
+                _accountService.Type = enmOperation.E;
                 _objResponse = _accountService.PreValidation(objDTOACC01);
 
                 if (!_objResponse.IsError)
@@ -169,16 +131,14 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="objDTOACC01">The objDTOACC01 containing currentPin, newPin, and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        [Others.Auth.Account.CustomAuthenticationFilter]
-        [Others.Auth.Account.CustomAuthorizationFilter]
+        [CustomAuthorizationFilter(Roles = "AccountHolder")]
         [HttpPatch]
         [Route("changePin")]
-        public IHttpActionResult ChangePin(DTO_ACC01 objDTOACC01)
+        public IHttpActionResult ChangePin(string C01F04, string C01X01)
         {
             try
             {
-                // Assuming ChangePinRequest is a model containing currentPin, newPin, and accountId properties
-                _objResponse = _accountService.ChangePin(objDTOACC01.C01F01, objDTOACC01.C01F04, objDTOACC01.C01F07);
+                _objResponse = _accountService.ChangePin(TokenManager.AccountSId, C01F04, C01X01);
                 return Ok(_objResponse);
             }
             catch (Exception ex)
@@ -193,8 +153,7 @@ namespace ATM_Simulation_Demo.Controllers
         /// </summary>
         /// <param name="objDTOACC01">The objDTOACC01 containing newMobileNumber and accountId.</param>
         /// <returns>Action result indicating the result of the operation.</returns>
-        [Others.Auth.Account.CustomAuthenticationFilter]
-        [Others.Auth.Account.CustomAuthorizationFilter]
+        [CustomAuthorizationFilter(Roles = "AccountHolder")]
         [HttpPatch]
         [Route("UpdateMobileNumber")]
         public IHttpActionResult UpdateMobileNumber(string newMobileNumber)
@@ -202,8 +161,8 @@ namespace ATM_Simulation_Demo.Controllers
             try
             {
                 // Assuming UpdateMobileNumberRequest is a model containing newMobileNumber and accountId properties
-                var account = _accountService.GetAccountByID(TokenManager.sessionId);
-                _objResponse = _accountService.UpdateMobileNumber(newMobileNumber);
+                var account = _accountService.GetAccountByID(TokenManager.AccountSId);
+                _objResponse.IsError = _accountService.UpdateSpecificField(TokenManager.AccountSId, "C01F05", newMobileNumber);
                 return Ok(_objResponse);
             }
             catch (Exception ex)
@@ -224,8 +183,7 @@ namespace ATM_Simulation_Demo.Controllers
         ///     - IHttpActionResult with HTTP 200 OK status code and the list of all user accounts if successful.
         ///     - IHttpActionResult with appropriate HTTP status code and error message if authorization fails or an error occurs.
         /// </returns>
-        [Others.Auth.User.CustomAuthenticationFilter]
-        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
+        [CustomAuthorizationFilter(Roles = "Admin")]
         [HttpGet]
         [Route("GetAllAccounts")]
         public IHttpActionResult GetAllAccounts()
@@ -240,15 +198,15 @@ namespace ATM_Simulation_Demo.Controllers
         /// <param name="cardNumber">Account's card number.</param>
         /// <param name="pin">Account's PIN.</param>
         /// <returns>Account information if found, otherwise NotFound.</returns>
-        [Others.Auth.User.CustomAuthenticationFilter]
-        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")]
+        [CustomAuthorizationFilter(Roles = "AccountHolder")]
         [HttpDelete]
         [Route("DeleteAccount")]
         public IHttpActionResult Delete()
         {
             try
             {
-                _accountService.Delete(TokenManager.sessionId);
+                //// validation on delete
+                _accountService.Delete(TokenManager.AccountSId);
                 return Ok();
             }
             catch (Exception ex)
@@ -270,8 +228,7 @@ namespace ATM_Simulation_Demo.Controllers
         ///     - IHttpActionResult with HTTP 200 OK status code if the account is successfully deleted.
         ///     - IHttpActionResult with appropriate HTTP status code and error message if authorization fails or an error occurs.
         /// </returns>
-        [Others.Auth.User.CustomAuthenticationFilter] // Custom authentication filter
-        [Others.Auth.User.CustomAuthorizationFilter(Roles = "Admin")] // Custom authorization filter with role-based access control
+        [CustomAuthorizationFilter(Roles = "Admin")] // Custom authorization filter with role-based access control
         [HttpDelete]
         [Route("{id}")]
         public IHttpActionResult Delete(int id)
@@ -289,7 +246,6 @@ namespace ATM_Simulation_Demo.Controllers
         }
 
         #endregion
-
 
     }
 }

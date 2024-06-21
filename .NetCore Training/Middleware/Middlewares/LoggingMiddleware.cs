@@ -1,24 +1,29 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Serilog;
-using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Middleware.Middlewares
 {
-    // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
+    /// <summary>
+    /// Middleware for logging incoming requests and outgoing responses.
+    /// </summary>
     public class LoggingMiddleware
     {
+        #region Private Field
         private readonly RequestDelegate _next;
         private readonly ILogger<LoggingMiddleware> _logger;
+        #endregion
 
+        #region Constructor
         public LoggingMiddleware(RequestDelegate next, ILogger<LoggingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
         }
+        #endregion
 
+        /// <summary>
+        /// Logs incoming requests and outgoing responses.
+        /// </summary>
+        /// <param name="context">The HttpContext for the request.</param>
         public async Task Invoke(HttpContext context)
         {
             // Capture information about the incoming request
@@ -73,6 +78,11 @@ namespace Middleware.Middlewares
     // Extension method used to add the middleware to the HTTP request pipeline
     public static class LoggingMiddlewareExtensions
     {
+        /// <summary>
+        /// Adds the LoggingMiddleware to the HTTP request pipeline.
+        /// </summary>
+        /// <param name="builder">The <see cref="IApplicationBuilder"/> instance.</param>
+        /// <returns>The <see cref="IApplicationBuilder"/> instance.</returns>
         public static IApplicationBuilder UseLoggingMiddleware(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<LoggingMiddleware>();

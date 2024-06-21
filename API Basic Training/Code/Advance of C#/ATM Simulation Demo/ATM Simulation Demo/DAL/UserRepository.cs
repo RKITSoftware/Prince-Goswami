@@ -14,15 +14,28 @@ namespace ATM_Simulation_Demo.DAL
     /// </summary>
     public class UserRepository : IBLUserRepository
     {
+        #region Private Fields
+        /// <summary>
+        /// Represents the connection string used to connect to the database.
+        /// </summary>
         private readonly string _connectionString;
+
+        /// <summary>
+        /// Represents connection setting for orm.
+        /// </summary>
         private readonly IDbConnectionFactory dbFactory;
+
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRepository"/> class.
         /// </summary>
         public UserRepository()
         {
-            _connectionString = DAL_Helper.connectionString;
+            _connectionString = DateRepository.connectionString;
             dbFactory = HttpContext.Current.Application["DbFactory"] as IDbConnectionFactory;
 
             if (dbFactory == null)
@@ -31,6 +44,9 @@ namespace ATM_Simulation_Demo.DAL
             }
         }
 
+        #endregion
+
+        #region Public Methods
         /// <summary>
         /// Creates a new user in the database.
         /// </summary>
@@ -157,5 +173,7 @@ namespace ATM_Simulation_Demo.DAL
                 return db.Exists<USR01>(userId);
             }
         }
+
+        #endregion   
     }
 }

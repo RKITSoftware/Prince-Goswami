@@ -1,4 +1,5 @@
 ﻿using Filter.Filters;
+using Microsoft.Extensions.Options;
 /// <summary>
 /// Startup class for configuring middleware and services.
 /// </summary>
@@ -21,11 +22,18 @@ public class Startup
     /// <param name="services">The service collection.</param>
     public void ConfigureServices(IServiceCollection services)
     {
+        
         services.AddControllers();
-        services.AddHttpClient(); // Register IHttpClientFactory
+        
+        services.AddControllers();
+        services.AddMemoryCache();
+        services.AddHttpClient();
+        services.AddTransient<JokeResourceFilter>();
+
         services.AddScoped<JokeActionFilter>();
         services.AddScoped<JokeExceptionFilter>();
         services.AddScoped<JokeResultFilter>();
+        // Add memory cache
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
     }

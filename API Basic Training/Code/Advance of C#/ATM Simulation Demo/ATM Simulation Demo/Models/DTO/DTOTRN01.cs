@@ -8,11 +8,13 @@ namespace ATM_Simulation_Demo.Models.DTO
     /// <summary>
     /// Represents a transaction in the system.
     /// </summary>
-    public class DTO_TRN01
+    public class DTOTRN01
     {
         /// <summary>
         /// Transaction ID (Primary Key, Auto Incremented)
         /// </summary>
+        [Required(ErrorMessage = "Transaction id is required.")]
+        [Range(0, int.MaxValue)]
         [JsonProperty("N01101")]
         public int N01F01 { get; set; }
 
@@ -27,7 +29,7 @@ namespace ATM_Simulation_Demo.Models.DTO
         /// </summary>
         [JsonProperty("N01103")]
         [Required(ErrorMessage = "TransactionType is required.")]
-        public TransactionType N01F03 { get; set; }
+        public enmTransactionType N01F03 { get; set; }
 
         /// <summary>
         /// Amount (Not Null)
@@ -43,7 +45,8 @@ namespace ATM_Simulation_Demo.Models.DTO
         [JsonProperty("N01105")]
         [Required(ErrorMessage = "Transaction Date is required.")]
         public DateTime N01F05 { get; set; }
-
+        ////Date .Now
+        
         /// <summary>
         /// Description
         /// </summary>

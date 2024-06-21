@@ -1,17 +1,30 @@
 ﻿using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.BAL.Services;
+using ATM_Simulation_Demo.Models;
 using ATM_Simulation_Demo.Models.POCO;
 using MySql.Data.MySqlClient;
 using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace ATM_Simulation_Demo.DAL
 {
     public class TransactionRepository : IBLTransactionRepository
     {
-        private readonly string _connectionString = DAL_Helper.connectionString;
+        #region Private Fields
+        /// <summary>
+        /// Represents the connection string used to connect to the database.
+        /// </summary>
+        private readonly string _connectionString = DateRepository.connectionString;
+
+        /// <summary>
+        /// Represents the service for managing limits.
+        /// </summary>
         private readonly IBLLimitService _limitService = new LimitService();
+        #endregion
+
+        #region Public Methods
 
         /// <inheritdoc />
         public decimal AddTransaction(int id, TRN01 transaction)
@@ -26,11 +39,7 @@ namespace ATM_Simulation_Demo.DAL
                     // Insert transaction
                     _ = connection.Insert(transaction);
 
-                    // Update account balance
-                    if (transaction.N01F03 == 0)
-                    {
-                        transaction.N01F04 *= -1;
-                    }
+
 
                     // Retrieve current balance
                     decimal currentBalance = connection.Single<ACC01>(q => q.C01F01 == id).C01F06;
@@ -43,7 +52,7 @@ namespace ATM_Simulation_Demo.DAL
                     // Update limit
                     if (transaction.N01F03 == 0)
                     {
-                        withdrawalVerified = _limitService.UpdateDailyATMLimit(connection,id, transaction.N01F04);
+                        withdrawalVerified = _limitService.UpdateDailyATMLimit(connection, id, transaction.N01F04);
                     }
                     if (!withdrawalVerified)
                     {
@@ -69,54 +78,40 @@ namespace ATM_Simulation_Demo.DAL
         }
 
         /// <inheritdoc />
-        public List<TRN01> ViewTransactionHistory(int id)
+        public DataTable ViewTransactionHistory(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
 
                 // Retrieve transaction history from the database
-                List<TRN01> transactionHistory = new List<TRN01>();
-                string query = @"SELECT 
-                                    N01F01, 
-                                    N01F02, 
-                                    N01F03, 
-                                    N01F04, 
-                                    N01F05, 
-                                    N01F06 
-                                 FROM 
-                                    TRN01 
-                                 WHERE 
-                                    N01F02 = @AccountId";
-                using (MySqlCommand command = new MySqlCommand(
-                  query , connection))
-                {
-                    command.Parameters.AddWithValue("@AccountId", id);
+                string query = string.Format(@"SELECT 
+                    C01F03
+                    N01F03, 
+                    N01F04, 
+                    N01F05, 
+                    N01F06,
+                    CASE 
+                        WHEN N01F03 = 0 THEN 'Debit'
+                        ELSE 'Credit'
+                    END AS TransactionType
+                 FROM 
+                    TRN01 
+                 INNER JOIN ACC01
+                    ACC01.C010F1 = TRN01.N010F2
+                 WHERE 
+                    N01F02 = @0
+                 ORDER BY N01F05 DESC;", id);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            transactionHistory.Add(new TRN01
-                            {
-                                N01F01 = reader.GetInt32("N01F01"),
-                                N01F02 = reader.GetInt32("N01F02"),
-                                N01F03 = (TransactionType)Enum.Parse(typeof(TransactionType), reader.GetString("N01F03")),
-                                N01F04 = reader.GetDecimal("N01F04"),
-                                N01F05 = reader.GetDateTime("N01F05"),
-                                N01F06 = reader.GetString("N01F06")
-                            });
-                        }
-                    }
-                }
-
-                return transactionHistory;
+                DataTable dt = DALHelper.ExecuteSelectQuery(query, connection);
+                return dt;
             }
         }
 
         /// <inheritdoc />
-        public List<TRN01> GetAllTransactions()
+        public DataTable GetAllTransactions()
         {
+            DataTable dt;
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -124,30 +119,30 @@ namespace ATM_Simulation_Demo.DAL
                 // Retrieve transaction history from the database
                 List<TRN01> transactionHistory = new List<TRN01>();
 
-                using (MySqlCommand command = new MySqlCommand(
-                    "SELECT * FROM TRN01 ", connection))
-                {
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            transactionHistory.Add(new TRN01
-                            {
-                                N01F01 = reader.GetInt32("N01F01"),
-                                N01F02 = reader.GetInt32("N01F02"),
-                                N01F03 = (TransactionType)Enum.Parse(typeof(TransactionType), reader.GetString("N01F03")),
-                                N01F04 = reader.GetDecimal("N01F04"),
-                                N01F05 = reader.GetDateTime("N01F05"),
-                                N01F06 = reader.GetString("N01F06")
-                            });
-                        }
-                    }
-                }
-
-                return transactionHistory;
+                string query = @"SELECT 
+                                    N01F01,
+                                    C01F02,
+                                    C01F03,
+                                    N01F03,
+                                    N01F04,
+                                    N01F05,
+                                    N01F06 
+                                CASE 
+                                    WHEN N01F03 = 0 THEN 'Debit'
+                                    ELSE 'Credit'
+                                END AS TransactionType
+                                FROM TRN01 
+                                INNER JOIN ACC01
+                                    ACC01.C010F1 = TRN01.N010F2
+                                ORDER BY N01F05 DESC,C01F02";
+                dt = DALHelper.ExecuteSelectQuery(query, connection);
             }
+
+            return dt;
         }
 
+
+        /// <inheritdoc/>
         public bool VerifyTransaction(int id, decimal amount)
         {
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
@@ -155,8 +150,9 @@ namespace ATM_Simulation_Demo.DAL
                 connection.Open();
 
                 decimal balance = connection.Single<ACC01>(q => q.C01F01 == id).C01F06;
-                return balance - amount > 10;
+                return balance - amount > 0;
             }
         }
+
+        #endregion    }
     }
-}

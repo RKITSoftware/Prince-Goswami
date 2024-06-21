@@ -39,7 +39,7 @@ namespace ATM_Simulation_Demo.BAL
         /// <param name="operation">Add or Edit operation.</param>
         /// <param name="id">Create or Update id</param>
         /// <returns>True if id is valid else False.</returns>
-        public static bool IsIDValid(EnmOperation operation, int id)
+        public static bool IsIDValid(enmOperation operation, int id)
         {
             //if (operation == EnmOperation.A)
             //{
@@ -49,7 +49,7 @@ namespace ATM_Simulation_Demo.BAL
             //    }
             //}
 
-            if (operation == EnmOperation.E)
+            if (operation == enmOperation.E)
             {
                 if (id == 0)
                 {

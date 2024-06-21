@@ -1,30 +1,50 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ATM_Simulation_Demo.BAL.Interface;
-using ATM_Simulation_Demo.Models;
+﻿using ATM_Simulation_Demo.BAL.Interface;
 using ATM_Simulation_Demo.Models.POCO;
 using MySql.Data.MySqlClient;
 using ServiceStack.OrmLite;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ATM_Simulation_Demo.DAL
 {
     public class LimitRepository : IBLLimitRepository
     {
+        #region Private Fields
+
+        /// <summary>
+        /// Connection string to the database
+        /// </summary>
         private readonly string _connectionString;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor for LimitRepository.
+        /// </summary>
         public LimitRepository()
         {
-            _connectionString = DAL_Helper.connectionString;
+            // Initialize the connection string using the helper class
+            _connectionString = DateRepository.connectionString;
         }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc/>
 
         public void AddATMLimit(LMT01 limit)
         {
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                connection.Insert(limit);
+                _ = connection.Insert(limit);
             }
         }
+
+        /// <inheritdoc/>
 
         public LMT01 GetATMLimitByAccountID(int accountID)
         {
@@ -32,11 +52,14 @@ namespace ATM_Simulation_Demo.DAL
             {
                 connection.Open();
 
-                var query = connection.Single<LMT01>(x => x.T01F02 == accountID);
+                LMT01 objLMT01 = connection.Single<LMT01>(x => x.T01F02 == accountID);
 
-                return query;
+                return objLMT01;
             }
         }
+
+        /// <inheritdoc/>
+
 
         public List<LMT01> GetAllATMLimit()
         {
@@ -50,26 +73,32 @@ namespace ATM_Simulation_Demo.DAL
             }
         }
 
+
+        /// <inheritdoc/>
+
         public void ResetAllATMLimits()
         {
             using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
 
-                var limits = connection.Select<LMT01>();
+                List<LMT01> limits = connection.Select<LMT01>();
 
                 if (limits.Any())
                 {
-                    foreach (var limit in limits)
+                    foreach (LMT01 limit in limits)
                     {
                         limit.T01F03 = 10; // Reset DailyTransactionLimit to 0
                         limit.T01F04 = 0; // Reset MaxWithdrawalAmount to 0
 
-                        connection.Update(limit);
+                        _ = connection.Update(limit);
                     }
                 }
             }
         }
+
+
+        /// <inheritdoc/>
 
         public void UpdateATMLimit(int accountID, decimal updatedWithdrawlLimit)
         {
@@ -77,17 +106,18 @@ namespace ATM_Simulation_Demo.DAL
             {
                 connection.Open();
 
-                var existingLimit = connection.Single<LMT01>(x => x.T01F02 == accountID);
+                LMT01 existingLimit = connection.Single<LMT01>(x => x.T01F02 == accountID);
 
                 if (existingLimit != null)
                 {
                     existingLimit.T01F04 = updatedWithdrawlLimit;
 
-                    connection.Update(existingLimit);
+                    _ = connection.Update(existingLimit);
                 }
             }
         }
 
+        /// <inheritdoc/>
         public bool UpdateDailyATMLimit(int accountID, decimal balance)
         {
             try
@@ -97,14 +127,14 @@ namespace ATM_Simulation_Demo.DAL
                 {
                     connection.Open();
 
-                    var existingLimit = connection.Single<LMT01>(x => x.T01F02 == accountID);
+                    LMT01 existingLimit = connection.Single<LMT01>(x => x.T01F02 == accountID);
 
                     if (existingLimit != null)
                     {
                         existingLimit.T01F03 = existingLimit.T01F03--;
-                        existingLimit.T01F05 = existingLimit.T01F05 + balance;
+                        existingLimit.T01F05 += balance;
 
-                        connection.Update(existingLimit);
+                        _ = connection.Update(existingLimit);
                     }
                 }
                 return true;
@@ -114,5 +144,7 @@ namespace ATM_Simulation_Demo.DAL
                 return false;
             }
         }
+
+        #endregion    }
     }
 }

@@ -3,28 +3,17 @@ using System.Collections.Generic;
 using ATM_Simulation_Demo.Models;
 using ATM_Simulation_Demo.Models.DTO;
 using ATM_Simulation_Demo.Models.POCO;
+using ServiceStack.OrmLite;
 
 namespace ATM_Simulation_Demo.BAL.Interface
 {
     /// <summary>
     /// Interface for account-related operations in the ATM simulation.
     /// </summary>
-    public interface IBLAccountService
+    public interface IBLAccountService : IDataHandlerService<DTOACC01>
     {
-        /// <summary>
-        /// Checking the id exists or not for category.
-        /// </summary>
-        /// <param name="objDTOACC01">DTO for ACC01 Model.</param>
-        /// <returns>Success response if no error occurs else response with specific statuscode with message.</returns>
-        Response PreValidation(DTO_ACC01 objDTOACC01);
-        
-        EnmOperation Operation { get; set; }
+        Response PreValidation(DTOACC01 objDTOACC01);
 
-        Response Validation();
-        void PreSave(DTO_ACC01 objACC01DTO);
-        Response Save();
-
-      
         /// <summary>
         /// Retrieves a account based on the provided card number and PIN.
         /// </summary>
@@ -66,6 +55,16 @@ namespace ATM_Simulation_Demo.BAL.Interface
         /// </summary>
         /// <param name="Id">Account ID.</param>
         Response Delete(int Id);
+
+        /// <summary>
+        /// Updates a specific field of a user account with the provided value.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to update.</typeparam>
+        /// <param name="accountId">The ID of the account to update.</param>
+        /// <param name="fieldName">The name of the field to update.</param>
+        /// <param name="val">The new value to assign to the field.</param>
+        /// <returns>True if the update was successful, otherwise false.</returns>
+        bool UpdateSpecificField<T>(int accountId, string fieldName, T val);
 
     }
 }
