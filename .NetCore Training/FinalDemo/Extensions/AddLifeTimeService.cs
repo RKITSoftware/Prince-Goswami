@@ -36,9 +36,13 @@ namespace FinalDemo.Extension
             services.AddTransient<IBLCUS01, BLCUS01>();
             services.AddTransient<IBLCUS02, BLCUS02>();
             services.AddTransient<IBLUSR01, BLUSR01>();
-            
+
             #endregion
 
+
+            // Register DALHelper
+            services.AddSingleton<DALHelper>();
+            
             return services;
         }
     }

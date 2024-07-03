@@ -1,8 +1,8 @@
 ﻿using FinalDemo.BL.Interface.Repository;
 using FinalDemo.Models.POCO;
-using ServiceStack.Data;
-using ServiceStack.OrmLite;
-using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
+using System.Collections.Generic;
 
 namespace FinalDemo.DAL
 {
@@ -11,68 +11,81 @@ namespace FinalDemo.DAL
     /// </summary>
     public class CUS02_DAL : ICUS02_DAL
     {
-        private readonly IDbConnectionFactory _dbFactory;
-        private readonly string _connectionString;
+        private readonly DALHelper _dalHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CUS02_DAL"/> class.
         /// </summary>
-        /// <param name="dbFactory">The IDbConnectionFactory implementation.</param>
-        public CUS02_DAL( IConfiguration configuration)
+        /// <param name="dalHelper">The DALHelper instance.</param>
+        public CUS02_DAL(DALHelper dalHelper)
         {
-            _connectionString = configuration.GetConnectionString("Default");
-            _dbFactory = new OrmLiteConnectionFactory(_connectionString, MySqlDialect.Provider);
+            _dalHelper = dalHelper;
         }
 
         /// <summary>
-        /// Retrieves a single Vehicle by its unique identifier.
+        /// Retrieves a single Customer by its unique identifier.
         /// </summary>
-        /// <param name="id">The unique identifier of the Vehicle.</param>
-        /// <returns>The Vehicle if found, otherwise null.</returns>
+        /// <param name="id">The unique identifier of the Customer.</param>
+        /// <returns>The Customer if found, otherwise null.</returns>
         public CUS02 GetByID(int id)
         {
-            using var db = _dbFactory.OpenDbConnection();
-            return db.SingleById<CUS02>(id);
+            string query = "SELECT * FROM CUS02 WHERE Id = @Id";
+            var parameter = new MySqlParameter("@Id", id);
+            return _dalHelper.ExecuteSingleQuery<CUS02>(query, parameter);
         }
 
         /// <summary>
-        /// Retrieves all Vehicles.
+        /// Retrieves all Customers.
         /// </summary>
-        /// <returns>A collection of all Vehicles.</returns>
+        /// <returns>A collection of all Customers.</returns>
         public List<CUS02> GetAll()
         {
-            using var db = _dbFactory.OpenDbConnection();
-            return db.Select<CUS02>();
+            string query = "SELECT * FROM CUS02";
+            return _dalHelper.ExecuteQuery<CUS02>(query);
         }
 
         /// <summary>
-        /// Adds a new Vehicle to the repository.
+        /// Adds a new Customer to the repository.
         /// </summary>
-        /// <param name="cus02">The Vehicle to add.</param>
+        /// <param name="cus02">The Customer to add.</param>
         public void Add(CUS02 cus02)
         {
-            using var db = _dbFactory.OpenDbConnection();
-            db.Insert(cus02);
+            string query = "INSERT INTO CUS02 (FirstName, LastName, Email) VALUES (@FirstName, @LastName, @Email)";
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@FirstName", cus02.FirstName),
+                new MySqlParameter("@LastName", cus02.LastName),
+                new MySqlParameter("@Email", cus02.Email)
+            };
+            _dalHelper.ExecuteNonQuery(query, parameters);
         }
 
         /// <summary>
-        /// Updates an existing Vehicle in the repository.
+        /// Updates an existing Customer in the repository.
         /// </summary>
-        /// <param name="cus02">The Vehicle to update.</param>
+        /// <param name="cus02">The Customer to update.</param>
         public void Update(CUS02 cus02)
         {
-            using var db = _dbFactory.OpenDbConnection();
-            db.Update(cus02);
+            string query = "UPDATE CUS02 SET FirstName = @FirstName, LastName = @LastName, Email = @Email WHERE Id = @Id";
+            var parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@FirstName", cus02.FirstName),
+                new MySqlParameter("@LastName", cus02.LastName),
+                new MySqlParameter("@Email", cus02.Email),
+                new MySqlParameter("@Id", cus02.Id)
+            };
+            _dalHelper.ExecuteNonQuery(query, parameters);
         }
 
         /// <summary>
-        /// Deletes a Vehicle from the repository.
+        /// Deletes a Customer from the repository.
         /// </summary>
-        /// <param name="cus02">The Vehicle to delete.</param>
+        /// <param name="id">The unique identifier of the Customer to delete.</param>
         public void Delete(int id)
         {
-            using var db = _dbFactory.OpenDbConnection();
-            db.Delete(id);
+            string query = "DELETE FROM CUS02 WHERE Id = @Id";
+            var parameter = new MySqlParameter("@Id", id);
+            _dalHelper.ExecuteNonQuery(query, parameter);
         }
     }
 }
