@@ -1,8 +1,0 @@
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\ExternalProject\obj\Debug\ExternalProject.csproj.AssemblyReference.cache
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\ExternalProject\obj\Debug\ExternalProject.csproj.SuggestedBindingRedirects.cache
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\ExternalProject\obj\Debug\ExternalProject.csproj.CoreCompileInputs.cache
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\ExternalProject\bin\Debug\ExternalProject.exe.config
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\ExternalProject\bin\Debug\ExternalProject.exe
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\ExternalProject\bin\Debug\ExternalProject.pdb
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\ExternalProject\obj\Debug\ExternalProject.exe
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Reference\ExternalProject\obj\Debug\ExternalProject.pdb

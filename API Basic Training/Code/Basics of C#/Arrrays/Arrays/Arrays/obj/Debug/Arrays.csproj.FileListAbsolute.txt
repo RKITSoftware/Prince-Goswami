@@ -1,8 +1,0 @@
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Arrrays\Arrays\Arrays\bin\Debug\Arrays.exe.config
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Arrrays\Arrays\Arrays\bin\Debug\Arrays.exe
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Arrrays\Arrays\Arrays\bin\Debug\Arrays.pdb
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Arrrays\Arrays\Arrays\obj\Debug\Arrays.csproj.AssemblyReference.cache
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Arrrays\Arrays\Arrays\obj\Debug\Arrays.csproj.SuggestedBindingRedirects.cache
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Arrrays\Arrays\Arrays\obj\Debug\Arrays.csproj.CoreCompileInputs.cache
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Arrrays\Arrays\Arrays\obj\Debug\Arrays.exe
-F:\367 - Prince.G\Prince-Goswami-main\API Basic Training\Code\Basics of C#\Arrrays\Arrays\Arrays\obj\Debug\Arrays.pdb
